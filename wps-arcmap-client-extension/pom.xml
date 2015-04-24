@@ -1,0 +1,293 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.n52.wps.client.arcmap</groupId>
+		<artifactId>wpsclient4arcgis</artifactId>
+		<version>1.1.1-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>wps-arcmap-client-extension</artifactId>
+	<packaging>jar</packaging>
+	<name>52North Extensible WPS ArcMap Client</name>
+	<description>This ArcMap extension lets you add WPS processes to ArcMap, which will be encapsulated as standard geoprocessing tools.</description>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<outputDirectory>${project.dependency-folder}</outputDirectory>
+						<overWriteReleases>false</overWriteReleases>
+						<overWriteSnapshots>false</overWriteSnapshots>
+						<overWriteIfNewer>true</overWriteIfNewer>
+						<excludeTransitive>true</excludeTransitive>
+						<!--includeArtifactIds>52n-wps-io, axis</includeArtifactIds -->
+						<excludeArtifactIds>arcobjects</excludeArtifactIds>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jasig.maven</groupId>
+					<artifactId>maven-notice-plugin</artifactId>
+					<version>1.0.6.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>1.7</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<header>../misc/licenses/license_header.txt</header>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jasig.maven</groupId>
+				<artifactId>maven-notice-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>check-licenses</id>
+						<phase />
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}</targetPath>
+				<excludes>
+					<exclude>logback.xml</exclude>
+					<exclude>**/*.ico</exclude>
+					<exclude>**/*.esriAddIn</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	</build>
+	<dependencies>
+		<dependency>
+			<artifactId>arcobjects</artifactId>
+			<groupId>com.esri.arcgis</groupId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+		</dependency>
+		<!-- start dependencies needed by base64 tool -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<!-- end dependencies needed by base64 tool -->
+		<!-- start dependencies needed by zipped shapefile tools -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<!-- end dependencies needed by zipped shapefile tools -->
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-wps-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-wps-io-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-wps-client-lib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-wps-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-wps-commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${wps.groupid}</groupId>
+			<artifactId>52n-xml-wps-v100</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.sensorweb</groupId>
+			<artifactId>52n-xml-ows-v110</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.sensorweb</groupId>
+			<artifactId>52n-xml-xlink-v110</artifactId>
+		</dependency>
+		<dependency>
+			<artifactId>wps-communication-tool</artifactId>
+			<groupId>org.n52.wps.client.arcmap</groupId>
+		</dependency>
+		<dependency>
+			<artifactId>wps-base64-conversion-tool</artifactId>
+			<groupId>org.n52.wps.client.arcmap</groupId>
+		</dependency>
+		<dependency>
+			<artifactId>wps-zipped-shp-export-tool</artifactId>
+			<groupId>org.n52.wps.client.arcmap</groupId>
+		</dependency>
+		<dependency>
+			<artifactId>wps-zipped-shp-unzip-tool</artifactId>
+			<groupId>org.n52.wps.client.arcmap</groupId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	<properties>
+		<project.dependency.folder>${project.build.directory}/dependency</project.dependency.folder>
+		<project.esriaddin.folder>${project.build.directory}/addin</project.esriaddin.folder>
+	</properties>
+	<profiles>
+		<profile>
+			<id>create-client</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-cli</id>
+								<configuration>
+									<target>
+										<mkdir dir="${project.esriaddin.folder}/dist/image" />
+										<copy todir="${project.esriaddin.folder}/dist/image">
+											<fileset dir="${basedir}/src/main/resources/image"
+												excludes="*.db" />
+										</copy>
+										<copy file="${project.build.directory}/config.xml"
+											tofile="${project.esriaddin.folder}/dist/config.xml" />
+										<copy file="${basedir}/src/main/resources/logback.xml"
+											tofile="${project.esriaddin.folder}/dist/logback.xml" />
+										<copy todir="${project.esriaddin.folder}/dist/org">
+											<fileset dir="target/classes/org" />
+										</copy>
+										<zip
+											destfile="${project.esriaddin.folder}/dist/Install/ArcGISWPSClient.jar"
+											update="true">
+											<fileset dir="${project.esriaddin.folder}/dist/">
+												<exclude name="Install/" />
+												<exclude name="config.xml" />
+												<exclude name="logback.xml" />
+											</fileset>
+										</zip>
+										<zip
+											destfile="${project.esriaddin.folder}/52n-wps-arcmap-client-logback-xml.jar"
+											update="true">
+											<fileset dir="${project.esriaddin.folder}/dist/">
+												<include name="logback.xml" />
+											</fileset>
+										</zip>
+										<zip destfile="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin"
+											update="true">
+											<fileset dir="${project.esriaddin.folder}/dist/">
+												<exclude name="logback.xml" />
+											</fileset>
+										</zip>
+										<!-- installer files -->
+										<!--copy todir="${project.build.directory}/Installer-Files"> <fileset 
+											dir="${basedir}/src/main/resources/Installer-Files" excludes="*.db" /> </copy> 
+											<copy todir="${project.build.directory}/wpsurls"> <fileset dir="${basedir}/src/main/resources/wpsurls" 
+											excludes="*.db" /></copy --> 
+										<copy file="${basedir}/src/main/resources/Installer-Files/logo52n-48x48.ico" 
+											tofile="${project.build.directory}/Installer-Files/logo52n-48x48.ico" />
+										<zip
+											destfile="${project.dependency.folder}/52n-wps-arcmap-client-logback-xml.jar"
+											update="true">
+											<fileset dir="${project.esriaddin.folder}/dist/">
+												<include name="logback.xml" />
+											</fileset>
+										</zip>
+										<copy file="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin" 
+											tofile="${project.build.directory}/addins/ArcMapWPSClient.esriaddin" />
+										<copy file="${basedir}/src/main/resources/addins/AddWPSServerAddin.esriAddIn" 
+											tofile="${project.build.directory}/addins/AddWPSServerAddin.esriaddin" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- <plugin> -->
+					<!-- <groupId>com.google.code.maven-replacer-plugin</groupId> -->
+					<!-- <artifactId>replacer</artifactId> -->
+					<!-- <version>1.5.2</version> -->
+					<!-- <executions> -->
+					<!-- <execution> -->
+					<!-- <phase></phase> -->
+					<!-- <goals> -->
+					<!-- <goal>replace</goal> -->
+					<!-- </goals> -->
+					<!-- </execution> -->
+					<!-- </executions> -->
+					<!-- <configuration> -->
+					<!-- <file>${project.build.directory}/WPS-Installer.nsi</file> -->
+					<!-- <regex>false</regex> -->
+					<!-- <replacements> -->
+					<!-- <replacement> -->
+					<!-- <token>%version%</token> -->
+					<!-- <value>${project.version}</value> -->
+					<!-- </replacement> -->
+					<!-- </replacements> -->
+					<!-- </configuration> -->
+					<!-- </plugin> -->
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

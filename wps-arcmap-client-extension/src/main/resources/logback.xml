@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration>
+	<property name="logFile" value="${APPDATA}/52North/WPS ArcMap Client/wps-arcmap-client" />
+	<appender name="arcmap-client-file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--for further documentation -->
+		<File>${logFile}.log</File>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logFile}/%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 14 days' worth of history -->
+			<maxHistory>14</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%d{ISO8601} [%t] %-5p %c: %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="arcmap-client-console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{ISO8601} [%t] %-5p %c: %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="org.n52.client" level="DEBUG" />
+	<logger name="org.n52.wps.client.WPSClientSession" level="DEBUG" />
+
+	<root level="INFO">
+		<appender-ref ref="arcmap-client-file" />
+		<appender-ref ref="arcmap-client-console" />
+	</root>
+</configuration>

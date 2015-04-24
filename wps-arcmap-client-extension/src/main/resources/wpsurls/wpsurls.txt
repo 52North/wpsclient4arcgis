@@ -1,0 +1,4 @@
+
+http://geoprocessing.demo.52north.org:8080/wps/WebProcessingService
+http://localhost:8080/wps/WebProcessingService
+http://www.zoo-project.org/zoo1/
