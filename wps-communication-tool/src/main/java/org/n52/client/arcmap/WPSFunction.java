@@ -815,11 +815,31 @@ public class WPSFunction extends BaseGeoprocessingTool {
                          */
                     }
 
+                    //split string coming from quick export
+                    if(value.contains(",")){
+                        String[] parameters = value.split(",");
+                        
+                        for (String parameter : parameters) {
+                            try {
+                                File inputFile = new File(parameter);
+                                
+                                if(inputFile.exists()){
+                                    value = parameter;
+                                    break;
+                                }
+                            } catch (Exception e) {
+                                /*
+                                 * ignore
+                                 */
+                            }
+                        }
+                    }
+
                     DocumentBuilderFactory factoryVector = DocumentBuilderFactory.newInstance();
 
                     if (mimeType != null && mimeType.contains("xml")) {
                         try {
-
+                            
                             DataType dataTypeVector = inTypeVector.addNewData();
 
                             ComplexDataType cDataTypeVector = dataTypeVector.addNewComplexData();
