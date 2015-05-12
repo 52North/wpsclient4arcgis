@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="trace" monitorInterval="10">
+	<Properties>
+		<Property name="logFile">${env:APPDATA}/52North/WPS ArcMap Client/wps-arcmap-client</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingRandomAccessFile name="arcmapclient-log"
+			fileName="${logFile}.log" filePattern="${logFile}/%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20" />
+		</RollingRandomAccessFile>
+		<Async name="Async">
+			<AppenderRef ref="arcmapclient-log" />
+		</Async>
+	</Appenders>
+	<Loggers>
+		<Logger name="org.n52.client" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="Async" />
+		</Logger>
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>

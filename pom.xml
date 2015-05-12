@@ -16,8 +16,8 @@
 	</issueManagement>
 	<licenses>
 		<license>
-			<name>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</name>
-			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 	<inceptionYear>2013</inceptionYear>
@@ -171,7 +171,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.5</slf4j.version>
-		<logback.version>1.0.13</logback.version>
+		<log4j.version>2.0.2</log4j.version>
 		<wps.version>3.2.0</wps.version><!-- after 3.2.0 WPS is using Java 1.7, 
 			ArcGIS still uses 1.6 -->
 		<wps.groupid>org.n52.wps</wps.groupid>
@@ -316,16 +316,6 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
@@ -354,6 +344,21 @@
 				<artifactId>log4j-over-slf4j</artifactId>
 				<version>${slf4j.version}</version>
 				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

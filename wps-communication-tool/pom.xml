@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>wps-communication-tool</artifactId>
 	<packaging>jar</packaging>
-	<name>52North WPS ArcMap Client communication Tool</name>
+	<name>52North WPS ArcMap Client Communication Tool</name>
 	<description>This implementation encapsulates WPS processes in standard ArcGIS geoprocessing tools.</description>
 	<build>
 		<plugins>
@@ -72,10 +72,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

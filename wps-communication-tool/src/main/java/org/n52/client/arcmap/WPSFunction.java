@@ -2,29 +2,17 @@
  * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 as published
- * by the Free Software Foundation.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * If the program is linked with libraries which are licensed under one of
- * the following licenses, the combination of the program with the linked
- * library is not considered a "derivative work" of the program:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *       • Apache License, version 2.0
- *       • Apache Software License, version 1.0
- *       • GNU Lesser General Public License, version 3
- *       • Mozilla Public License, versions 1.0, 1.1 and 2.0
- *       • Common Development and Distribution License (CDDL), version 1.0
- *
- * Therefore the distribution of the program linked with libraries licensed
- * under the aforementioned licenses, is permitted by the copyright holders
- * if the distribution is compliant with both the GNU General Public
- * License version 2 and the aforementioned licenses.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.n52.client.arcmap;
 
@@ -59,6 +47,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import net.opengis.ows.x11.DomainMetadataType;
+import net.opengis.ows.x11.ExceptionReportDocument;
 import net.opengis.ows.x11.ExceptionType;
 import net.opengis.ows.x11.ValueType;
 import net.opengis.wps.x100.ComplexDataDescriptionType;
@@ -75,6 +64,7 @@ import net.opengis.wps.x100.InputReferenceType;
 import net.opengis.wps.x100.InputType;
 import net.opengis.wps.x100.LiteralDataType;
 import net.opengis.wps.x100.LiteralInputType;
+import net.opengis.wps.x100.OutputDataType;
 import net.opengis.wps.x100.OutputDescriptionType;
 import net.opengis.wps.x100.OutputReferenceType;
 import net.opengis.wps.x100.ProcessDescriptionType;
@@ -451,7 +441,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             DEFile file = new DEFile();
 
-            String tmpFilePath = System.getenv("TMP") + File.separator + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
+            String tmpFilePath = System.getenv("TMP") + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
 
             file.setAsText(tmpFilePath);
 
@@ -497,11 +487,13 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     // exists, create a different tmp file
                     File tmpFile = new File(tmpParameterValue.getAsText());
 
-                    if (tmpFile.exists()) {
+                    if (!tmpFile.exists()) {
+                        //necessary for quick import?!
+                        new File(tmpParameterValue.getAsText()).createNewFile();
 
-                        String tmpFilePath = System.getenv("TMP") + File.separator + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
-
-                        tmpParameterValue.setAsText(tmpFilePath);
+//                        String tmpFilePath = System.getenv("TMP") + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
+//
+//                        tmpParameterValue.setAsText(tmpFilePath);                        
                     }
 
                 }
@@ -554,10 +546,16 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
 
             LOGGER.debug(execDoc.toString());
+            
+            Object response = WPSClientSession.getInstance().execute(wpsURL, execDoc);
 
-            ExecuteResponseDocument responseDoc = (ExecuteResponseDocument) WPSClientSession.getInstance().execute(wpsURL, execDoc);
-
-            handleExecuteResponse(responseDoc, paramvalues, parameterNameValueMap, messages);
+            if(response instanceof ExecuteResponseDocument){
+            
+            handleExecuteResponse((ExecuteResponseDocument)response, paramvalues, parameterNameValueMap, messages);
+            
+            }else if(response instanceof ExceptionReportDocument){
+                LOGGER.error("Something went wrong while executing the WPS process. Exceptionreport: {}", response.toString());
+            }
 
         } catch (Exception e1) {
             LOGGER.error("Something went wrong while executing the WPS process.", e1);
@@ -578,16 +576,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         LOGGER.debug(response.toString());
 
-        DataType outputData = response.getProcessOutputs().getOutputArray(0).getData();
-
-        OutputReferenceType outputReference = response.getProcessOutputs().getOutputArray(0).getReference();
-
         String statusLocation = response.getStatusLocation();
 
         boolean processFinished = response.getStatus() == null ? false : response.getStatus().isSetProcessSucceeded();
 
         boolean processFailed = response.getStatus() == null ? false : response.getStatus().isSetProcessFailed();
 
+        OutputDataType[] outputs = response.getProcessOutputs().getOutputArray();
+        
         if (statusLocation != null && !statusLocation.equals("") && !processFinished) {
 
             // sleep for five seconds
@@ -610,6 +606,116 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
             handleExecuteResponse(executeDoc, paramvalues, parameterNameValueMap, messages);
             return;
+        }else if (processFinished) {
+            
+            for (OutputDataType outputDataType : outputs) {
+
+                DataType outputData = outputDataType.getData();
+
+                OutputReferenceType outputReference = outputDataType.getReference();
+                
+                String outputPath = "";
+
+                File outputFile = null;
+
+                for (String key : parameterNameValueMap.keySet()) {
+                    if (key.startsWith(outputPrefix)) {
+                        /*
+                         * there should be only one
+                         */
+                        if (parameterNameValueMap.get(key) != null) {
+                            outputPath = parameterNameValueMap.get(key);
+                            /*
+                             * if this is RANDOM_FILE generate a temp file by leaving
+                             * output file null
+                             */
+                            if (!outputPath.equals(randomFileString)) {
+                                outputFile = new File(outputPath);
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                String identifier = response.getProcessOutputs().getOutputArray(0).getIdentifier().getStringValue();
+
+                String encoding = parameterNameValueMap.get(identifier + "_encoding");
+
+                String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
+
+                String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
+
+                if (extension == null || extension.equals("")) {
+                    extension = "dat";
+                }
+
+                /*
+                 * if input is not base64 assume that output should be
+                 */
+                boolean outputShouldBeBase64 = false;
+
+                if (encoding != null) {
+                    outputShouldBeBase64 = encoding.equals("base64");
+                }
+
+                if (outputFile == null) {
+
+                    if (outputShouldBeBase64) {
+                        extension = ".base64." + extension;
+                    }
+                    outputFile = File.createTempFile("wpsFunction", "." + extension);
+                }
+
+                for (int i = 0; i < paramvalues.getCount(); i++) {
+                    IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
+                    IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
+                    if (tmpParameter.getName().equals(outputPrefix + identifier)) {
+                        tmpParameterValue.setAsText(outputFile.getAbsolutePath());
+                    }
+
+                }
+
+                String s = "";
+
+                if (outputData != null) {
+
+                    ComplexDataType cData = outputData.getComplexData();
+
+                    s = nodeToString(cData.getDomNode().getFirstChild());
+
+                    if (!response.toString().contains("application/x-zipped-shp")) {
+
+                        if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
+
+                            try {
+                                s = nodeToString(cData.getDomNode().getChildNodes().item(1));
+
+                                LOGGER.debug("ComplexData content " + s);
+                            } catch (Exception e) {
+                                LOGGER.error("cData.getDomNode().getFirstChild().getChildNodes().item(1) leads to " + e);
+                            }
+                        } else {
+                            LOGGER.debug("ComplexData content " + s);
+                        }
+                    }
+
+                    LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+                    messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+
+                    BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
+
+                    bwr.write(s);
+
+                    bwr.close();
+
+                } else if (outputReference != null) {
+
+                    URL href = new URL(outputReference.getHref());
+
+                    FileUtils.copyURLToFile(href, outputFile);
+                }
+                
+            }
         }
 
         if (processFailed) {
@@ -632,107 +738,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, completeExceptionText);
             }
             return;
-        }
-
-        String outputPath = "";
-
-        File outputFile = null;
-
-        for (String key : parameterNameValueMap.keySet()) {
-            if (key.startsWith(outputPrefix)) {
-                /*
-                 * there should be only one
-                 */
-                if (parameterNameValueMap.get(key) != null) {
-                    outputPath = parameterNameValueMap.get(key);
-                    /*
-                     * if this is RANDOM_FILE generate a temp file by leaving
-                     * output file null
-                     */
-                    if (!outputPath.equals(randomFileString)) {
-                        outputFile = new File(outputPath);
-                    }
-                }
-                break;
-            }
-        }
-
-        String identifier = response.getProcessOutputs().getOutputArray(0).getIdentifier().getStringValue();
-
-        String encoding = parameterNameValueMap.get(identifier + "_encoding");
-
-        String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
-
-        String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
-
-        if (extension == null || extension.equals("")) {
-            extension = "dat";
-        }
-
-        /*
-         * if input is not base64 assume that output should be
-         */
-        boolean outputShouldBeBase64 = false;
-
-        if (encoding != null) {
-            outputShouldBeBase64 = encoding.equals("base64");
-        }
-
-        if (outputFile == null) {
-
-            if (outputShouldBeBase64) {
-                extension = ".base64." + extension;
-            }
-            outputFile = File.createTempFile("wpsFunction", "." + extension);
-        }
-
-        for (int i = 0; i < paramvalues.getCount(); i++) {
-            IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
-            IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
-            if (tmpParameter.getName().equals(outputPrefix + identifier)) {
-                tmpParameterValue.setAsText(outputFile.getAbsolutePath());
-            }
-
-        }
-
-        String s = "";
-
-        if (outputData != null) {
-
-            ComplexDataType cData = outputData.getComplexData();
-
-            s = nodeToString(cData.getDomNode().getFirstChild());
-
-            if (!response.toString().contains("application/x-zipped-shp")) {
-
-                if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
-
-                    try {
-                        s = nodeToString(cData.getDomNode().getChildNodes().item(1));
-
-                        LOGGER.debug("ComplexData content " + s);
-                    } catch (Exception e) {
-                        LOGGER.error("cData.getDomNode().getFirstChild().getChildNodes().item(1) leads to " + e);
-                    }
-                } else {
-                    LOGGER.debug("ComplexData content " + s);
-                }
-            }
-
-            LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
-            messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
-
-            BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
-
-            bwr.write(s);
-
-            bwr.close();
-
-        } else if (outputReference != null) {
-
-            URL href = new URL(outputReference.getHref());
-
-            FileUtils.copyURLToFile(href, outputFile);
         }
 
     }

@@ -8,7 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>wps-arcmap-client-extension</artifactId>
 	<packaging>jar</packaging>
-	<name>52North Extensible WPS ArcMap Client</name>
+	<name>52North WPS ArcMap Client Extension</name>
 	<description>This ArcMap extension lets you add WPS processes to ArcMap, which will be encapsulated as standard geoprocessing tools.</description>
 	<build>
 		<pluginManagement>
@@ -159,22 +159,9 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -185,6 +172,18 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
 		</dependency>
 	</dependencies>
 	<properties>
@@ -210,8 +209,8 @@
 										</copy>
 										<copy file="${project.build.directory}/config.xml"
 											tofile="${project.esriaddin.folder}/dist/config.xml" />
-										<copy file="${basedir}/src/main/resources/logback.xml"
-											tofile="${project.esriaddin.folder}/dist/logback.xml" />
+										<copy file="${basedir}/src/main/resources/log4j2.xml"
+											tofile="${project.esriaddin.folder}/dist/log4j2.xml" />
 										<copy todir="${project.esriaddin.folder}/dist/org">
 											<fileset dir="target/classes/org" />
 										</copy>
@@ -221,39 +220,41 @@
 											<fileset dir="${project.esriaddin.folder}/dist/">
 												<exclude name="Install/" />
 												<exclude name="config.xml" />
-												<exclude name="logback.xml" />
+												<exclude name="log4j2.xml" />
 											</fileset>
 										</zip>
-										<zip
-											destfile="${project.esriaddin.folder}/52n-wps-arcmap-client-logback-xml.jar"
-											update="true">
-											<fileset dir="${project.esriaddin.folder}/dist/">
-												<include name="logback.xml" />
-											</fileset>
-										</zip>
+<!-- 										<zip -->
+<!-- 											destfile="${project.esriaddin.folder}/52n-wps-arcmap-client-logback-xml.jar" -->
+<!-- 											update="true"> -->
+<!-- 											<fileset dir="${project.esriaddin.folder}/dist/"> -->
+<!-- 												<include name="logback.xml" /> -->
+<!-- 											</fileset> -->
+<!-- 										</zip> -->
 										<zip destfile="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin"
 											update="true">
 											<fileset dir="${project.esriaddin.folder}/dist/">
-												<exclude name="logback.xml" />
+												<exclude name="log4j2.xml" />
 											</fileset>
 										</zip>
 										<!-- installer files -->
 										<!--copy todir="${project.build.directory}/Installer-Files"> <fileset 
 											dir="${basedir}/src/main/resources/Installer-Files" excludes="*.db" /> </copy> 
 											<copy todir="${project.build.directory}/wpsurls"> <fileset dir="${basedir}/src/main/resources/wpsurls" 
-											excludes="*.db" /></copy --> 
-										<copy file="${basedir}/src/main/resources/Installer-Files/logo52n-48x48.ico" 
+											excludes="*.db" /></copy -->
+										<copy
+											file="${basedir}/src/main/resources/Installer-Files/logo52n-48x48.ico"
 											tofile="${project.build.directory}/Installer-Files/logo52n-48x48.ico" />
 										<zip
-											destfile="${project.dependency.folder}/52n-wps-arcmap-client-logback-xml.jar"
+											destfile="${project.dependency.folder}/52n-wps-arcmap-client-log4j2-xml.jar"
 											update="true">
 											<fileset dir="${project.esriaddin.folder}/dist/">
-												<include name="logback.xml" />
+												<include name="log4j2.xml" />
 											</fileset>
 										</zip>
-										<copy file="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin" 
+										<copy file="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin"
 											tofile="${project.build.directory}/addins/ArcMapWPSClient.esriaddin" />
-										<copy file="${basedir}/src/main/resources/addins/AddWPSServerAddin.esriAddIn" 
+										<copy
+											file="${basedir}/src/main/resources/addins/AddWPSServerAddin.esriAddIn"
 											tofile="${project.build.directory}/addins/AddWPSServerAddin.esriaddin" />
 									</target>
 								</configuration>
