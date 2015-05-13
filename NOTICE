@@ -79,7 +79,7 @@ This project includes:
   Main module under Lesser General Public License (LGPL)
   mapscript under MapServer License (MIT license)
   Metadata under Lesser General Public License (LGPL)
-  OGC OWS schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC OWS schema (spec. v1.1.0) under The Apache Software License, Version 2.0
   OGC WPS schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   ogckml2.2 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
   Open GIS Interfaces under OGC copyright or Lesser General Public License (LGPL)
@@ -94,7 +94,7 @@ This project includes:
   stax-utils under BSD
   Support and utility classes under Simplified BSD
   vecmath under GNU General Public License (GPL), version 2, with the CLASSPATH exception
-  W3C xlink schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  W3C xlink schema (spec. v1.1.0) under The Apache Software License, Version 2.0
   Web Feature Service Model under Lesser General Public License (LGPL)
   WFS XML Support under Lesser General Public License (LGPL)
   WPS Client for ArcGIS under The Apache Software License, Version 2.0

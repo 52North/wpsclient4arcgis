@@ -18,6 +18,6 @@ package org.n52.client.arcmap.util;
 
 public enum InputTypeEnum {
 
-	Complex, Literal, Unknown
-	
+    Complex, Literal, Unknown
+
 }

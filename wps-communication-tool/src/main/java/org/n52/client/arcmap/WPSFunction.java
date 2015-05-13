@@ -475,8 +475,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
     public void updateParameters(IArray paramvalues,
             IGPEnvironmentManager envMgr) {
 
-        //TODO, we need to check if the chosen combination of mime type, schema, encoding is supported by the process
-        
+        // TODO, we need to check if the chosen combination of mime type,
+        // schema, encoding is supported by the process
+
         try {
             for (int i = 0; i < paramvalues.getCount(); i++) {
                 IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
@@ -488,12 +489,15 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     File tmpFile = new File(tmpParameterValue.getAsText());
 
                     if (!tmpFile.exists()) {
-                        //necessary for quick import?!
+                        // necessary for quick import?!
                         new File(tmpParameterValue.getAsText()).createNewFile();
 
-//                        String tmpFilePath = System.getenv("TMP") + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
-//
-//                        tmpParameterValue.setAsText(tmpFilePath);                        
+                        // String tmpFilePath = System.getenv("TMP") +
+                        // "wpsOutput" +
+                        // UUID.randomUUID().toString().substring(0, 5) +
+                        // ".tmp";
+                        //
+                        // tmpParameterValue.setAsText(tmpFilePath);
                     }
 
                 }
@@ -546,14 +550,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
 
             LOGGER.debug(execDoc.toString());
-            
+
             Object response = WPSClientSession.getInstance().execute(wpsURL, execDoc);
 
-            if(response instanceof ExecuteResponseDocument){
-            
-            handleExecuteResponse((ExecuteResponseDocument)response, paramvalues, parameterNameValueMap, messages);
-            
-            }else if(response instanceof ExceptionReportDocument){
+            if (response instanceof ExecuteResponseDocument) {
+
+                handleExecuteResponse((ExecuteResponseDocument) response, paramvalues, parameterNameValueMap, messages);
+
+            } else if (response instanceof ExceptionReportDocument) {
                 LOGGER.error("Something went wrong while executing the WPS process. Exceptionreport: {}", response.toString());
             }
 
@@ -583,7 +587,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
         boolean processFailed = response.getStatus() == null ? false : response.getStatus().isSetProcessFailed();
 
         OutputDataType[] outputs = response.getProcessOutputs().getOutputArray();
-        
+
         if (statusLocation != null && !statusLocation.equals("") && !processFinished) {
 
             // sleep for five seconds
@@ -606,14 +610,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
             handleExecuteResponse(executeDoc, paramvalues, parameterNameValueMap, messages);
             return;
-        }else if (processFinished) {
-            
+        } else if (processFinished) {
+
             for (OutputDataType outputDataType : outputs) {
 
                 DataType outputData = outputDataType.getData();
 
                 OutputReferenceType outputReference = outputDataType.getReference();
-                
+
                 String outputPath = "";
 
                 File outputFile = null;
@@ -626,8 +630,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
                         if (parameterNameValueMap.get(key) != null) {
                             outputPath = parameterNameValueMap.get(key);
                             /*
-                             * if this is RANDOM_FILE generate a temp file by leaving
-                             * output file null
+                             * if this is RANDOM_FILE generate a temp file by
+                             * leaving output file null
                              */
                             if (!outputPath.equals(randomFileString)) {
                                 outputFile = new File(outputPath);
@@ -636,7 +640,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                         break;
                     }
                 }
-                
+
                 String identifier = response.getProcessOutputs().getOutputArray(0).getIdentifier().getStringValue();
 
                 String encoding = parameterNameValueMap.get(identifier + "_encoding");
@@ -714,7 +718,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                     FileUtils.copyURLToFile(href, outputFile);
                 }
-                
+
             }
         }
 
@@ -820,15 +824,15 @@ public class WPSFunction extends BaseGeoprocessingTool {
                          */
                     }
 
-                    //split string coming from quick export
-                    if(value.contains(",")){
+                    // split string coming from quick export
+                    if (value.contains(",")) {
                         String[] parameters = value.split(",");
-                        
+
                         for (String parameter : parameters) {
                             try {
                                 File inputFile = new File(parameter);
-                                
-                                if(inputFile.exists()){
+
+                                if (inputFile.exists()) {
                                     value = parameter;
                                     break;
                                 }
@@ -844,7 +848,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                     if (mimeType != null && mimeType.contains("xml")) {
                         try {
-                            
+
                             DataType dataTypeVector = inTypeVector.addNewData();
 
                             ComplexDataType cDataTypeVector = dataTypeVector.addNewComplexData();
@@ -868,9 +872,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                                 cDataTypeVector.setSchema(schema);
                             }
-                            
+
                             if (encoding != null && !encoding.equals("")) {
-                                
+
                                 cDataTypeVector.setEncoding(encoding);
                             }
 
@@ -916,9 +920,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                                 cDataTypeVector.setSchema(schema);
                             }
-                            
+
                             if (encoding != null && !encoding.equals("")) {
-                                
+
                                 cDataTypeVector.setEncoding(encoding);
                             }
                         } catch (Exception e) {
@@ -1136,7 +1140,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
             if (supportedSchema != null && !supportedSchema.equals("")) {
                 schemas.add(supportedSchema);
             }
-            
+
             if (supportedEncoding != null && !supportedEncoding.equals("")) {
                 encodings.add(supportedEncoding);
             }

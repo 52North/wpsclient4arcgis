@@ -31,58 +31,62 @@ import com.esri.arcgis.interop.AutomationException;
  *
  */
 public class ShowDialogExtension extends Extension {
-	
-	private static Logger LOGGER = LoggerFactory.getLogger(ShowDialogExtension.class);
 
-	private IApplication app;
-	
-	private static ShowDialogExtension instance;	
-	
-	public static ShowDialogExtension getInstance(){
-		return instance;
-	}	
-	
-	/**
-	 * Initializes this application extension with the ArcMap application instance it is hosted in.
-	 * 
-	 * This method is automatically called by the host ArcMap application.
-	 * It marks the start of the dockable window's lifecycle.
-	 * Clients must not call this method.
-	 * 
-	 * @param app is a reference to ArcMap's IApplication interface
-	 * @exception java.io.IOException if there are interop problems.
-	 * @exception com.esri.arcgis.interop.AutomationException if the component throws an ArcObjects exception.
-	 */
-	@Override
-	public void init(IApplication arg0) throws IOException, AutomationException {
-		
-		this.app = arg0;
-		instance = this;
-		
-		ArcMapWPSClientDialog dialog = null;
-		
-		try {			
-			dialog = ArcMapWPSClientDialog.getInstance();			
-		} catch (Exception e) {
-			LOGGER.error("Error while getting dialog instance: ", e.getMessage());
-		}
-		
-		if(dialog == null){
-			
-			try {				
-				dialog = new ArcMapWPSClientDialog(arg0);
-				dialog.setVisible(true);				
-			} catch (Exception e) {			
-				LOGGER.error("Error while creating new dialog instance: ",  e.getMessage());
-			}
-		}else{
-			dialog.setVisible(true);
-			LOGGER.debug("Show dialog.");
-		}
+    private static Logger LOGGER = LoggerFactory.getLogger(ShowDialogExtension.class);
 
-	}
-	
-	public IApplication getApplication(){
-		return app;
-	}	
+    private IApplication app;
+
+    private static ShowDialogExtension instance;
+
+    public static ShowDialogExtension getInstance() {
+        return instance;
+    }
+
+    /**
+     * Initializes this application extension with the ArcMap application
+     * instance it is hosted in.
+     * 
+     * This method is automatically called by the host ArcMap application. It
+     * marks the start of the dockable window's lifecycle. Clients must not call
+     * this method.
+     * 
+     * @param app
+     *            is a reference to ArcMap's IApplication interface
+     * @exception java.io.IOException
+     *                if there are interop problems.
+     * @exception com.esri.arcgis.interop.AutomationException
+     *                if the component throws an ArcObjects exception.
+     */
+    @Override
+    public void init(IApplication arg0) throws IOException, AutomationException {
+
+        this.app = arg0;
+        instance = this;
+
+        ArcMapWPSClientDialog dialog = null;
+
+        try {
+            dialog = ArcMapWPSClientDialog.getInstance();
+        } catch (Exception e) {
+            LOGGER.error("Error while getting dialog instance: ", e.getMessage());
+        }
+
+        if (dialog == null) {
+
+            try {
+                dialog = new ArcMapWPSClientDialog(arg0);
+                dialog.setVisible(true);
+            } catch (Exception e) {
+                LOGGER.error("Error while creating new dialog instance: ", e.getMessage());
+            }
+        } else {
+            dialog.setVisible(true);
+            LOGGER.debug("Show dialog.");
+        }
+
+    }
+
+    public IApplication getApplication() {
+        return app;
+    }
 }
