@@ -30,6 +30,12 @@ import org.slf4j.LoggerFactory;
 
 import com.esri.arcgis.geoprocessing.tools.datamanagementtools.CopyFeatures;
 
+/**
+ * Generator class that creates a base64 encoded String and saves it to a file.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public class ShapefileGenerator extends AGenerator {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ShapefileGenerator.class);

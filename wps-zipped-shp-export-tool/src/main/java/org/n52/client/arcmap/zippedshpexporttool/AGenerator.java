@@ -22,6 +22,12 @@ import java.net.UnknownHostException;
 
 import com.esri.arcgis.geoprocessing.GeoProcessor;
 
+/**
+ * Abstract generator class that offers some convenience methods.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public abstract class AGenerator {
 
     protected String outputDir;

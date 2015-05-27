@@ -27,6 +27,8 @@ import com.esri.arcgis.framework.IApplication;
 import com.esri.arcgis.interop.AutomationException;
 
 /**
+ * ArcMap extension used to open the <code>ArcMapWPSClientDialog</code>.
+ * 
  * @author Benjamin Pross
  *
  */
@@ -35,12 +37,6 @@ public class ShowDialogExtension extends Extension {
     private static Logger LOGGER = LoggerFactory.getLogger(ShowDialogExtension.class);
 
     private IApplication app;
-
-    private static ShowDialogExtension instance;
-
-    public static ShowDialogExtension getInstance() {
-        return instance;
-    }
 
     /**
      * Initializes this application extension with the ArcMap application
@@ -61,12 +57,11 @@ public class ShowDialogExtension extends Extension {
     public void init(IApplication arg0) throws IOException, AutomationException {
 
         this.app = arg0;
-        instance = this;
 
         ArcMapWPSClientDialog dialog = null;
 
         try {
-            dialog = ArcMapWPSClientDialog.getInstance();
+            dialog = ArcMapWPSClientDialog.getInstance(app);
         } catch (Exception e) {
             LOGGER.error("Error while getting dialog instance: ", e.getMessage());
         }
@@ -84,9 +79,5 @@ public class ShowDialogExtension extends Extension {
             LOGGER.debug("Show dialog.");
         }
 
-    }
-
-    public IApplication getApplication() {
-        return app;
     }
 }

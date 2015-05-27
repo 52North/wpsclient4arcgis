@@ -25,10 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
-import org.n52.client.arcmap.base64conversiontool.util.Base64ConversionToolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +41,7 @@ import com.esri.arcgis.geodatabase.DERasterDatasetType;
 import com.esri.arcgis.geodatabase.IDataset;
 import com.esri.arcgis.geodatabase.IGPMessages;
 import com.esri.arcgis.geodatabase.IGPValue;
+import com.esri.arcgis.geodatabase.esriGPMessageSeverity;
 import com.esri.arcgis.geoprocessing.BaseGeoprocessingTool;
 import com.esri.arcgis.geoprocessing.GPCompositeDataType;
 import com.esri.arcgis.geoprocessing.GPDataFileType;
@@ -52,7 +51,6 @@ import com.esri.arcgis.geoprocessing.GPLayerType;
 import com.esri.arcgis.geoprocessing.GPParameter;
 import com.esri.arcgis.geoprocessing.GPRasterDataLayerType;
 import com.esri.arcgis.geoprocessing.GPRasterLayerType;
-import com.esri.arcgis.geoprocessing.GPString;
 import com.esri.arcgis.geoprocessing.GPStringType;
 import com.esri.arcgis.geoprocessing.IGPEnvironmentManager;
 import com.esri.arcgis.geoprocessing.IGPParameter;
@@ -64,6 +62,13 @@ import com.esri.arcgis.system.IArray;
 import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
+/**
+ * This class represents a ArcGIS geoprocessing tool that en-/decodes files in
+ * base64.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public class Base64ConversionTool extends BaseGeoprocessingTool {
 
     /**
@@ -73,7 +78,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Base64ConversionTool.class);
 
-    private String toolName = "Base64Conversion";
+    private String toolName = "Base64ConversionTool";
 
     private String displayName = "Base64 Conversion Tool";
 
@@ -84,10 +89,6 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
     private final String outputID = "out_file";
 
     private final String randomFileString = "RANDOM_FILE";
-
-    private File inputFile;
-
-    private byte[] inputFileAsByteArray;
 
     public Base64ConversionTool() {
 
@@ -125,7 +126,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
     public IArray getParameterInfo() throws IOException, AutomationException {
         IArray parameters = new Array();
 
-        GPParameter parameter4 = new GPParameter();
+        GPParameter inputParameter = new GPParameter();
 
         GPCompositeDataType composite = new GPCompositeDataType();
         composite.addDataType(new DERasterBandType());
@@ -141,29 +142,24 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         composite.addDataType(new DETextFileType());
         composite.addDataType(new GPDataFileType());
         composite.addDataType(new DEFileType());
+        composite.addDataType(new GPStringType());
 
-        parameter4.setName(inputID);
-        parameter4.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter4.setDisplayName("Input file");
-        parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
-        parameter4.setDataTypeByRef(composite);
+        inputParameter.setName(inputID);
+        inputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
+        inputParameter.setDisplayName("Input file");
+        inputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
+        inputParameter.setDataTypeByRef(composite);
         // parameter4.setValueByRef(new GPString());
-        parameters.add(parameter4);
+        parameters.add(inputParameter);
 
-        GPParameter parameter41 = new GPParameter();
-        parameter41.setName(outputID);
-        parameter41.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
-        parameter41.setDisplayName("Output file");
-        parameter41.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
-        parameter41.setDataTypeByRef(composite);
-
-        GPString gpRandomFileString = new GPString();
-
-        gpRandomFileString.setAsText(randomFileString);
-
-        parameter41.setValueByRef(gpRandomFileString);
-        // parameter41.addDependency(inputID);
-        parameters.add(parameter41);
+        GPParameter outputParameter = new GPParameter();
+        outputParameter.setName(outputID);
+        outputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
+        outputParameter.setDisplayName("Output file");
+        outputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
+        outputParameter.setDataTypeByRef(composite);
+        
+        parameters.add(outputParameter);
 
         return parameters;
     }
@@ -184,78 +180,86 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
          * assume that output should not be base64 encoded else assume that
          * output should be base64 encoded and add ".base64" before extension
          */
-        boolean outputShouldBeBase64 = false;
-
-        IGPValue inputFilePathGPValue = null;
-        IGPValue outputFilePathGPValue = null;
-
-        try {
-            for (int i = 0; i < paramvalues.getCount(); i++) {
-                IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
-                IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
-                if (tmpParameter.getName().equals(inputID)) {
-                    if (!tmpParameter.isAltered()) {
-                        return;
-                    }
-                    inputFilePathGPValue = tmpParameterValue;
-
-                } else if (tmpParameter.getName().equals(outputID)) {
-                    outputFilePathGPValue = tmpParameterValue;
-                }
-            }
-
-            if (!outputFilePathGPValue.getAsText().equals(randomFileString)) {
-                return;
-            }
-
-            String inputFilePath = inputFilePathGPValue.getAsText();
-
-            if (inputFilePathGPValue instanceof IGPLayer) {
-                ILayer layer = gpUtilities.findMapLayer(inputFilePath);
-                if (layer instanceof IDataset) {
-                    inputFilePath = ((IDataset) layer).getWorkspace().getPathName() + File.separator + inputFilePath;
-                }
-            }
-            inputFile = new File(inputFilePath);
-            outputShouldBeBase64 = !Base64ConversionToolUtil.checkBase64InputFile(new File(inputFilePath), inputFileAsByteArray);
-
-            if (outputFilePathGPValue == null || outputFilePathGPValue.getAsText().equals("") || outputFilePathGPValue.getAsText().equals(randomFileString)) {
-
-                /*
-                 * create temp file with same extension as input file
-                 */
-                String extension = "dat";
-                String inputFileName = inputFile.getName();
-
-                if (inputFile.getName().lastIndexOf(".") != -1) {
-                    extension = inputFileName.substring(inputFileName.lastIndexOf("."));
-                }
-                if (outputShouldBeBase64) {
-                    extension = ".base64" + extension;
-                }
-                String newOutputFilePath = System.getenv("TMP") + File.separator + "base64Conversion" + UUID.randomUUID().toString().substring(0, 6) + extension;
-
-                outputFilePathGPValue.setAsText(newOutputFilePath);
-            } else {
-
-                String outputFilePathFromGPValue = outputFilePathGPValue.getAsText();
-
-                boolean pathHasChanged = false;
-
-                String newOutputFilePath = Base64ConversionToolUtil.getNewOutputFileNameIfApplicable(outputShouldBeBase64, outputFilePathFromGPValue);
-
-                if (!outputFilePathFromGPValue.equals(newOutputFilePath)) {
-                    pathHasChanged = true;
-                }
-
-                if (pathHasChanged) {
-                    outputFilePathGPValue.setAsText(newOutputFilePath);
-                }
-            }
-
-        } catch (Exception e) {
-            LOGGER.error("Error in updating parameters method", e);
-        }
+        // boolean outputShouldBeBase64 = false;
+        //
+        // IGPValue inputFilePathGPValue = null;
+        // IGPValue outputFilePathGPValue = null;
+        //
+        // try {
+        // for (int i = 0; i < paramvalues.getCount(); i++) {
+        // IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
+        // IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
+        // if (tmpParameter.getName().equals(inputID)) {
+        // if (!tmpParameter.isAltered()) {
+        // return;
+        // }
+        // inputFilePathGPValue = tmpParameterValue;
+        //
+        // } else if (tmpParameter.getName().equals(outputID)) {
+        // outputFilePathGPValue = tmpParameterValue;
+        // }
+        // }
+        //
+        // if (!outputFilePathGPValue.getAsText().equals(randomFileString)) {
+        // return;
+        // }
+        //
+        // String inputFilePath = inputFilePathGPValue.getAsText();
+        //
+        // if (inputFilePathGPValue instanceof IGPLayer) {
+        // ILayer layer = gpUtilities.findMapLayer(inputFilePath);
+        // if (layer instanceof IDataset) {
+        // inputFilePath = ((IDataset) layer).getWorkspace().getPathName() +
+        // File.separator + inputFilePath;
+        // }
+        // }
+        // inputFile = new File(inputFilePath);
+        // outputShouldBeBase64 =
+        // !Base64ConversionToolUtil.checkBase64InputFile(new
+        // File(inputFilePath));
+        //
+        // if (outputFilePathGPValue == null ||
+        // outputFilePathGPValue.getAsText().equals("") ||
+        // outputFilePathGPValue.getAsText().equals(randomFileString)) {
+        //
+        // /*
+        // * create temp file with same extension as input file
+        // */
+        // String extension = "dat";
+        // String inputFileName = inputFile.getName();
+        //
+        // if (inputFile.getName().lastIndexOf(".") != -1) {
+        // extension = inputFileName.substring(inputFileName.lastIndexOf("."));
+        // }
+        // if (outputShouldBeBase64) {
+        // extension = ".base64" + extension;
+        // }
+        // String newOutputFilePath = System.getenv("TMP") + "base64Conversion"
+        // + UUID.randomUUID().toString().substring(0, 6) + extension;
+        //
+        // outputFilePathGPValue.setAsText(newOutputFilePath);
+        // } else {
+        //
+        // String outputFilePathFromGPValue = outputFilePathGPValue.getAsText();
+        //
+        // boolean pathHasChanged = false;
+        //
+        // String newOutputFilePath =
+        // Base64ConversionToolUtil.getNewOutputFileNameIfApplicable(outputShouldBeBase64,
+        // outputFilePathFromGPValue);
+        //
+        // if (!outputFilePathFromGPValue.equals(newOutputFilePath)) {
+        // pathHasChanged = true;
+        // }
+        //
+        // if (pathHasChanged) {
+        // outputFilePathGPValue.setAsText(newOutputFilePath);
+        // }
+        // }
+        //
+        // } catch (Exception e) {
+        // LOGGER.error("Error in updating parameters method", e);
+        // }
 
     }
 
@@ -351,7 +355,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
             treatBase64(inputFile, outputFile, messages, paramvalues);
         } catch (Exception e) {
             LOGGER.error("Something went wrong while de-/encoding file in base64", e);
-            messages.addMessage("Something went wrong while de-/encoding file in base64");
+            messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Something went wrong while de-/encoding file in base64");
         }
 
         messages.addMessage("success");
@@ -420,7 +424,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         }
     }
 
-    public void writeBase64(byte[] content,
+    private void writeBase64(byte[] content,
             File outputFile) throws Exception {
         String stringToWrite = Base64.encodeBase64String(content);
 
@@ -431,7 +435,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         writer.close();
     }
 
-    public void write(byte[] content,
+    private void write(byte[] content,
             File outputFile) throws Exception {
 
         byte[] bytes = Base64.decodeBase64(content);

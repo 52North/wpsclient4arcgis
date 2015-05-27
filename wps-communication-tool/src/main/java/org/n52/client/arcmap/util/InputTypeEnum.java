@@ -16,6 +16,12 @@
  */
 package org.n52.client.arcmap.util;
 
+/**
+ * Enum representing the supported WPS input types and an unknown type for non-supported types.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public enum InputTypeEnum {
 
     Complex, Literal, Unknown

@@ -51,6 +51,14 @@ import com.esri.arcgis.system.IArray;
 import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
+/**
+ * This class represents a ArcGIS geoprocessing tool that exports vector data 
+ * as shapefiles, zips the files and encodes the zip file in base64.
+ * This can be used as inline complex data for WPS execute requests.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
 
     /**
@@ -60,7 +68,7 @@ public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ZippedShapefileExportTool.class);
 
-    private String toolName = "ZippedShapefileExport";
+    private String toolName = "ZippedShapefileExportTool";
 
     private String displayName = "Java Zipped Shapefile Export Tool";
 

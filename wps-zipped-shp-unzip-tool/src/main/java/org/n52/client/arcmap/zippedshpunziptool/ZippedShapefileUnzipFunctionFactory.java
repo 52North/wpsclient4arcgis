@@ -33,6 +33,13 @@ import com.esri.arcgis.system.IUID;
 import com.esri.arcgis.system.UID;
 import com.esri.arcgis.system.esriProductCode;
 
+/**
+ * This class represents the function factory for the 
+ * ZippedShapefileUnzip ArcGIS geoprocessing tool.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 @ArcGISExtension(
         categories = { ArcGISCategories.GPFunctionFactories })
 public class ZippedShapefileUnzipFunctionFactory implements IGPFunctionFactory {

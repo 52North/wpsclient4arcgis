@@ -62,7 +62,7 @@ public class Base64ConversionToolTest {
 		
 		boolean isBase64;
 		try {
-			isBase64 = Base64ConversionToolUtil.checkBase64InputFile(file, new byte[(int) file.length()]);
+			isBase64 = Base64ConversionToolUtil.checkBase64InputFile(file);
 			
 			assertTrue(isBase64);
 		} catch (Exception e) {

@@ -44,7 +44,6 @@ import net.opengis.wps.x100.CapabilitiesDocument;
 import net.opengis.wps.x100.ProcessBriefType;
 import net.opengis.wps.x100.WPSCapabilitiesType;
 
-import org.n52.client.ShowDialogExtension;
 import org.n52.client.arcmap.WPSFunctionFactory;
 import org.n52.wps.client.WPSClientException;
 import org.n52.wps.client.WPSClientSession;
@@ -73,7 +72,7 @@ import com.esri.arcgis.interop.AutomationException;
 import com.esri.arcgis.version.VersionManager;
 
 /**
- * jDialog form connecting to WPS servers and adding processes to ArcMap
+ * <code>jDialog</code> form used for connecting to WPS servers and adding processes to ArcMap.
  * 
  * @author Benjamin Pross
  *
@@ -137,10 +136,10 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private File arcmapWPSClientAppData;
 
-    public static ArcMapWPSClientDialog getInstance() {
+    public static ArcMapWPSClientDialog getInstance(IApplication app) {
 
         if (instance == null) {
-            instance = new ArcMapWPSClientDialog(ShowDialogExtension.getInstance().getApplication());
+            instance = new ArcMapWPSClientDialog(app);
         }
         return instance;
     }
@@ -522,6 +521,11 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     }
 
+    /**
+     * Returns the processes selected in the <code>processTree</code>.
+     * 
+     * @return <code>ArrayList<String></code> containing the selected processes
+     */
     public ArrayList<String> getSelectedProcesses() {
 
         TreePath[] paths = processTree.getSelectionPaths();
@@ -535,6 +539,11 @@ public class ArcMapWPSClientDialog extends JDialog {
         return selectedProcesses;
     }
 
+    /**
+     * Returns the URL of the selected WPS.
+     * 
+     * @return <code>String</code> containing the URL of the selected WPS
+     */
     public String getWPSUrl() {
         return wpsUrlsComboBox.getSelectedItem().toString().trim();
     }
@@ -594,10 +603,20 @@ public class ArcMapWPSClientDialog extends JDialog {
         }
     }
 
+    /**
+     * Returns the current <code>IApplication</code>.
+     * 
+     * @return the current <code>IApplication</code>
+     */
     public IApplication getApplication() {
         return app;
     }
 
+
+
+    /**
+     * Called when the dialog is closed.
+     */
     public void dispose() {
         super.dispose();
         try {
@@ -637,7 +656,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
         IGxObject child = children.next();
 
-        GxToolbox toolbocObject = null;
+        GxToolbox toolboxObject = null;
 
         while (child != null) {
 
@@ -650,7 +669,7 @@ public class ArcMapWPSClientDialog extends JDialog {
                 new VersionManager().getActiveVersion(pCode, pVer, pPath);
 
                 // did not find another way to do this...
-                toolbocObject = new GxToolbox(child);
+                toolboxObject = new GxToolbox(child);
 
                 ToolboxWorkspaceFactory fac = new ToolboxWorkspaceFactory();
 
@@ -690,17 +709,17 @@ public class ArcMapWPSClientDialog extends JDialog {
 
                     wpsfac.functionNames.add(identifier + "@" + url);
 
-                    IGPFunction f = wpsfac.getFunction(identifier + "@" + url);
+                    IGPFunction function = wpsfac.getFunction(identifier + "@" + url);
 
-                    IGPTool t9 = tbox.createTool(esriGPToolType.esriGPFunctionTool, identifier, identifier, identifier, url, null);
+                    IGPTool tool = tbox.createTool(esriGPToolType.esriGPFunctionTool, identifier, identifier, identifier, url, null);
 
-                    IGPFunctionTool ft = new IGPFunctionToolProxy(t9);
+                    IGPFunctionTool functiontool = new IGPFunctionToolProxy(tool);
 
-                    ft.setFunctionByRef(f);
+                    functiontool.setFunctionByRef(function);
 
-                    t9.store();
+                    tool.store();
                 }
-                toolbocObject.refresh();
+                toolboxObject.refresh();
                 break;
             }
             child = children.next();

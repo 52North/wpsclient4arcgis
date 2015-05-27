@@ -33,6 +33,13 @@ import com.esri.arcgis.system.IUID;
 import com.esri.arcgis.system.UID;
 import com.esri.arcgis.system.esriProductCode;
 
+/**
+ * This class represents the function factory for the 
+ * Base64Conversion ArcGIS geoprocessing tool.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 @ArcGISExtension(
         categories = { ArcGISCategories.GPFunctionFactories })
 public class Base64ConversionFactory implements IGPFunctionFactory {
@@ -48,7 +55,7 @@ public class Base64ConversionFactory implements IGPFunctionFactory {
 
     private String category = "Base64ConversionJavaToolset";
 
-    private String base64ConversionToolName = "Base64Conversion";
+    private String base64ConversionToolName = "Base64ConversionTool";
 
     private String base64ConversionToolDisplayName = "Base64 Conversion Tool";
 

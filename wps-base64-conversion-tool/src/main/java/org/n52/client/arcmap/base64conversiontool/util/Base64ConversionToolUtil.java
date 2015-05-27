@@ -22,8 +22,22 @@ import java.io.InputStream;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+ * Utility class for the <code>Base64ConversionTool</code>.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public class Base64ConversionToolUtil {
 
+    
+    /**
+     * This method adds a .base64 file extension, if the output file should be encoded in base64.
+     * 
+     * @param outputShouldBeBase64 True if the output should be encoded in base64. The output file will get an additional .base64 extension.
+     * @param outputFilePathFromGPValue The output file path specified by the <code>Base64ConversionTool</code> GP tool.
+     * @return The new file path.
+     */
     public static String getNewOutputFileNameIfApplicable(boolean outputShouldBeBase64,
             String outputFilePathFromGPValue) {
         /*
@@ -45,12 +59,18 @@ public class Base64ConversionToolUtil {
         return newOutputFilePath;
     }
 
-    public static boolean checkBase64InputFile(File inputFile,
-            byte[] inputFileAsByteArray) throws Exception {
+    /**
+     * Checks if the content of a file is encoded in base64.
+     * 
+     * @param inputFile The file which content should be checked.
+     * @return True if the content of a file is encoded in base64.
+     * @throws Exception If the file could not be read.
+     */
+    public static boolean checkBase64InputFile(File inputFile) throws Exception {
 
         InputStream in = new FileInputStream(inputFile);
 
-        inputFileAsByteArray = new byte[(int) inputFile.length()];
+        byte[] inputFileAsByteArray = new byte[(int) inputFile.length()];
 
         in.read(inputFileAsByteArray);
 

@@ -66,6 +66,13 @@ import com.esri.arcgis.system.IArray;
 import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
+/**
+ * This class represents a ArcGIS geoprocessing tool that unzips 
+ * shapefiles. The shapefiles can be encoded as base64. 
+ * 
+ * @author Benjamin Pross
+ *
+ */
 public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
 
     /**

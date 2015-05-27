@@ -89,10 +89,8 @@ import com.esri.arcgis.datainterop.FMESourceDatasetType;
 import com.esri.arcgis.datasourcesfile.DEFile;
 import com.esri.arcgis.datasourcesfile.DEFileType;
 import com.esri.arcgis.framework.IApplication;
-import com.esri.arcgis.geodatabase.GPMessage;
 import com.esri.arcgis.geodatabase.IGPCodedValueDomain;
 import com.esri.arcgis.geodatabase.IGPDomain;
-import com.esri.arcgis.geodatabase.IGPMessage;
 import com.esri.arcgis.geodatabase.IGPMessages;
 import com.esri.arcgis.geodatabase.IGPValue;
 import com.esri.arcgis.geodatabase.esriGPMessageSeverity;
@@ -121,6 +119,10 @@ import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
 /**
+ * This class represents a ArcGIS geoprocessing tool that communicates with 
+ * Web Processing Services (WPS). It reads in files for complex data inputs and
+ * produces files again for complex output data of the WPS.
+ * 
  * @author Benjamin Pross
  *
  */
@@ -144,8 +146,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
     public static IApplication app;
 
     private final String outputPrefix = "out_";
-
-    private final String randomFileString = "RANDOM_FILE";
 
     public WPSFunction() {
 
@@ -273,34 +273,23 @@ public class WPSFunction extends BaseGeoprocessingTool {
             case Complex:
 
                 GPCompositeDataType composite = new GPCompositeDataType();
-                // composite.addDataType(new DERasterBandType());
-                // composite.addDataType(new DERasterDatasetType());
-                // composite.addDataType(new GPRasterLayerType());
-                // composite.addDataType(new GPRasterDataLayerType());
-                // composite.addDataType(new GPFeatureLayerType());
-                // composite.addDataType(new DEFeatureClassType());
-                // composite.addDataType(new GPLayerType());
-                // composite.addDataType(new DELayerType());
-                // composite.addDataType(new GPFeatureRecordSetLayerType());
-                // composite.addDataType(new DETextFileType());
                 composite.addDataType(new DEFileType());
                 composite.addDataType(new GPStringType());
                 composite.addDataType(new FMEDestDatasetType());
-                // composite.addDataType(new DEDatasetType());
-                GPParameter parameter4 = new GPParameter();
+                GPParameter complexParameter = new GPParameter();
 
-                parameter4.setName(labelText);
-                parameter4.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-                parameter4.setDisplayName(labelText);
+                complexParameter.setName(labelText);
+                complexParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
+                complexParameter.setDisplayName(labelText);
                 if (currentDescriptionType.getMinOccurs().intValue() > 0) {
-                    parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
+                    complexParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
                 } else {
-                    parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
+                    complexParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
                 }
 
-                parameter4.setDataTypeByRef(composite);
-                parameter4.setValueByRef(new GPString());
-                parameters.add(parameter4);
+                complexParameter.setDataTypeByRef(composite);
+                complexParameter.setValueByRef(new GPString());
+                parameters.add(complexParameter);
 
                 addSchemaMimeTypeEncodingToParameters(parameters, currentDescriptionType);
 
@@ -313,14 +302,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 break;
 
             case Literal:
-                GPParameter parameter2 = new GPParameter();
-                parameter2.setName(labelText);
-                parameter2.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-                parameter2.setDisplayName(labelText);
+                GPParameter literalParameter = new GPParameter();
+                literalParameter.setName(labelText);
+                literalParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
+                literalParameter.setDisplayName(labelText);
                 if (currentDescriptionType.getMinOccurs().intValue() > 0) {
-                    parameter2.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
+                    literalParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
                 } else {
-                    parameter2.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
+                    literalParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
                 }
 
                 DomainMetadataType dataType = currentDescriptionType.getLiteralData().getDataType();
@@ -342,23 +331,23 @@ public class WPSFunction extends BaseGeoprocessingTool {
                             /*
                              * try this to avoid decimal point/comma issues
                              */
-                            parameter2.setDataTypeByRef(new GPStringType());
-                            parameter2.setValueByRef(new GPString());
+                            literalParameter.setDataTypeByRef(new GPStringType());
+                            literalParameter.setValueByRef(new GPString());
                         } else if (dataTypeString.contains("string")) {
-                            parameter2.setDataTypeByRef(new GPStringType());
-                            parameter2.setValueByRef(new GPString());
+                            literalParameter.setDataTypeByRef(new GPStringType());
+                            literalParameter.setValueByRef(new GPString());
                         } else if (dataTypeString.contains("integer") || dataTypeString.contains("int")) {
-                            parameter2.setDataTypeByRef(new GPLongType());
-                            parameter2.setValueByRef(new GPLong());
+                            literalParameter.setDataTypeByRef(new GPLongType());
+                            literalParameter.setValueByRef(new GPLong());
                         } else if (dataTypeString.contains("dateTime")) {
-                            parameter2.setDataTypeByRef(new GPDateType());
-                            parameter2.setValueByRef(new GPDate());
+                            literalParameter.setDataTypeByRef(new GPDateType());
+                            literalParameter.setValueByRef(new GPDate());
                         } else if (dataTypeString.contains("boolean") || dataTypeString.contains("bool")) {
-                            parameter2.setDataTypeByRef(new GPBooleanType());
-                            parameter2.setValueByRef(new GPBoolean());
+                            literalParameter.setDataTypeByRef(new GPBooleanType());
+                            literalParameter.setValueByRef(new GPBoolean());
                         } else if (dataTypeString.contains("float")) {
-                            parameter2.setDataTypeByRef(new GPDoubleType());
-                            parameter2.setValueByRef(new GPDouble());
+                            literalParameter.setDataTypeByRef(new GPDoubleType());
+                            literalParameter.setValueByRef(new GPDouble());
                         } else {
                             noDataTypeFound = true;
                         }
@@ -387,13 +376,13 @@ public class WPSFunction extends BaseGeoprocessingTool {
                             domain.addStringCode(string, string);
                         }
                         // Assign the domain to the parameter.
-                        parameter2.setDomainByRef((IGPDomain) domain);
+                        literalParameter.setDomainByRef((IGPDomain) domain);
 
                     }
                     if (!noDataTypeFound) {
-                        parameters.add(parameter2);
+                        parameters.add(literalParameter);
                     } else {
-                        parameter2.setDataTypeByRef(new GPStringType());
+                        literalParameter.setDataTypeByRef(new GPStringType());
 
                         String defaultValue = currentDescriptionType.getLiteralData().getDefaultValue();
 
@@ -403,11 +392,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                             gpString.setValue(defaultValue);
 
-                            parameter2.setValueByRef(gpString);
+                            literalParameter.setValueByRef(gpString);
                         } else {
-                            parameter2.setValueByRef(new GPString());
+                            literalParameter.setValueByRef(new GPString());
                         }
-                        parameters.add(parameter2);
+                        parameters.add(literalParameter);
                     }
 
                 } catch (Exception e) {
@@ -432,12 +421,12 @@ public class WPSFunction extends BaseGeoprocessingTool {
             composite.addDataType(new FMESourceDatasetType());
             composite.addDataType(new DEFileType());
             composite.addDataType(new GPStringType());
-            GPParameter parameter4 = new GPParameter();
-            parameter4.setName(outputPrefix + outDescType.getIdentifier().getStringValue());
-            parameter4.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
-            parameter4.setDisplayName(outDescType.getIdentifier().getStringValue());
-            parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
-            parameter4.setDataTypeByRef(new DEFileType());
+            GPParameter outputParameter = new GPParameter();
+            outputParameter.setName(outputPrefix + outDescType.getIdentifier().getStringValue());
+            outputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
+            outputParameter.setDisplayName(outDescType.getIdentifier().getStringValue());
+            outputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
+            outputParameter.setDataTypeByRef(new DEFileType());
 
             DEFile file = new DEFile();
 
@@ -445,12 +434,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             file.setAsText(tmpFilePath);
 
-            GPString gpRandomFileString = new GPString();
-
-            gpRandomFileString.setAsText(tmpFilePath);
-
-            parameter4.setValueByRef(file);
-            parameters.add(parameter4);
+            outputParameter.setValueByRef(file);
+            parameters.add(outputParameter);
 
             addSchemaMimeTypeEncodingToParameters(parameters, outDescType);
 
@@ -489,7 +474,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     File tmpFile = new File(tmpParameterValue.getAsText());
 
                     if (!tmpFile.exists()) {
-                        // necessary for quick import?!
+                        // necessary for quick export?!
                         new File(tmpParameterValue.getAsText()).createNewFile();
 
                         // String tmpFilePath = System.getenv("TMP") +
@@ -618,32 +603,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                 OutputReferenceType outputReference = outputDataType.getReference();
 
-                String outputPath = "";
+                String identifier = outputDataType.getIdentifier().getStringValue();
+                
+                String outputPath = parameterNameValueMap.get(outputPrefix + identifier);
 
-                File outputFile = null;
-
-                for (String key : parameterNameValueMap.keySet()) {
-                    if (key.startsWith(outputPrefix)) {
-                        /*
-                         * there should be only one
-                         */
-                        if (parameterNameValueMap.get(key) != null) {
-                            outputPath = parameterNameValueMap.get(key);
-                            /*
-                             * if this is RANDOM_FILE generate a temp file by
-                             * leaving output file null
-                             */
-                            if (!outputPath.equals(randomFileString)) {
-                                outputFile = new File(outputPath);
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                String identifier = response.getProcessOutputs().getOutputArray(0).getIdentifier().getStringValue();
-
-                String encoding = parameterNameValueMap.get(identifier + "_encoding");
+                File outputFile = new File(outputPath);
 
                 String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
 
@@ -651,32 +615,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                 if (extension == null || extension.equals("")) {
                     extension = "dat";
-                }
-
-                /*
-                 * if input is not base64 assume that output should be
-                 */
-                boolean outputShouldBeBase64 = false;
-
-                if (encoding != null) {
-                    outputShouldBeBase64 = encoding.equals("base64");
-                }
-
-                if (outputFile == null) {
-
-                    if (outputShouldBeBase64) {
-                        extension = ".base64." + extension;
-                    }
-                    outputFile = File.createTempFile("wpsFunction", "." + extension);
-                }
-
-                for (int i = 0; i < paramvalues.getCount(); i++) {
-                    IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
-                    IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
-                    if (tmpParameter.getName().equals(outputPrefix + identifier)) {
-                        tmpParameterValue.setAsText(outputFile.getAbsolutePath());
-                    }
-
                 }
 
                 String s = "";
@@ -988,57 +926,45 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
         }
 
-        if (outputDescTypes.size() > 1) {
-            LOGGER.error("More than one output currently not supported.");
-            try {
-                IGPMessage errorMessage = new GPMessage();
-                errorMessage.setErrorCode(esriGPMessageSeverity.esriGPMessageSeverityError);
-                errorMessage.setDescription("Currently only one output is allowed. Found " + outputDescTypes.size() + ".");
-                messages.add(errorMessage);
-            } catch (Exception e) {
-                /*
-                 * ignore
-                 */
-            }
-            throw new IllegalArgumentException();
-        }
-
         ResponseFormType responseForm = ex.addNewResponseForm();
 
         ResponseDocumentType responseDocument = responseForm.addNewResponseDocument();
 
-        DocumentOutputDefinitionType output = responseDocument.addNewOutput();
+        for (OutputDescriptionType outputDescriptionType : outputDescTypes) {
+            
+            String identifier = outputDescriptionType.getIdentifier().getStringValue();
 
-        String identifier = outputDescTypes.get(0).getIdentifier().getStringValue();
+            DocumentOutputDefinitionType output = responseDocument.addNewOutput();
+            
+            output.addNewIdentifier().setStringValue(identifier);
+            /*
+             * TODO: add strategy for empty schema/mimetype/encoding
+             */
+            String schema = parameterNameValueMap.get(identifier + "_schema");
+            LOGGER.debug("Schema = " + schema);
 
-        output.addNewIdentifier().setStringValue(identifier);
-        /*
-         * TODO: add strategy for empty schema/mimetype/encoding
-         */
-        String schema = parameterNameValueMap.get(identifier + "_schema");
-        LOGGER.debug("Schema = " + schema);
+            String mimeType1 = parameterNameValueMap.get(identifier + "_mimetype");
+            LOGGER.debug("Mime Type = " + mimeType1);
 
-        String mimeType1 = parameterNameValueMap.get(identifier + "_mimetype");
-        LOGGER.debug("Mime Type = " + mimeType1);
+            String encoding = parameterNameValueMap.get(identifier + "_encoding");
+            LOGGER.debug("Mime Type = " + encoding);
 
-        String encoding = parameterNameValueMap.get(identifier + "_encoding");
-        LOGGER.debug("Mime Type = " + encoding);
+            String isReference = parameterNameValueMap.get(identifier + "_reference");
+            LOGGER.debug("IsReference = " + isReference);
 
-        String isReference = parameterNameValueMap.get(identifier + "_reference");
-        LOGGER.debug("IsReference = " + isReference);
+            if (isReference != null && Boolean.parseBoolean(isReference)) {
+                output.setAsReference(true);
+            }
 
-        if (isReference != null && Boolean.parseBoolean(isReference)) {
-            output.setAsReference(true);
-        }
-
-        if (mimeType1 != null && !mimeType1.equals("")) {
-            output.setMimeType(mimeType1);
-        }
-        if (encoding != null && !encoding.equals("")) {
-            output.setEncoding(encoding);
-        }
-        if (schema != null && !schema.equals("")) {
-            output.setSchema(schema);
+            if (mimeType1 != null && !mimeType1.equals("")) {
+                output.setMimeType(mimeType1);
+            }
+            if (encoding != null && !encoding.equals("")) {
+                output.setEncoding(encoding);
+            }
+            if (schema != null && !schema.equals("")) {
+                output.setSchema(schema);
+            }
         }
 
     }

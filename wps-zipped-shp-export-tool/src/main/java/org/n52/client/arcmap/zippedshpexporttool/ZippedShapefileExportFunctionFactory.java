@@ -33,6 +33,13 @@ import com.esri.arcgis.system.IUID;
 import com.esri.arcgis.system.UID;
 import com.esri.arcgis.system.esriProductCode;
 
+/**
+ * This class represents the function factory for the 
+ * ZippedShapefileExport ArcGIS geoprocessing tool.
+ * 
+ * @author Benjamin Pross
+ *
+ */
 @ArcGISExtension(
         categories = { ArcGISCategories.GPFunctionFactories })
 public class ZippedShapefileExportFunctionFactory implements IGPFunctionFactory {
@@ -48,7 +55,7 @@ public class ZippedShapefileExportFunctionFactory implements IGPFunctionFactory 
 
     private String category = "ZippedShapefileExportJavaToolset";
 
-    private String toolName = "ZippedShapefileExport";
+    private String toolName = "ZippedShapefileExportTool";
 
     private String toolDisplayName = "Java Zipped Shapefile Export Tool";
 
