@@ -43,7 +43,7 @@ public class ShapefileGenerator extends AGenerator {
     public void generateBase64EncodedString(String layerName,
             String resultFilename) throws Exception {
 
-        outputDir = getOutputDir() + File.separator + "52n" + File.separator + "tmp";
+        outputDir = getOutputDir() + File.separator + "tmp";
 
         cleanAndRecreateDirectory(outputDir);
 

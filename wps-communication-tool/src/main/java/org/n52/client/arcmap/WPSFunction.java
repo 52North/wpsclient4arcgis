@@ -85,7 +85,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.esri.arcgis.datainterop.FMEDestDatasetType;
-import com.esri.arcgis.datainterop.FMESourceDatasetType;
 import com.esri.arcgis.datasourcesfile.DEFile;
 import com.esri.arcgis.datasourcesfile.DEFileType;
 import com.esri.arcgis.framework.IApplication;
@@ -416,21 +415,19 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 LOGGER.info("Skipping non-complex output {}", outDescType.getIdentifier().getStringValue());
                 continue;
             }
-
-            GPCompositeDataType composite = new GPCompositeDataType();
-            composite.addDataType(new FMESourceDatasetType());
-            composite.addDataType(new DEFileType());
-            composite.addDataType(new GPStringType());
+            
+            String identifier = outDescType.getIdentifier().getStringValue();
+            
             GPParameter outputParameter = new GPParameter();
-            outputParameter.setName(outputPrefix + outDescType.getIdentifier().getStringValue());
+            outputParameter.setName(outputPrefix + identifier);
             outputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
-            outputParameter.setDisplayName(outDescType.getIdentifier().getStringValue());
+            outputParameter.setDisplayName(identifier);
             outputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
             outputParameter.setDataTypeByRef(new DEFileType());
 
             DEFile file = new DEFile();
 
-            String tmpFilePath = System.getenv("TMP") + "wpsOutput" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
+            String tmpFilePath = System.getenv("TMP") + identifier + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
 
             file.setAsText(tmpFilePath);
 
@@ -440,7 +437,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
             addSchemaMimeTypeEncodingToParameters(parameters, outDescType);
 
             try {
-                addReferenceParameter(outDescType.getIdentifier().getStringValue(), parameters, esriGPParameterDirection.esriGPParameterDirectionOutput);
+                addReferenceParameter(identifier, parameters, esriGPParameterDirection.esriGPParameterDirectionOutput);
             } catch (Exception e) {
                 LOGGER.error("Could not add reference parameter", e);
             }
@@ -467,25 +464,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
             for (int i = 0; i < paramvalues.getCount(); i++) {
                 IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
                 IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
-
-                if (tmpParameter.getName().startsWith("out") && tmpParameterValue instanceof DEFile && tmpParameterValue.getAsText().endsWith("tmp")) {
-                    // assume tmp file name was not touched, so if the file
-                    // exists, create a different tmp file
-                    File tmpFile = new File(tmpParameterValue.getAsText());
-
-                    if (!tmpFile.exists()) {
-                        // necessary for quick export?!
-                        new File(tmpParameterValue.getAsText()).createNewFile();
-
-                        // String tmpFilePath = System.getenv("TMP") +
-                        // "wpsOutput" +
-                        // UUID.randomUUID().toString().substring(0, 5) +
-                        // ".tmp";
-                        //
-                        // tmpParameterValue.setAsText(tmpFilePath);
-                    }
-
-                }
 
                 LOGGER.info("check " + tmpParameter.getName());
                 LOGGER.info("Value: " + tmpParameterValue.getAsText());
@@ -617,6 +595,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     extension = "dat";
                 }
 
+                LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+                messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+
                 String s = "";
 
                 if (outputData != null) {
@@ -625,6 +606,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                     s = nodeToString(cData.getDomNode().getFirstChild());
 
+                    //TODO check if still necessary
                     if (!response.toString().contains("application/x-zipped-shp")) {
 
                         if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
@@ -640,9 +622,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
                             LOGGER.debug("ComplexData content " + s);
                         }
                     }
-
-                    LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
-                    messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
 
                     BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
 

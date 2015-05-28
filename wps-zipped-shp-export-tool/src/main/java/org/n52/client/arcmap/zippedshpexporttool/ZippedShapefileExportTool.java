@@ -68,15 +68,17 @@ public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ZippedShapefileExportTool.class);
 
-    private String toolName = "ZippedShapefileExportTool";
-
-    private String displayName = "Java Zipped Shapefile Export Tool";
-
-    private String metadataFileName = toolName + ".xml";
-
     private final String randomFileString = "RANDOM_FILE";
 
-    private final String resultName = "zipped_shapefile";
+    private final String inputName = "in_layer";
+    
+    private final String resultName = "out_zipped_shapefile";
+
+    public static final String toolName = "ZippedShapefileExportTool";
+
+    public static final String displayName = "Java Zipped Shapefile Export Tool";
+
+    private String metadataFileName = toolName + ".xml";
 
     public ZippedShapefileExportTool() {
 
@@ -126,9 +128,9 @@ public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
         compositeVector.addDataType(new GPDataFileType());
         compositeVector.addDataType(new DEFileType());
 
-        parameter4.setName("in_layer");
+        parameter4.setName(inputName);
         parameter4.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter4.setDisplayName("Input Filename");
+        parameter4.setDisplayName(inputName);
         parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
         parameter4.setDataTypeByRef(compositeVector);
         parameter4.setValueByRef(new DEFeatureClass());

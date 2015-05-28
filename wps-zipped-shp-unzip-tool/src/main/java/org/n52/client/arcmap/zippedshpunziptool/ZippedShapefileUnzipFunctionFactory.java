@@ -55,9 +55,9 @@ public class ZippedShapefileUnzipFunctionFactory implements IGPFunctionFactory {
 
     private String category = "ZippedShapefileUnzipJavaToolset";
 
-    private String toolName = "ZippedShapefileUnzipTool";
+    private String toolName = ZippedShapefileUnzipTool.toolName;
 
-    private String toolDisplayName = "Java Zipped Shapefile Unzip Tool";
+    private String toolDisplayName = ZippedShapefileUnzipTool.displayName;
 
     /**
      * Returns the appropriate GPFunction object based on specified tool name
@@ -77,7 +77,7 @@ public class ZippedShapefileUnzipFunctionFactory implements IGPFunctionFactory {
         if (name.equalsIgnoreCase(toolName)) {
             GPFunctionName functionName = new GPFunctionName();
             functionName.setCategory(category);
-            functionName.setDescription("Tool for unzipping zipped shapefiles.");
+            functionName.setDescription("Tool for unzipping zipped shapefiles, either encoded in base64 or not.");
             functionName.setDisplayName(toolDisplayName);
             functionName.setName(toolName);
             functionName.setMinimumProduct(esriProductCode.esriProductCodeAdvanced);

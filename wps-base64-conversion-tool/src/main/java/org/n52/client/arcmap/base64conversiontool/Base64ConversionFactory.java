@@ -55,9 +55,9 @@ public class Base64ConversionFactory implements IGPFunctionFactory {
 
     private String category = "Base64ConversionJavaToolset";
 
-    private String base64ConversionToolName = "Base64ConversionTool";
+    private String base64ConversionToolName = Base64ConversionTool.toolName;
 
-    private String base64ConversionToolDisplayName = "Base64 Conversion Tool";
+    private String base64ConversionToolDisplayName = Base64ConversionTool.displayName;
 
     /**
      * Returns the appropriate GPFunction object based on specified tool name
@@ -77,7 +77,7 @@ public class Base64ConversionFactory implements IGPFunctionFactory {
         if (name.equalsIgnoreCase(base64ConversionToolName)) {
             GPFunctionName functionName = new GPFunctionName();
             functionName.setCategory(category);
-            functionName.setDescription("This tool converts files to base64 encoded files and vice versa - implemented in Java");
+            functionName.setDescription("This tool converts files to base64 encoded files and vice versa.");
             functionName.setDisplayName(base64ConversionToolDisplayName);
             functionName.setName(base64ConversionToolName);
             functionName.setMinimumProduct(esriProductCode.esriProductCodeAdvanced);

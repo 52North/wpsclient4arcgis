@@ -25,12 +25,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.esri.arcgis.carto.ILayer;
+import com.esri.arcgis.datasourcesfile.DEFile;
 import com.esri.arcgis.datasourcesfile.DEFileType;
 import com.esri.arcgis.datasourcesfile.DELayerType;
 import com.esri.arcgis.datasourcesfile.DETextFileType;
@@ -78,17 +80,17 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
 
     private static Logger LOGGER = LoggerFactory.getLogger(Base64ConversionTool.class);
 
-    private String toolName = "Base64ConversionTool";
-
-    private String displayName = "Base64 Conversion Tool";
-
-    private String metadataFileName = toolName + ".xml";
-
     private final String inputID = "in_file";
 
     private final String outputID = "out_file";
 
     private final String randomFileString = "RANDOM_FILE";
+
+    public static final String toolName = "Base64ConversionTool";
+
+    public static final String displayName = "Base64 Conversion Tool";
+
+    private String metadataFileName = toolName + ".xml";
 
     public Base64ConversionTool() {
 
@@ -142,7 +144,6 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         composite.addDataType(new DETextFileType());
         composite.addDataType(new GPDataFileType());
         composite.addDataType(new DEFileType());
-        composite.addDataType(new GPStringType());
 
         inputParameter.setName(inputID);
         inputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
@@ -157,7 +158,15 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         outputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
         outputParameter.setDisplayName("Output file");
         outputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
-        outputParameter.setDataTypeByRef(composite);
+        outputParameter.setDataTypeByRef(new DEFileType());
+        
+        DEFile file = new DEFile();
+
+        String tmpFilePath = System.getenv("TMP") + "base64conversion" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
+
+        file.setAsText(tmpFilePath);
+
+        outputParameter.setValueByRef(file);
         
         parameters.add(outputParameter);
 
@@ -173,94 +182,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
      * value.
      */
     public void updateParameters(IArray paramvalues,
-            IGPEnvironmentManager envMgr) {
-
-        /*
-         * get input file path check file whether it is base64 encoded if it is
-         * assume that output should not be base64 encoded else assume that
-         * output should be base64 encoded and add ".base64" before extension
-         */
-        // boolean outputShouldBeBase64 = false;
-        //
-        // IGPValue inputFilePathGPValue = null;
-        // IGPValue outputFilePathGPValue = null;
-        //
-        // try {
-        // for (int i = 0; i < paramvalues.getCount(); i++) {
-        // IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
-        // IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
-        // if (tmpParameter.getName().equals(inputID)) {
-        // if (!tmpParameter.isAltered()) {
-        // return;
-        // }
-        // inputFilePathGPValue = tmpParameterValue;
-        //
-        // } else if (tmpParameter.getName().equals(outputID)) {
-        // outputFilePathGPValue = tmpParameterValue;
-        // }
-        // }
-        //
-        // if (!outputFilePathGPValue.getAsText().equals(randomFileString)) {
-        // return;
-        // }
-        //
-        // String inputFilePath = inputFilePathGPValue.getAsText();
-        //
-        // if (inputFilePathGPValue instanceof IGPLayer) {
-        // ILayer layer = gpUtilities.findMapLayer(inputFilePath);
-        // if (layer instanceof IDataset) {
-        // inputFilePath = ((IDataset) layer).getWorkspace().getPathName() +
-        // File.separator + inputFilePath;
-        // }
-        // }
-        // inputFile = new File(inputFilePath);
-        // outputShouldBeBase64 =
-        // !Base64ConversionToolUtil.checkBase64InputFile(new
-        // File(inputFilePath));
-        //
-        // if (outputFilePathGPValue == null ||
-        // outputFilePathGPValue.getAsText().equals("") ||
-        // outputFilePathGPValue.getAsText().equals(randomFileString)) {
-        //
-        // /*
-        // * create temp file with same extension as input file
-        // */
-        // String extension = "dat";
-        // String inputFileName = inputFile.getName();
-        //
-        // if (inputFile.getName().lastIndexOf(".") != -1) {
-        // extension = inputFileName.substring(inputFileName.lastIndexOf("."));
-        // }
-        // if (outputShouldBeBase64) {
-        // extension = ".base64" + extension;
-        // }
-        // String newOutputFilePath = System.getenv("TMP") + "base64Conversion"
-        // + UUID.randomUUID().toString().substring(0, 6) + extension;
-        //
-        // outputFilePathGPValue.setAsText(newOutputFilePath);
-        // } else {
-        //
-        // String outputFilePathFromGPValue = outputFilePathGPValue.getAsText();
-        //
-        // boolean pathHasChanged = false;
-        //
-        // String newOutputFilePath =
-        // Base64ConversionToolUtil.getNewOutputFileNameIfApplicable(outputShouldBeBase64,
-        // outputFilePathFromGPValue);
-        //
-        // if (!outputFilePathFromGPValue.equals(newOutputFilePath)) {
-        // pathHasChanged = true;
-        // }
-        //
-        // if (pathHasChanged) {
-        // outputFilePathGPValue.setAsText(newOutputFilePath);
-        // }
-        // }
-        //
-        // } catch (Exception e) {
-        // LOGGER.error("Error in updating parameters method", e);
-        // }
-
+            IGPEnvironmentManager envMgr) {        
     }
 
     /**

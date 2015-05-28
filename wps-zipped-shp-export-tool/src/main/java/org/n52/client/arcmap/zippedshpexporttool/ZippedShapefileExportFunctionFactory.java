@@ -55,9 +55,9 @@ public class ZippedShapefileExportFunctionFactory implements IGPFunctionFactory 
 
     private String category = "ZippedShapefileExportJavaToolset";
 
-    private String toolName = "ZippedShapefileExportTool";
+    private String toolName = ZippedShapefileExportTool.toolName;
 
-    private String toolDisplayName = "Java Zipped Shapefile Export Tool";
+    private String toolDisplayName = ZippedShapefileExportTool.displayName;
 
     /**
      * Returns the appropriate GPFunction object based on specified tool name
@@ -77,7 +77,7 @@ public class ZippedShapefileExportFunctionFactory implements IGPFunctionFactory 
         if (name.equalsIgnoreCase(toolName)) {
             GPFunctionName functionName = new GPFunctionName();
             functionName.setCategory(category);
-            functionName.setDescription("Tool for exporting layers as shapefiles and zipping them.");
+            functionName.setDescription("Tool for exporting layers as zipped shapefiles.");
             functionName.setDisplayName(toolDisplayName);
             functionName.setName(toolName);
             functionName.setMinimumProduct(esriProductCode.esriProductCodeAdvanced);

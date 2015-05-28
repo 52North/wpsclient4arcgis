@@ -23,7 +23,7 @@
 		</Async>
 	</Appenders>
 	<Loggers>
-		<Logger name="org.n52.client" level="info" additivity="false">
+		<Logger name="org.n52.client" level="debug" additivity="false">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="Async" />
 		</Logger>

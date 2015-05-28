@@ -81,9 +81,38 @@ OutFile "52n-Extensible-WPS-ArcMap-Client-${project.version}-Setup.exe"
 
 Section ""
 
+  SetOutPath $INSTDIR\java\jre\lib\ext
+
+  File .\dependency\52n-wps-arcmap-client-log4j2-xml.jar
+  File .\dependency\52n-wps-client-lib-3.2.0.jar
+  File .\dependency\52n-wps-commons-3.2.0.jar
+  File .\dependency\52n-wps-config-1.2.1.jar
+  File .\dependency\52n-wps-io-3.2.0.jar
+  File .\dependency\52n-wps-io-impl-3.2.0.jar
+  File .\dependency\52n-xml-ows-v110-2.1.0.jar
+  File .\dependency\52n-xml-wps-v100-1.1.0.jar
+  File .\dependency\52n-xml-xlink-v110-2.1.0.jar
+  File .\dependency\commons-codec-1.8.jar
+  File .\dependency\commons-io-2.4.jar
+  File .\dependency\jcl-over-slf4j-1.7.5.jar
+  File .\dependency\jul-to-slf4j-1.7.5.jar
+  File .\dependency\log4j-api-2.0.2.jar
+  File .\dependency\log4j-core-2.0.2.jar
+  File .\dependency\log4j-over-slf4j-1.7.5.jar
+  File .\dependency\log4j-slf4j-impl-2.0.2.jar
+  File .\dependency\slf4j-api-1.7.5.jar
+  File .\dependency\xmlbeans-2.4.0.jar
+
+SectionEnd 
+
+Section ""
+
   SetOutPath $INSTDIR\java\lib\ext
 
-  File /r .\dependency\*.* 
+  File .\dependency\wps-base64-conversion-tool-${project.version}.jar
+  File .\dependency\wps-communication-tool-${project.version}.jar
+  File .\dependency\wps-zipped-shp-export-tool-${project.version}.jar
+  File .\dependency\wps-zipped-shp-unzip-tool-${project.version}.jar
 
 SectionEnd 
 
@@ -118,29 +147,29 @@ Section "Uninstall"
 
   delete $INSTDIR\bin\addins\AddWPSServerAddin.esriAddIn  
   delete $INSTDIR\bin\addins\ArcMapWPSClient.esriaddin
-  delete $INSTDIR\java\lib\ext\52n-wps-arcmap-client-logback-xml.jar
-  delete $INSTDIR\java\lib\ext\52n-wps-client-lib-3.2.0.jar
-  delete $INSTDIR\java\lib\ext\52n-wps-commons-3.2.0.jar
-  delete $INSTDIR\java\lib\ext\52n-wps-config-1.2.1.jar
-  delete $INSTDIR\java\lib\ext\52n-wps-io-3.2.0.jar
-  delete $INSTDIR\java\lib\ext\52n-wps-io-impl-3.2.0.jar
-  delete $INSTDIR\java\lib\ext\52n-xml-ows-v110-1.1.0.jar
-  delete $INSTDIR\java\lib\ext\52n-xml-wps-v100-1.1.0.jar
-  delete $INSTDIR\java\lib\ext\52n-xml-xlink-v110-1.0.0.jar
-  delete $INSTDIR\java\lib\ext\commons-codec-1.8.jar
-  delete $INSTDIR\java\lib\ext\commons-io-2.4.jar
-  delete $INSTDIR\java\lib\ext\jcl-over-slf4j-1.7.5.jar
-  delete $INSTDIR\java\lib\ext\jul-to-slf4j-1.7.5.jar
-  delete $INSTDIR\java\lib\ext\log4j-over-slf4j-1.7.5.jar
-  delete $INSTDIR\java\lib\ext\logback-classic-1.0.13.jar
-  delete $INSTDIR\java\lib\ext\logback-core-1.0.13.jar
-  delete $INSTDIR\java\lib\ext\slf4j-api-1.7.5.jar
-  delete $INSTDIR\java\lib\ext\slf4j-simple-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-arcmap-client-logback-xml.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-client-lib-3.2.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-commons-3.2.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-config-1.2.1.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-io-3.2.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-wps-io-impl-3.2.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-xml-ows-v110-1.1.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-xml-wps-v100-1.1.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-xml-xlink-v110-1.0.0.jar
+  delete $INSTDIR\java\jre\lib\ext\commons-codec-1.8.jar
+  delete $INSTDIR\java\jre\lib\ext\commons-io-2.4.jar
+  delete $INSTDIR\java\jre\lib\ext\jcl-over-slf4j-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\jul-to-slf4j-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\log4j-over-slf4j-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\logback-classic-1.0.13.jar
+  delete $INSTDIR\java\jre\lib\ext\logback-core-1.0.13.jar
+  delete $INSTDIR\java\jre\lib\ext\slf4j-api-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\slf4j-simple-1.7.5.jar
+  delete $INSTDIR\java\lib\ext\xmlbeans-2.4.0.jar
   delete $INSTDIR\java\lib\ext\wps-base64-conversion-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-communication-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-zipped-shp-export-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-zipped-shp-unzip-tool-${project.version}.jar
-  delete $INSTDIR\java\lib\ext\xmlbeans-2.4.0.jar
   delete "$DESKTOP\Uninstall the 52 North Extensible WPS ArcMap Client.lnk"
   RMDir /r "$APPDATA\52North\"
 

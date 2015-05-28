@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -35,24 +36,13 @@ import org.apache.commons.codec.binary.Base64InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.esri.arcgis.datasourcesfile.DEFile;
 import com.esri.arcgis.datasourcesfile.DEFileType;
-import com.esri.arcgis.datasourcesfile.DELayerType;
-import com.esri.arcgis.datasourcesfile.DETextFileType;
-import com.esri.arcgis.geodatabase.DEFeatureClass;
-import com.esri.arcgis.geodatabase.DEFeatureClassType;
-import com.esri.arcgis.geodatabase.DERasterBandType;
-import com.esri.arcgis.geodatabase.DERasterDatasetType;
 import com.esri.arcgis.geodatabase.IGPMessages;
 import com.esri.arcgis.geodatabase.IGPValue;
+import com.esri.arcgis.geodatabase.esriGPMessageSeverity;
 import com.esri.arcgis.geoprocessing.BaseGeoprocessingTool;
-import com.esri.arcgis.geoprocessing.GPCompositeDataType;
-import com.esri.arcgis.geoprocessing.GPDataFileType;
-import com.esri.arcgis.geoprocessing.GPFeatureLayerType;
-import com.esri.arcgis.geoprocessing.GPFeatureRecordSetLayerType;
-import com.esri.arcgis.geoprocessing.GPLayerType;
 import com.esri.arcgis.geoprocessing.GPParameter;
-import com.esri.arcgis.geoprocessing.GPRasterDataLayerType;
-import com.esri.arcgis.geoprocessing.GPRasterLayerType;
 import com.esri.arcgis.geoprocessing.GPString;
 import com.esri.arcgis.geoprocessing.GPStringType;
 import com.esri.arcgis.geoprocessing.GeoProcessor;
@@ -82,9 +72,15 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ZippedShapefileUnzipTool.class);
 
-    private String toolName = "ZippedShapefileUnzipTool";
+    private final String inputName = "in_zipped_shapefile";
+    
+    private final String encodingName = "in_encoding";
+    
+    private final String resultName = "out_shapefile";
 
-    private String displayName = "Java Zipped Shapefile Unzip Tool";
+    public static final String displayName = "Zipped Shapefile Unzip Tool";
+
+    public static final String toolName = "ZippedShapefileUnzipTool";
 
     private String metadataFileName = toolName + ".xml";
 
@@ -136,73 +132,40 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
     public IArray getParameterInfo() throws IOException, AutomationException {
         IArray parameters = new Array();
 
-        GPParameter parameter4 = new GPParameter();
+        GPParameter fileNameParameter = new GPParameter();
+        fileNameParameter.setName(inputName);
+        fileNameParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
+        fileNameParameter.setDisplayName(inputName);
+        fileNameParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
+        fileNameParameter.setDataTypeByRef(new DEFileType());
+        fileNameParameter.setValueByRef(new GPString());
+        parameters.add(fileNameParameter);
 
-        GPCompositeDataType composite = new GPCompositeDataType();
-        composite.addDataType(new DERasterBandType());
-        composite.addDataType(new DERasterDatasetType());
-        composite.addDataType(new GPRasterLayerType());
-        composite.addDataType(new GPRasterDataLayerType());
-        composite.addDataType(new GPStringType());
-        composite.addDataType(new GPFeatureLayerType());
-        composite.addDataType(new DEFeatureClassType());
-        composite.addDataType(new GPLayerType());
-        composite.addDataType(new DELayerType());
-        composite.addDataType(new GPFeatureRecordSetLayerType());
-        composite.addDataType(new DETextFileType());
-        composite.addDataType(new GPDataFileType());
-        composite.addDataType(new DEFileType());
+        GPParameter encodingParameter = new GPParameter();
+        encodingParameter.setName(encodingName);
+        encodingParameter.setDisplayName(encodingName);
+        encodingParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
+        encodingParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
+        encodingParameter.setDataTypeByRef(new GPStringType());
+        encodingParameter.setValueByRef(new GPString());
+        parameters.add(encodingParameter);
 
-        parameter4.setName("in_filename");
-        parameter4.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter4.setDisplayName("Input Filename");
-        parameter4.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
-        parameter4.setDataTypeByRef(composite);
-        parameter4.setValueByRef(new GPString());
-        parameters.add(parameter4);
+        GPParameter resultParameter = new GPParameter();
+        resultParameter.setName(resultName);
+        resultParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
+        resultParameter.setDisplayName(resultName);
+        resultParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
+        resultParameter.setDataTypeByRef(new DEFileType());
 
-        GPParameter parameter;
-        // Define parameter 3: Field type
-        parameter = new GPParameter();
-        parameter.setName("in_schema");
-        parameter.setDisplayName("Schema");
-        parameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
-        parameter.setDataTypeByRef(new GPStringType());
-        parameter.setValueByRef(new GPString());
-        parameters.add(parameter);
+        DEFile file = new DEFile();
 
-        GPParameter parameter1;
-        // Define parameter 3: Field type
-        parameter1 = new GPParameter();
-        parameter1.setName("in_mimetype");
-        parameter1.setDisplayName("Mime Type");
-        parameter1.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter1.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
-        parameter1.setDataTypeByRef(new GPStringType());
-        parameter1.setValueByRef(new GPString());
+        String proposedFilePath = System.getenv("TMP") + resultName + UUID.randomUUID().toString().substring(0, 5) + ".shp";
 
-        parameters.add(parameter1);
+        file.setAsText(proposedFilePath);
 
-        GPParameter parameter11;
-        // Define parameter 3: Field type
-        parameter11 = new GPParameter();
-        parameter11.setName("in_encoding");
-        parameter11.setDisplayName("Encoding");
-        parameter11.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
-        parameter11.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
-        parameter11.setDataTypeByRef(new GPStringType());
-        parameter11.setValueByRef(new GPString());
-        parameters.add(parameter11);
-
-        GPParameter parameter41 = new GPParameter();
-        parameter41.setName("result");
-        parameter41.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
-        parameter41.setDisplayName("result");
-        parameter41.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
-        parameter41.setDataTypeByRef(new DEFeatureClassType());
-        parameter41.setValueByRef(new DEFeatureClass());
-        parameters.add(parameter41);
+        resultParameter.setValueByRef(file);
+        
+        parameters.add(resultParameter);
 
         return parameters;
     }
@@ -276,22 +239,22 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
 
         String encoding = "";
 
-        if (parameterNameValueMap.get("in_filename") != null) {
-            inputPath = parameterNameValueMap.get("in_filename");
+        if (parameterNameValueMap.get(inputName) != null) {
+            inputPath = parameterNameValueMap.get(inputName);
         }
 
         LOGGER.debug("inputpath " + inputPath);
         messages.addMessage("Reading from file: " + inputPath);
 
-        if (parameterNameValueMap.get("in_encoding") != null) {
-            encoding = parameterNameValueMap.get("in_encoding");
+        if (parameterNameValueMap.get(encodingName) != null) {
+            encoding = parameterNameValueMap.get(encodingName);
         }
 
         /*
          * there should be only one
          */
-        if (parameterNameValueMap.get("result") != null) {
-            outputPath = parameterNameValueMap.get("result");
+        if (parameterNameValueMap.get(resultName) != null) {
+            outputPath = parameterNameValueMap.get(resultName);
         }
 
         messages.addMessage(outputPath);
@@ -316,12 +279,12 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
 
             LOGGER.debug("Tmp dir " + tmpDir);
 
-            File tmpZipFile = new File(tmpDir + File.separator + "52n" + File.separator + "out" + File.separator + "output.zip");
+            File tmpZipFile = new File(tmpDir + File.separator + "out" + File.separator + "output.zip");
             LOGGER.debug("Output ParentFile " + tmpZipFile.getParent());
             try {
-
                 tmpZipFile.getParentFile().mkdirs();
             } catch (Exception e) {
+                messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Something went wrong while trying to create temporary zip file:" + tmpZipFile.getAbsolutePath());
                 LOGGER.debug("Exception " + e);
             }
             byteOut.writeTo(new FileOutputStream(tmpZipFile));
@@ -366,8 +329,9 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
                     dest.close();
                 }
                 zis.close();
-            } catch (Exception e5) {
-                e5.printStackTrace();
+            } catch (Exception e) {
+                LOGGER.error("Could not unzip file.", e);
+                messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Could not unzip file.");
             }
         }
     }
@@ -383,7 +347,6 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
      * Returns status of license
      */
     public boolean isLicensed() throws IOException, AutomationException {
-        // no license checking is being done in this sample.
         return true;
     }
 }
