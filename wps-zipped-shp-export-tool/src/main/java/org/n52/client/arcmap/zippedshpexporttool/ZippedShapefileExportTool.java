@@ -76,7 +76,7 @@ public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
 
     public static final String toolName = "ZippedShapefileExportTool";
 
-    public static final String displayName = "Java Zipped Shapefile Export Tool";
+    public static final String displayName = "Zipped Shapefile Export Tool";
 
     private String metadataFileName = toolName + ".xml";
 

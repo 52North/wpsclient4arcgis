@@ -77,7 +77,7 @@
 				<filtering>true</filtering>
 				<targetPath>${project.build.directory}</targetPath>
 				<excludes>
-					<exclude>logback.xml</exclude>
+					<exclude>log4j2.xml</exclude>
 					<exclude>**/*.ico</exclude>
 					<exclude>**/*.esriAddIn</exclude>
 				</excludes>
@@ -264,29 +264,6 @@
 							</execution>
 						</executions>
 					</plugin>
-					<!-- <plugin> -->
-					<!-- <groupId>com.google.code.maven-replacer-plugin</groupId> -->
-					<!-- <artifactId>replacer</artifactId> -->
-					<!-- <version>1.5.2</version> -->
-					<!-- <executions> -->
-					<!-- <execution> -->
-					<!-- <phase></phase> -->
-					<!-- <goals> -->
-					<!-- <goal>replace</goal> -->
-					<!-- </goals> -->
-					<!-- </execution> -->
-					<!-- </executions> -->
-					<!-- <configuration> -->
-					<!-- <file>${project.build.directory}/WPS-Installer.nsi</file> -->
-					<!-- <regex>false</regex> -->
-					<!-- <replacements> -->
-					<!-- <replacement> -->
-					<!-- <token>%version%</token> -->
-					<!-- <value>${project.version}</value> -->
-					<!-- </replacement> -->
-					<!-- </replacements> -->
-					<!-- </configuration> -->
-					<!-- </plugin> -->
 				</plugins>
 			</build>
 		</profile>

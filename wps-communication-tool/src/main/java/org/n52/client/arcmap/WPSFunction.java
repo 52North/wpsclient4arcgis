@@ -551,7 +551,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         OutputDataType[] outputs = response.getProcessOutputs().getOutputArray();
 
-        if (statusLocation != null && !statusLocation.equals("") && !processFinished) {
+        if (statusLocation != null && !statusLocation.equals("") && !processFinished  && !processFailed) {
 
             // sleep for five seconds
             try {
