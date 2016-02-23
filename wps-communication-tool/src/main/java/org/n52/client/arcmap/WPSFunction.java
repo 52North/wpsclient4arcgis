@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -118,17 +118,17 @@ import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
 /**
- * This class represents a ArcGIS geoprocessing tool that communicates with 
+ * This class represents a ArcGIS geoprocessing tool that communicates with
  * Web Processing Services (WPS). It reads in files for complex data inputs and
  * produces files again for complex output data of the WPS.
- * 
+ *
  * @author Benjamin Pross
  *
  */
 public class WPSFunction extends BaseGeoprocessingTool {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2980889352605483580L;
 
@@ -415,9 +415,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 LOGGER.info("Skipping non-complex output {}", outDescType.getIdentifier().getStringValue());
                 continue;
             }
-            
+
             String identifier = outDescType.getIdentifier().getStringValue();
-            
+
             GPParameter outputParameter = new GPParameter();
             outputParameter.setName(outputPrefix + identifier);
             outputParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionOutput);
@@ -582,7 +582,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 OutputReferenceType outputReference = outputDataType.getReference();
 
                 String identifier = outputDataType.getIdentifier().getStringValue();
-                
+
                 String outputPath = parameterNameValueMap.get(outputPrefix + identifier);
 
                 File outputFile = new File(outputPath);
@@ -910,11 +910,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
         ResponseDocumentType responseDocument = responseForm.addNewResponseDocument();
 
         for (OutputDescriptionType outputDescriptionType : outputDescTypes) {
-            
+
             String identifier = outputDescriptionType.getIdentifier().getStringValue();
 
             DocumentOutputDefinitionType output = responseDocument.addNewOutput();
-            
+
             output.addNewIdentifier().setStringValue(identifier);
             /*
              * TODO: add strategy for empty schema/mimetype/encoding

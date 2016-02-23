@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ import com.esri.arcgis.geoprocessing.tools.datamanagementtools.CopyFeatures;
 
 /**
  * Generator class that creates a base64 encoded String and saves it to a file.
- * 
+ *
  * @author Benjamin Pross
  *
  */

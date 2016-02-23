@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -67,14 +67,14 @@ import com.esri.arcgis.system.ITrackCancel;
 /**
  * This class represents a ArcGIS geoprocessing tool that en-/decodes files in
  * base64.
- * 
+ *
  * @author Benjamin Pross
  *
  */
 public class Base64ConversionTool extends BaseGeoprocessingTool {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -8229199587241414416L;
 
@@ -159,7 +159,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         outputParameter.setDisplayName("Output file");
         outputParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
         outputParameter.setDataTypeByRef(new DEFileType());
-        
+
         DEFile file = new DEFile();
 
         String tmpFilePath = System.getenv("TMP") + "base64conversion" + UUID.randomUUID().toString().substring(0, 5) + ".tmp";
@@ -167,7 +167,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
         file.setAsText(tmpFilePath);
 
         outputParameter.setValueByRef(file);
-        
+
         parameters.add(outputParameter);
 
         return parameters;
@@ -182,7 +182,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
      * value.
      */
     public void updateParameters(IArray paramvalues,
-            IGPEnvironmentManager envMgr) {        
+            IGPEnvironmentManager envMgr) {
     }
 
     /**
@@ -286,7 +286,7 @@ public class Base64ConversionTool extends BaseGeoprocessingTool {
     /**
      * This method encodes/decodes files in/from base64 depending on the input
      * file.
-     * 
+     *
      * @param inputFile
      *            The input file decoded in base64 or not
      * @param outputFile

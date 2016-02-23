@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,25 +57,25 @@ import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
 /**
- * This class represents a ArcGIS geoprocessing tool that unzips 
- * shapefiles. The shapefiles can be encoded as base64. 
- * 
+ * This class represents a ArcGIS geoprocessing tool that unzips
+ * shapefiles. The shapefiles can be encoded as base64.
+ *
  * @author Benjamin Pross
  *
  */
 public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2796504233317967922L;
 
     private static Logger LOGGER = LoggerFactory.getLogger(ZippedShapefileUnzipTool.class);
 
     private final String inputName = "in_zipped_shapefile";
-    
+
     private final String encodingName = "in_encoding";
-    
+
     private final String resultName = "out_shapefile";
 
     public static final String displayName = "Zipped Shapefile Unzip Tool";
@@ -164,7 +164,7 @@ public class ZippedShapefileUnzipTool extends BaseGeoprocessingTool {
         file.setAsText(proposedFilePath);
 
         resultParameter.setValueByRef(file);
-        
+
         parameters.add(resultParameter);
 
         return parameters;

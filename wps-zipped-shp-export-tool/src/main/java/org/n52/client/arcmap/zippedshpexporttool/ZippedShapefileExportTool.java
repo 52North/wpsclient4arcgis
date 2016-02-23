@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,17 +52,17 @@ import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
 
 /**
- * This class represents a ArcGIS geoprocessing tool that exports vector data 
+ * This class represents a ArcGIS geoprocessing tool that exports vector data
  * as shapefiles, zips the files and encodes the zip file in base64.
  * This can be used as inline complex data for WPS execute requests.
- * 
+ *
  * @author Benjamin Pross
  *
  */
 public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2667973686420068297L;
 
@@ -71,7 +71,7 @@ public class ZippedShapefileExportTool extends BaseGeoprocessingTool {
     private final String randomFileString = "RANDOM_FILE";
 
     private final String inputName = "in_layer";
-    
+
     private final String resultName = "out_zipped_shapefile";
 
     public static final String toolName = "ZippedShapefileExportTool";

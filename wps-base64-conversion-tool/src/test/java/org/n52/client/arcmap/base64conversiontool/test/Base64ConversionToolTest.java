@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,49 +26,49 @@ import org.n52.client.arcmap.base64conversiontool.util.Base64ConversionToolUtil;
 
 public class Base64ConversionToolTest {
 
-	
+
 	@Test
 	public void testGetNewOutputFileNameAddBase64(){
-		
+
 		String path = "./elev_ned_30m1_cropped.tif";
-		
+
 		String newPath = Base64ConversionToolUtil.getNewOutputFileNameIfApplicable(true, path);
-		
+
 		System.out.println(newPath);
-		
+
 		assertTrue(newPath.contains(".base64.tif"));
-		
+
 	}
-	
+
 	@Test
 	public void testGetNewOutputFileNameRemoveBase64(){
-		
+
 		String path = "./mockupData.base64.tif";
-		
+
 		String newPath = Base64ConversionToolUtil.getNewOutputFileNameIfApplicable(false, path);
-		
+
 		System.out.println(newPath);
-		
+
 		assertTrue(!newPath.contains(".base64"));
-		
+
 	}
-	
+
 	@Test
 	public void testCheckBase64(){
-		
+
 		String path = "src/test/resources/mockupData.base64.tif";
-		
+
 		File file = new File(path);
-		
+
 		boolean isBase64;
 		try {
 			isBase64 = Base64ConversionToolUtil.checkBase64InputFile(file);
-			
+
 			assertTrue(isBase64);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		
+
 	}
-	
+
 }

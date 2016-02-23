@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ import com.esri.arcgis.geoprocessing.GeoProcessor;
 
 /**
  * Abstract generator class that offers some convenience methods.
- * 
+ *
  * @author Benjamin Pross
  *
  */
@@ -49,7 +49,7 @@ public abstract class AGenerator {
 
     /**
      * Returns output directory
-     * 
+     *
      * @return
      */
     public String getOutputDir() {
@@ -62,7 +62,7 @@ public abstract class AGenerator {
 
     /**
      * Empties specified directory of all files, deletes and re-creates it
-     * 
+     *
      * @param dirName
      *            String
      */
@@ -75,7 +75,7 @@ public abstract class AGenerator {
     /**
      * Deletes all files in specified directory and then deletes the directory
      * as well
-     * 
+     *
      * @param Path
      *            String
      */

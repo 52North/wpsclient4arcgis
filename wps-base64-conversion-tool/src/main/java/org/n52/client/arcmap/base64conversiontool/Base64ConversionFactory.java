@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,9 +34,9 @@ import com.esri.arcgis.system.UID;
 import com.esri.arcgis.system.esriProductCode;
 
 /**
- * This class represents the function factory for the 
+ * This class represents the function factory for the
  * Base64Conversion ArcGIS geoprocessing tool.
- * 
+ *
  * @author Benjamin Pross
  *
  */
@@ -45,7 +45,7 @@ import com.esri.arcgis.system.esriProductCode;
 public class Base64ConversionFactory implements IGPFunctionFactory {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6282191862777911563L;
 

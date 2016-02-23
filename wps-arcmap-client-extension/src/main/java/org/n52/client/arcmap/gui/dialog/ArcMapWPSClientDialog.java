@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,14 +73,14 @@ import com.esri.arcgis.version.VersionManager;
 
 /**
  * <code>jDialog</code> form used for connecting to WPS servers and adding processes to ArcMap.
- * 
+ *
  * @author Benjamin Pross
  *
  */
 public class ArcMapWPSClientDialog extends JDialog {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4074655130230106574L;
 
@@ -523,7 +523,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     /**
      * Returns the processes selected in the <code>processTree</code>.
-     * 
+     *
      * @return <code>ArrayList<String></code> containing the selected processes
      */
     public ArrayList<String> getSelectedProcesses() {
@@ -541,7 +541,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     /**
      * Returns the URL of the selected WPS.
-     * 
+     *
      * @return <code>String</code> containing the URL of the selected WPS
      */
     public String getWPSUrl() {
@@ -568,7 +568,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     /**
      * Empties specified directory of all files, deletes and re-creates it
-     * 
+     *
      * @param dirName
      *            String
      */
@@ -581,7 +581,7 @@ public class ArcMapWPSClientDialog extends JDialog {
     /**
      * Deletes all files in specified directory and then deletes the directory
      * as well
-     * 
+     *
      * @param Path
      *            String
      */
@@ -605,7 +605,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     /**
      * Returns the current <code>IApplication</code>.
-     * 
+     *
      * @return the current <code>IApplication</code>
      */
     public IApplication getApplication() {

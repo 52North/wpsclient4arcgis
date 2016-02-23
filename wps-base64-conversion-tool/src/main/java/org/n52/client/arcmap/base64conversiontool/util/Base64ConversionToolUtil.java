@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,16 +24,16 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Utility class for the <code>Base64ConversionTool</code>.
- * 
+ *
  * @author Benjamin Pross
  *
  */
 public class Base64ConversionToolUtil {
 
-    
+
     /**
      * This method adds a .base64 file extension, if the output file should be encoded in base64.
-     * 
+     *
      * @param outputShouldBeBase64 True if the output should be encoded in base64. The output file will get an additional .base64 extension.
      * @param outputFilePathFromGPValue The output file path specified by the <code>Base64ConversionTool</code> GP tool.
      * @return The new file path.
@@ -61,7 +61,7 @@ public class Base64ConversionToolUtil {
 
     /**
      * Checks if the content of a file is encoded in base64.
-     * 
+     *
      * @param inputFile The file which content should be checked.
      * @return True if the content of a file is encoded in base64.
      * @throws Exception If the file could not be read.

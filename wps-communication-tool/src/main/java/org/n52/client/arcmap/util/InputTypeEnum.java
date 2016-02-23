@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ package org.n52.client.arcmap.util;
 
 /**
  * Enum representing the supported WPS input types and an unknown type for non-supported types.
- * 
+ *
  * @author Benjamin Pross
  *
  */

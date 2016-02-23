@@ -1,5 +1,5 @@
-/**
- * ﻿Copyright (C) 2013 - 2015 52°North Initiative for Geospatial Open Source
+/*
+ * ﻿Copyright (C) 2013 - 2016 52°North Initiative for Geospatial Open Source
  * Software GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import com.esri.arcgis.interop.AutomationException;
 
 /**
  * ArcMap extension used to open the <code>ArcMapWPSClientDialog</code>.
- * 
+ *
  * @author Benjamin Pross
  *
  */
@@ -41,11 +41,11 @@ public class ShowDialogExtension extends Extension {
     /**
      * Initializes this application extension with the ArcMap application
      * instance it is hosted in.
-     * 
+     *
      * This method is automatically called by the host ArcMap application. It
      * marks the start of the dockable window's lifecycle. Clients must not call
      * this method.
-     * 
+     *
      * @param app
      *            is a reference to ArcMap's IApplication interface
      * @exception java.io.IOException
