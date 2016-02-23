@@ -146,8 +146,20 @@ Section ""
 SectionEnd 
 
 Section 
+  SetOutPath "$APPDATA\52North\WPS ArcMap Client" 
+  File ".\Installer-Files\logo52n-48x48.ico" 
   WriteUninstaller "$APPDATA\52North\WPS ArcMap Client\uninstall.exe"
   CreateShortCut "$DESKTOP\Uninstall the 52 North Extensible WPS ArcMap Client.lnk" "$APPDATA\52North\WPS ArcMap Client\uninstall.exe" ""
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS" \
+                 "DisplayName" "52 North WPS Client for ArcGIS"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS" \
+                 "DisplayIcon" "$APPDATA\52North\WPS ArcMap Client\logo52n-48x48.ico"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS" \
+                 "Publisher" "52 North"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS" \
+                 "DisplayVersion" "${project.version}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS" \
+                 "UninstallString" "$APPDATA\52North\WPS ArcMap Client\uninstall.exe"
 SectionEnd
 
 Section "Uninstall"
@@ -181,5 +193,6 @@ Section "Uninstall"
   RMDir /r "$APPDATA\52North\"
 
   WriteRegStr HKLM "SOFTWARE\ESRI\ArcGIS Java Extensions" 'Logging' '0'
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\WPSClient4ArcGIS"
   
 SectionEnd 
