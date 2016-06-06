@@ -151,6 +151,8 @@
 	<properties>
 		<project.dependency.folder>${project.build.directory}/dependency</project.dependency.folder>
 		<project.esriaddin.folder>${project.build.directory}/addin</project.esriaddin.folder>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>dd.MM.yyyy</maven.build.timestamp.format>
 	</properties>
 	<profiles>
 		<profile>

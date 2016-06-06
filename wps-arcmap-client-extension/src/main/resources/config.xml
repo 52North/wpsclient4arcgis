@@ -3,11 +3,11 @@
   <Name>ArcMap WPS Client Add-In</Name>
   <AddInID>b0c595f1-012f-1000-5000-80b0ec200000</AddInID>
   <Description>This Add-In lets you add WPS processes to your Toolbox, where they will act like any other Geoprocessing tool.</Description>
-  <Version>1.1.1-SNAPSHOT</Version>
+  <Version>${project.version}</Version>
   <Image></Image>
   <Author>Benjamin Pross</Author>
   <Company>52°North</Company>
-  <Date>${maven.build.timestamp}</Date>
+  <Date>${timestamp}</Date>
   <Targets>
     <Target name="Desktop" version="10.0"/>
     <Target name="Desktop" version="10.1"/>
