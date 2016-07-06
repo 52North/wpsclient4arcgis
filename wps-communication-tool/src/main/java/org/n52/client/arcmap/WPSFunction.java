@@ -738,6 +738,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
                         inHref.setSchema(schema);
                     }
 
+                    if (encoding != null && !encoding.equals("")) {
+
+                        inHref.setEncoding(encoding);
+                    }
+
                 } else {
                     try {
                         messages.addMessage("Reading file for complex input: " + value);
