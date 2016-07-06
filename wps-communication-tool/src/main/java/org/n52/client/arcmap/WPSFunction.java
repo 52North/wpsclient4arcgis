@@ -98,8 +98,6 @@ import com.esri.arcgis.geoprocessing.GPBoolean;
 import com.esri.arcgis.geoprocessing.GPBooleanType;
 import com.esri.arcgis.geoprocessing.GPCodedValueDomain;
 import com.esri.arcgis.geoprocessing.GPCompositeDataType;
-import com.esri.arcgis.geoprocessing.GPDate;
-import com.esri.arcgis.geoprocessing.GPDateType;
 import com.esri.arcgis.geoprocessing.GPDouble;
 import com.esri.arcgis.geoprocessing.GPDoubleType;
 import com.esri.arcgis.geoprocessing.GPLong;
@@ -339,8 +337,9 @@ public class WPSFunction extends BaseGeoprocessingTool {
                             literalParameter.setDataTypeByRef(new GPLongType());
                             literalParameter.setValueByRef(new GPLong());
                         } else if (dataTypeString.contains("dateTime")) {
-                            literalParameter.setDataTypeByRef(new GPDateType());
-                            literalParameter.setValueByRef(new GPDate());
+                            //TODO: use String here as format of dateTime is not clear
+                            literalParameter.setDataTypeByRef(new GPStringType());
+                            literalParameter.setValueByRef(new GPString());
                         } else if (dataTypeString.contains("boolean") || dataTypeString.contains("bool")) {
                             literalParameter.setDataTypeByRef(new GPBooleanType());
                             literalParameter.setValueByRef(new GPBoolean());
