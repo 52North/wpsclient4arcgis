@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import java.util.UUID;
 
@@ -76,6 +78,7 @@ import net.opengis.wps.x100.SupportedComplexDataInputType;
 import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.n52.client.arcmap.util.Download;
 import org.n52.client.arcmap.util.InputTypeEnum;
 import org.n52.wps.client.WPSClientSession;
 import org.n52.wps.io.data.GenericFileDataConstants;
@@ -513,11 +516,27 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             LOGGER.debug(execDoc.toString());
 
+            try {
+                messages.addMessage("Sending POST request to WPS.");
+            } catch (Exception e1) {
+                /*
+                 * ignore
+                 */
+            }
+
             Object response = WPSClientSession.getInstance().execute(wpsURL, execDoc);
+
+            try {
+                messages.addMessage("Got response.");
+            } catch (Exception e1) {
+                /*
+                 * ignore
+                 */
+            }
 
             if (response instanceof ExecuteResponseDocument) {
 
-                handleExecuteResponse((ExecuteResponseDocument) response, paramvalues, parameterNameValueMap, messages);
+                handleExecuteResponse((ExecuteResponseDocument) response, paramvalues, parameterNameValueMap, messages, trackcancel);
 
             } else if (response instanceof ExceptionReportDocument) {
                 LOGGER.error("Something went wrong while executing the WPS process. Exceptionreport: {}", response.toString());
@@ -542,7 +561,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
     private void handleExecuteResponse(ExecuteResponseDocument responseDoc,
             IArray paramvalues,
             Map<String, String> parameterNameValueMap,
-            IGPMessages messages) throws IOException, TransformerFactoryConfigurationError, TransformerException {
+            final IGPMessages messages, ITrackCancel trackcancel) throws IOException, TransformerFactoryConfigurationError, TransformerException {
 
         ExecuteResponse response = responseDoc.getExecuteResponse();
 
@@ -557,6 +576,38 @@ public class WPSFunction extends BaseGeoprocessingTool {
         OutputDataType[] outputs = response.getProcessOutputs().getOutputArray();
 
         if (statusLocation != null && !statusLocation.equals("") && !processFinished  && !processFailed) {
+
+            boolean processAccepted = false;
+            boolean processStarted = false;
+
+            String status = "";
+            int percentage = 0;
+
+            if(response.getStatus().isSetProcessAccepted()){
+                processAccepted = true;
+            }
+
+            if(response.getStatus().isSetProcessStarted()){
+                processStarted = true;
+                status = response.getStatus().getProcessStarted().getStringValue();
+                percentage = response.getStatus().getProcessStarted().getPercentCompleted();
+            }
+
+            try {
+
+                if (processAccepted) {
+                    messages.addMessage("Process accepted.");
+                }
+                if (processStarted) {
+                    if (status != null && !status.isEmpty()) {
+                        messages.addMessage("Process status: " + status);
+                    } else if (percentage != 0) {
+                        messages.addMessage("Process completed: " + status + " %");
+                    }
+                }
+            } catch (Exception e) {
+                /* ignore */
+            }
 
             // sleep for five seconds
             try {
@@ -576,7 +627,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 LOGGER.error("Could not fetch statuslocation URL: {}", statusLocation);
                 LOGGER.error(e.getMessage());
             }
-            handleExecuteResponse(executeDoc, paramvalues, parameterNameValueMap, messages);
+            handleExecuteResponse(executeDoc, paramvalues, parameterNameValueMap, messages, trackcancel);
             return;
         } else if (processFinished) {
 
@@ -637,8 +688,28 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 } else if (outputReference != null) {
 
                     URL href = new URL(outputReference.getHref());
+                    try {
+                        messages.addMessage("Start result download from " + outputReference.getHref());
+                    } catch (Exception e) {
+                        /* ignore */
+                    }
 
-                    FileUtils.copyURLToFile(href, outputFile);
+                    final Download download = new Download(href, outputFile);
+
+                    download.addObserver(new Observer() {
+
+                        @Override
+                        public void update(Observable o,
+                                Object arg) {
+                            try {
+                                messages.addMessage("Downloaded " + download.getDownloaded() + " / " + download.getSize() + " bytes.");
+                            } catch (Exception e) {
+                                /* ignore */
+                            }
+                        }
+                    });
+
+                    download.startDownload();
                 }
 
             }
@@ -883,6 +954,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
                             LOGGER.error(e.getMessage());
                         }
                     }
+                }
+
+                try {
+                    messages.addMessage("Done.");
+                } catch (Exception e1) {
+                    /*
+                     * ignore
+                     */
                 }
 
                 break;
