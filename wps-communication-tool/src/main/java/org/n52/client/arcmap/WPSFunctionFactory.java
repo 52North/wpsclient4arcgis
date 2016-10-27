@@ -55,8 +55,8 @@ public class WPSFunctionFactory implements IGPFunctionFactory {
     private static Logger LOGGER = LoggerFactory.getLogger(WPSFunctionFactory.class);
 
     /**
-	 *
-	 */
+     *
+     */
     private static final long serialVersionUID = 1L;
 
     private String functionFactoryAlias = "wpsfunctionfactory";

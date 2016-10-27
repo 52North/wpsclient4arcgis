@@ -16,9 +16,13 @@
  */
 package org.n52.client.arcmap.util;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Observable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,8 +188,9 @@ public class Download extends Observable {
 
                 // Read from server into buffer.
                 int read = stream.read(buffer);
-                if (read == -1)
+                if (read == -1){
                     break;
+                }
 
                 // Write buffer to file.
                 file.write(buffer, 0, read);

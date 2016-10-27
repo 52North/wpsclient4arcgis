@@ -329,6 +329,12 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit-dep</artifactId>
+				<version>4.4</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jul-to-slf4j</artifactId>
 				<version>${slf4j.version}</version>
