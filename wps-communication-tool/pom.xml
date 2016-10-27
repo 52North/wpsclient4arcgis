@@ -42,10 +42,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
-			<artifactId>52n-wps-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${wps.groupid}</groupId>
 			<artifactId>52n-wps-commons</artifactId>
 		</dependency>
 		<dependency>

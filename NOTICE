@@ -26,30 +26,15 @@ This project includes:
   Apache Log4j API under The Apache Software License, Version 2.0
   Apache Log4j Core under The Apache Software License, Version 2.0
   Apache Log4j SLF4J Binding under The Apache Software License, Version 2.0
-  API interfaces under Lesser General Public License (LGPL)
-  ArcGrid datasource module under Lesser General Public License (LGPL)
-  ArcObjects Java 10.2.2 under ESRI License Agreement, Version 10.2
+  ArcObjects Java 10.3.1 under ESRI License Agreement, Version 10.3
   Axis Web Services under The Apache Software License, Version 2.0
-  common under Eclipse Public License (EPL)
   Commons Codec under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Commons JXPath under The Apache Software License, Version 2.0
   Commons Pool under The Apache Software License, Version 2.0
   commons-collections under The Apache Software License, Version 2.0
-  DataStore Support under Lesser General Public License (LGPL)
   Discovery under The Apache Software License, Version 2.0
-  ecore under Eclipse Public License (EPL)
-  EPSG Authority Service using HSQL database under Lesser General Public License (LGPL) or EPSG database distribution license or BSD License for HSQL
-  Feature Based Graphs and Networks under Lesser General Public License (LGPL)
-  Filter Encoding Specification Model under Lesser General Public License (LGPL)
-  Filter Encoding Specification XML Support under Lesser General Public License (LGPL)
-  Filter XML Support under Lesser General Public License (LGPL)
-  GeoJSON Support under Lesser General Public License (LGPL)
-  GeoTIFF grid coverage exchange module under Lesser General Public License (LGPL)
-  GML2 XML Support under Lesser General Public License (LGPL)
-  GML3 XML Support under Lesser General Public License (LGPL)
-  gmlpacket-2.0 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
-  Grid Coverage module under Lesser General Public License (LGPL)
+  edu.umn.gis:mapscript under MapServer License (MIT license)
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Hamcrest Core under BSD style
   Hamcrest Library under BSD style
@@ -59,9 +44,10 @@ This project includes:
   Image I/O-Extensions - Improved TIFF Plugin under BSD License
   Image I/O-Extensions - Pure java ArcGrid Plugin under GNU Lesser General Public License, version 3 or later (LGPL)
   Image I/O-Extensions - utilities classes and methods under GNU Lesser General Public License, version 3 or later (LGPL)
-  jai_codec under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
-  jai_imageio under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
   Java Advanced Imaging under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
+  java3d:vecmath under GNU General Public License (GPL), version 2, with the CLASSPATH exception
+  javax.media:jai_codec under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
+  javax.media:jai_imageio under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
   JCL 1.1.1 implemented over SLF4J under MIT License
   jdom under JDOM license, https://github.com/hunterhacker/jdom/blob/master/LICENSE.txt
   jGridShift under GNU Lesser General Public License, version 2.0 (LGPLv2)
@@ -73,39 +59,54 @@ This project includes:
   JTS Topology Suite under Lesser General Public License (LGPL)
   JUL to SLF4J bridge under MIT License
   JUnit under Common Public License Version 1.0
-  KML XML Support under Lesser General Public License (LGPL)
   Log4j Implemented Over SLF4J under Apache Software Licenses
   Logging under The Apache Software License, Version 2.0
-  Main module under Lesser General Public License (LGPL)
-  mapscript under MapServer License (MIT license)
-  Metadata under Lesser General Public License (LGPL)
   OGC OWS schema (spec. v1.1.0) under The Apache Software License, Version 2.0
-  OGC WPS schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  ogckml2.2 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
-  Open GIS Interfaces under OGC copyright or Lesser General Public License (LGPL)
-  Open Web Services Model under Lesser General Public License (LGPL)
-  OWS XML Support under Lesser General Public License (LGPL)
+  OGC WPS schema (spec. v1.0.0) under The Apache Software License, Version 2.0
+  org.eclipse.emf:common under Eclipse Public License (EPL)
+  org.eclipse.emf:ecore under Eclipse Public License (EPL)
+  org.eclipse.xsd:xsd under Eclipse Public License (EPL)
+  org.geotools.ogc:net.opengis.fes under The Apache Software License, Version 2.0
+  org.geotools.ogc:net.opengis.ows under The Apache Software License, Version 2.0
+  org.geotools.ogc:net.opengis.wfs under The Apache Software License, Version 2.0
+  org.geotools.ogc:org.w3.xlink under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-core under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-fes under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-filter under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-gml2 under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-gml3 under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-kml under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-ows under The Apache Software License, Version 2.0
+  org.geotools.xsd:gt-xsd-wfs under The Apache Software License, Version 2.0
+  org.geotools:gt-api under The Apache Software License, Version 2.0
+  org.geotools:gt-arcgrid under The Apache Software License, Version 2.0
+  org.geotools:gt-coverage under The Apache Software License, Version 2.0
+  org.geotools:gt-data under The Apache Software License, Version 2.0
+  org.geotools:gt-epsg-hsql under The Apache Software License, Version 2.0
+  org.geotools:gt-geojson under The Apache Software License, Version 2.0
+  org.geotools:gt-geotiff under The Apache Software License, Version 2.0
+  org.geotools:gt-graph under The Apache Software License, Version 2.0
+  org.geotools:gt-main under The Apache Software License, Version 2.0
+  org.geotools:gt-metadata under The Apache Software License, Version 2.0
+  org.geotools:gt-opengis under The Apache Software License, Version 2.0
+  org.geotools:gt-referencing under The Apache Software License, Version 2.0
+  org.geotools:gt-shapefile under The Apache Software License, Version 2.0
+  org.geotools:gt-xml under The Apache Software License, Version 2.0
+  org.n52.wps:52n-wps-config under The Apache Software License, Version 2.0
+  org.n52.wps:52n-xml-wps-v100 under The Apache Software License, Version 2.0
+  org.n52.wps:gmlpacket-2.0 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
+  org.n52.wps:ogckml2.2 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
   PicoContainer Core under BSD License
-  Referencing services under Lesser General Public License (LGPL)
-  Shapefile module under Lesser General Public License (LGPL)
   SLF4J API Module under MIT License
   SLF4J Simple Binding under MIT License
   StAX API under The Apache Software License, Version 2.0
   stax-utils under BSD
   Support and utility classes under Simplified BSD
-  vecmath under GNU General Public License (GPL), version 2, with the CLASSPATH exception
   W3C xlink schema (spec. v1.1.0) under The Apache Software License, Version 2.0
-  Web Feature Service Model under Lesser General Public License (LGPL)
-  WFS XML Support under Lesser General Public License (LGPL)
   WPS Client for ArcGIS under The Apache Software License, Version 2.0
-  WPS-Config under The Apache Software License, Version 2.0
   Xalan Java under The Apache Software License, Version 2.0
   Xalan Java Serializer under The Apache Software License, Version 2.0
-  Xlink Model under Lesser General Public License (LGPL)
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
-  XML Parsing under Lesser General Public License (LGPL)
-  XML Parsing Support under Lesser General Public License (LGPL)
   XmlBeans under The Apache Software License, Version 2.0
-  xsd under Eclipse Public License (EPL)
   ZonalStats operator under Simplified BSD
 

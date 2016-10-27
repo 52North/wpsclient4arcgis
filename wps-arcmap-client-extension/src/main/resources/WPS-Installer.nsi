@@ -93,11 +93,10 @@ Section ""
   File .\dependency\52n-wps-arcmap-client-log4j2-xml.jar
   File .\dependency\52n-wps-client-lib-3.2.0.jar
   File .\dependency\52n-wps-commons-3.2.0.jar
-  File .\dependency\52n-wps-config-1.2.1.jar
   File .\dependency\52n-wps-io-3.2.0.jar
   File .\dependency\52n-wps-io-impl-3.2.0.jar
   File .\dependency\52n-xml-ows-v110-2.1.0.jar
-  File .\dependency\52n-xml-wps-v100-1.1.0.jar
+  File .\dependency\52n-xml-wps-v100-2.1.0.jar
   File .\dependency\52n-xml-xlink-v110-2.1.0.jar
   File .\dependency\commons-codec-1.8.jar
   File .\dependency\commons-io-2.4.jar
@@ -168,11 +167,10 @@ Section "Uninstall"
   delete $INSTDIR\java\jre\lib\ext\52n-wps-arcmap-client-log4j2-xml.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-client-lib-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-commons-3.2.0.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-wps-config-1.2.1.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-impl-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-xml-ows-v110-2.1.0.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-xml-wps-v100-1.1.0.jar
+  delete $INSTDIR\java\jre\lib\ext\52n-xml-wps-v100-2.1.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-xml-xlink-v110-2.1.0.jar
   delete $INSTDIR\java\jre\lib\ext\commons-codec-1.8.jar
   delete $INSTDIR\java\jre\lib\ext\commons-io-2.4.jar

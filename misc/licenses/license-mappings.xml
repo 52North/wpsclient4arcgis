@@ -188,7 +188,6 @@
 		<groupId>javax.servlet.jsp</groupId>
 		<artifactId>jsp-api</artifactId>
 		<version>2.1</version>
-		<license>Commons Development and Distribution License, Version 1.0</license>
 		<license>GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)</license>
 	</artifact>
 
@@ -197,7 +196,6 @@
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.2</version>
-        <license>Commons Development and Distribution License, Version 1.0</license>
 		<license>GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)</license>
     </artifact>
 
@@ -471,8 +469,176 @@
     <artifact>
         <groupId>com.esri.arcgis</groupId>
         <artifactId>arcobjects</artifactId>
-        <version>10.2.2</version>
-        <name>ArcObjects Java 10.2.2</name>
-		<license>ESRI License Agreement, Version 10.2</license>
+        <version>10.3.1</version>
+        <name>ArcObjects Java 10.3.1</name>
+		<license>ESRI License Agreement, Version 10.3</license>
+    </artifact>
+        <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-api</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-arcgrid</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-coverage</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-data</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-geojson</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-geotiff</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-graph</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-main</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-metadata</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-opengis</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-referencing</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-shapefile</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-xml</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.ogc</groupId>
+        <artifactId>net.opengis.fes</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.ogc</groupId>
+        <artifactId>net.opengis.ows</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.ogc</groupId>
+        <artifactId>net.opengis.wfs</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.ogc</groupId>
+        <artifactId>org.w3.xlink</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-core</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-fes</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-filter</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-gml2</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-gml3</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-kml</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-ows</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.geotools.xsd</groupId>
+        <artifactId>gt-xsd-wfs</artifactId>
+        <version>8.7</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.n52.wps</groupId>
+        <artifactId>52n-wps-config</artifactId>
+        <version>1.2.1</version>
+		<license>The Apache Software License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.n52.wps</groupId>
+        <artifactId>52n-xml-wps-v100</artifactId>
+        <version>1.1.0</version>
+		<license>The Apache Software License, Version 2.0</license>
     </artifact>
 </license-lookup>
