@@ -1189,6 +1189,16 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
         }
 
+        try {
+            parameters.add(createListBoxStringParameter(labelText + "_mimetype", labelText + " mime type", mimeTypes, false));
+        } catch (AutomationException e) {
+            LOGGER.error(e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+
         if (!encodings.isEmpty()) {
 
             try {
@@ -1200,16 +1210,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }
-        }
-
-        try {
-            parameters.add(createListBoxStringParameter(labelText + "_mimetype", labelText + " mime type", mimeTypes, false));
-        } catch (AutomationException e) {
-            LOGGER.error(e.getMessage());
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
         }
     }
 
