@@ -54,9 +54,9 @@ public class ShowDialogExtension extends Extension {
      *                if the component throws an ArcObjects exception.
      */
     @Override
-    public void init(IApplication arg0) throws IOException, AutomationException {
+    public void init(IApplication app) throws IOException, AutomationException {
 
-        this.app = arg0;
+        this.app = app;
 
         ArcMapWPSClientDialog dialog = null;
 
@@ -69,7 +69,7 @@ public class ShowDialogExtension extends Extension {
         if (dialog == null) {
 
             try {
-                dialog = new ArcMapWPSClientDialog(arg0);
+                dialog = new ArcMapWPSClientDialog(app);
                 dialog.setVisible(true);
             } catch (Exception e) {
                 LOGGER.error("Error while creating new dialog instance: ", e.getMessage());
