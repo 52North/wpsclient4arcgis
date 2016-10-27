@@ -75,7 +75,6 @@ import net.opengis.wps.x100.ResponseDocumentType;
 import net.opengis.wps.x100.ResponseFormType;
 import net.opengis.wps.x100.SupportedComplexDataInputType;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.n52.client.arcmap.util.Download;
@@ -918,13 +917,15 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                             BufferedReader bread = new BufferedReader(new FileReader(new File(value)));
 
-                            String line = "";
-
                             String content = "";
 
-                            while ((line = bread.readLine()) != null) {
-                                content = content.concat(line);
+                            char[] chars = new char[8192];
+
+                            while (bread.read(chars) != -1) {
+                                content = content.concat(String.valueOf(chars));
                             }
+
+                            content = content.trim();
 
                             bread.close();
 
