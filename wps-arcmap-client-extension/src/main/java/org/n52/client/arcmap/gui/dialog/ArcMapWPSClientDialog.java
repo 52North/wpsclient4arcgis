@@ -524,7 +524,7 @@ public class ArcMapWPSClientDialog extends JDialog {
     /**
      * Returns the processes selected in the <code>processTree</code>.
      *
-     * @return <code>ArrayList<String></code> containing the selected processes
+     * @return <code>ArrayList</code> containing the selected processes
      */
     public ArrayList<String> getSelectedProcesses() {
 

@@ -61,7 +61,6 @@ public class Download extends Observable {
      * Constructor. A tempfile will be created to store the download.
      *
      * @param url The URL to download from.
-     * @throws IOException If the tempfile could not be created.
      */
     public Download(URL url, File resultFile) {
         this.url = url;
