@@ -514,7 +514,10 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 return;
             }
 
-            LOGGER.debug(execDoc.toString());
+            //only debug execute document if smaller than 5 MB
+            if(execDoc.toString().length() < 5242880){
+                LOGGER.debug(execDoc.toString());
+            }
 
             try {
                 messages.addMessage("Sending POST request to WPS.");
@@ -565,7 +568,10 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         ExecuteResponse response = responseDoc.getExecuteResponse();
 
-        LOGGER.debug(response.toString());
+        //only debug response if smaller than 5 MB
+        if(response.toString().length() < 5242880){
+            LOGGER.debug(response.toString());
+        }
 
         String statusLocation = response.getStatusLocation();
 
