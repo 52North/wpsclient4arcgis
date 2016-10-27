@@ -252,7 +252,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
-            JOptionPane.showMessageDialog(null, "Could not connect to: \n" + wpsURL + ".", "52 North WPS ArcMap Client", 1);
+            JOptionPane.showMessageDialog(progressFrame, "Could not connect to: \n" + wpsURL + ".", "52 North WPS ArcMap Client", 1);
             progressFrame.setVisible(false);
             return null;
         }
