@@ -107,9 +107,9 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private javax.swing.JButton okButton;
 
-    private javax.swing.JComboBox wpsUrlsComboBox;
+    private javax.swing.JComboBox<String> wpsUrlsComboBox;
 
-    private javax.swing.JComboBox versionComboBox;
+    private javax.swing.JComboBox<String>  versionComboBox;
 
     private javax.swing.JEditorPane processDetailsEditorPane;
 
@@ -148,10 +148,10 @@ public class ArcMapWPSClientDialog extends JDialog {
     private void initComponents() {
 
         urlLabel = new javax.swing.JLabel();
-        wpsUrlsComboBox = new javax.swing.JComboBox();
+        wpsUrlsComboBox = new javax.swing.JComboBox<String>();
         exampelLabel = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
-        versionComboBox = new javax.swing.JComboBox();
+        versionComboBox = new javax.swing.JComboBox<String>();
         exampleWPSLabel = new javax.swing.JLabel();
         serverProcessesPanel = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -195,7 +195,7 @@ public class ArcMapWPSClientDialog extends JDialog {
         versionLabel.setText("Version:");
         versionLabel.setName("versionLabel");
 
-        versionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default Version", "1.0.0" }));
+        versionComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Default Version", "1.0.0" }));
         versionComboBox.setName("jComboBox2");
 
         exampleWPSLabel.setText("http://geoprocessing.demo.52north.org:8080/wps/WebProcessingService");

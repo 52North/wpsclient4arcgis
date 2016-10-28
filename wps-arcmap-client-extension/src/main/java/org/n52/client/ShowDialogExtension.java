@@ -35,9 +35,6 @@ import com.esri.arcgis.interop.AutomationException;
 public class ShowDialogExtension extends Extension {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ShowDialogExtension.class);
-
-    private IApplication app;
-
     /**
      * Initializes this application extension with the ArcMap application
      * instance it is hosted in.
@@ -55,8 +52,6 @@ public class ShowDialogExtension extends Extension {
      */
     @Override
     public void init(IApplication app) throws IOException, AutomationException {
-
-        this.app = app;
 
         ArcMapWPSClientDialog dialog = null;
 
