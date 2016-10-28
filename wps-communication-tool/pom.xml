@@ -14,7 +14,6 @@
 		<dependency>
 			<artifactId>arcobjects</artifactId>
 			<groupId>com.esri.arcgis</groupId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
@@ -27,12 +26,6 @@
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
 			<artifactId>52n-wps-client-lib</artifactId>
-			<exclusions>
-			    <exclusion>
-			        <groupId>org.n52.wps</groupId>
-			        <artifactId>52n-xml-wps-v100</artifactId>
-			    </exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.n52.sensorweb</groupId>
@@ -49,7 +42,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -59,12 +51,10 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>

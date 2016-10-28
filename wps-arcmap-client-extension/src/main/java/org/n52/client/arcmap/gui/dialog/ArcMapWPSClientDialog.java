@@ -44,6 +44,7 @@ import net.opengis.wps.x100.CapabilitiesDocument;
 import net.opengis.wps.x100.ProcessBriefType;
 import net.opengis.wps.x100.WPSCapabilitiesType;
 
+import org.apache.xmlbeans.XmlObject;
 import org.n52.client.arcmap.WPSFunctionFactory;
 import org.n52.wps.client.WPSClientException;
 import org.n52.wps.client.WPSClientSession;
@@ -446,6 +447,10 @@ public class ArcMapWPSClientDialog extends JDialog {
             WPSClientSession.getInstance().connect(url);
 
             CapabilitiesDocument capsDoc = WPSClientSession.getInstance().getWPSCaps(url);
+
+            if(!(capsDoc instanceof XmlObject)){
+                LOGGER.error("CapabilitiesDocument doesn't implement XmlObject.");
+            }
 
             processes = capsDoc.getCapabilities().getProcessOfferings().getProcessArray();
 

@@ -50,7 +50,6 @@
 		<dependency>
 			<artifactId>arcobjects</artifactId>
 			<groupId>com.esri.arcgis</groupId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlbeans</groupId>
@@ -60,21 +59,25 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<!-- end dependencies needed by base64 tool -->
 		<!-- start dependencies needed by zipped shapefile tools -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<!-- end dependencies needed by zipped shapefile tools -->
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
 			<artifactId>52n-wps-io</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
 			<artifactId>52n-wps-io-impl</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
@@ -119,17 +122,14 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
