@@ -1,8 +1,8 @@
 RELEASE NOTES
 
- The 52°North Web Processing Service (WPS) enables the deployment of geo-processes on the web in a standardized way. 
- It features a pluggable architecture for processes and data encodings. 
- The implementation is based on the OpenGIS specification: 05-007r7.
+The WPS ArcMap client enables ArcGIS desktop consumption of WPS Processes enlarging the amount of tools available to users for geoprocessing spatial information. 
+With the client it is possible to select one or more layers in ArcMap and use them as input for WPS processes. 
+The result of the processes can be visualized in ArcMap again.
  
     Changes since last release
 ==================================
