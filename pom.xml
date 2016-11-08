@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
         <groupId>org.n52</groupId>
@@ -10,7 +9,7 @@
 	<artifactId>wpsclient4arcgis</artifactId>
 	<packaging>pom</packaging>
 	<name>WPS Client for ArcGIS</name>
-	<version>1.1.1-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<description>WPSClient4ArcGIS</description>
 	<url>http://52north.org/wpsclient4arcgis</url>
 	<licenses>
@@ -34,7 +33,8 @@
 		<connection>scm:git:git://github.com/52North/wpsclient4arcgis.git</connection>
 		<url>https://github.com/52North/wpsclient4arcgis</url>
 		<developerConnection>scm:git:ssh://git@github.com/52North/wpsclient4arcgis.git</developerConnection>
-	</scm>
+	  <tag>WPSClient4ArcGIS-1.2.0</tag>
+  </scm>
 	<issueManagement>
 		<system>GitHub</system>
 		<url>

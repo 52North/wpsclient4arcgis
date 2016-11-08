@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>org.n52.wps.client.arcmap</groupId>
 		<artifactId>wpsclient4arcgis</artifactId>
-		<version>1.1.1-SNAPSHOT</version>
+		<version>1.2.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>wps-arcmap-client-extension</artifactId>
@@ -164,46 +163,33 @@
 									<target>
 										<mkdir dir="${project.esriaddin.folder}/dist/image" />
 										<copy todir="${project.esriaddin.folder}/dist/image">
-											<fileset dir="${basedir}/src/main/resources/image"
-												excludes="*.db" />
+											<fileset dir="${basedir}/src/main/resources/image" excludes="*.db" />
 										</copy>
-										<copy file="${project.build.directory}/config.xml"
-											tofile="${project.esriaddin.folder}/dist/config.xml" />
-										<copy file="${basedir}/src/main/resources/log4j2.xml"
-											tofile="${project.esriaddin.folder}/dist/log4j2.xml" />
+										<copy file="${project.build.directory}/config.xml" tofile="${project.esriaddin.folder}/dist/config.xml" />
+										<copy file="${basedir}/src/main/resources/log4j2.xml" tofile="${project.esriaddin.folder}/dist/log4j2.xml" />
 										<copy todir="${project.esriaddin.folder}/dist/org">
 											<fileset dir="target/classes/org" />
 										</copy>
-										<zip
-											destfile="${project.esriaddin.folder}/dist/Install/ArcGISWPSClient.jar"
-											update="true">
+										<zip destfile="${project.esriaddin.folder}/dist/Install/ArcGISWPSClient.jar" update="true">
 											<fileset dir="${project.esriaddin.folder}/dist/">
 												<exclude name="Install/" />
 												<exclude name="config.xml" />
 												<exclude name="log4j2.xml" />
 											</fileset>
 										</zip>
-										<zip destfile="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin"
-											update="true">
+										<zip destfile="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin" update="true">
 											<fileset dir="${project.esriaddin.folder}/dist/">
 												<exclude name="log4j2.xml" />
 											</fileset>
 										</zip>
-										<copy
-											file="${basedir}/src/main/resources/Installer-Files/logo52n-48x48.ico"
-											tofile="${project.build.directory}/Installer-Files/logo52n-48x48.ico" />
-										<zip
-											destfile="${project.dependency.folder}/52n-wps-arcmap-client-log4j2-xml.jar"
-											update="true">
+										<copy file="${basedir}/src/main/resources/Installer-Files/logo52n-48x48.ico" tofile="${project.build.directory}/Installer-Files/logo52n-48x48.ico" />
+										<zip destfile="${project.dependency.folder}/52n-wps-arcmap-client-log4j2-xml.jar" update="true">
 											<fileset dir="${project.esriaddin.folder}/dist/">
 												<include name="log4j2.xml" />
 											</fileset>
 										</zip>
-										<copy file="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin"
-											tofile="${project.build.directory}/addins/ArcMapWPSClient.esriaddin" />
-										<copy
-											file="${basedir}/src/main/resources/addins/AddWPSServerAddin.esriAddIn"
-											tofile="${project.build.directory}/addins/AddWPSServerAddin.esriaddin" />
+										<copy file="${project.esriaddin.folder}/ArcMapWPSClient.esriaddin" tofile="${project.build.directory}/addins/ArcMapWPSClient.esriaddin" />
+										<copy file="${basedir}/src/main/resources/addins/AddWPSServerAddin.esriAddIn" tofile="${project.build.directory}/addins/AddWPSServerAddin.esriaddin" />
 									</target>
 								</configuration>
 								<goals>
