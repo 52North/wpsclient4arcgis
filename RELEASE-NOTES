@@ -12,7 +12,6 @@ The result of the processes can be visualized in ArcMap again.
  	  * Support for ArcGIS for Desktop 10.4
  	  * Add uninstaller to add/remove software 
  	  * Client works with ArcMap Quick Export Tool
- 	  * Improved download handling
 	  * Improved download handling
  
   --- Changes ---
