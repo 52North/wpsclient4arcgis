@@ -1,4 +1,4 @@
-# WPS Client fo ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge.gif)](https://www.openhub.net/p/wps-arcmap-client)
+# WPS Client for ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge.gif)](https://www.openhub.net/p/wps-arcmap-client)
 
 # Description
 This client wraps WPS processes as standard ArcGIS Geoprocessing tools. With the client it is possible to select one or more layers in ArcMap and use them as input for WPS processes. The result of the processes can be visualized in ArcMap again.
