@@ -30,8 +30,6 @@ import com.esri.arcgis.geoprocessing.GeoProcessor;
  */
 public abstract class AGenerator {
 
-    protected String outputDir;
-
     protected GeoProcessor gp;
 
     public AGenerator() {
@@ -42,9 +40,6 @@ public abstract class AGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        outputDir = getOutputDir() + File.separator + "tmp";
-        new File(outputDir).mkdirs();
-
     }
 
     /**
@@ -53,10 +48,7 @@ public abstract class AGenerator {
      * @return
      */
     public String getOutputDir() {
-        String outputDir = System.getenv("AppData") + File.separator + "52North" + File.separator + "WPS ArcMap Client";
-        System.out.println("Creating output directory - " + outputDir);
-        new File(outputDir).mkdirs();
-        return outputDir;
+        return System.getProperty("java.io.tmpdir");
 
     }
 

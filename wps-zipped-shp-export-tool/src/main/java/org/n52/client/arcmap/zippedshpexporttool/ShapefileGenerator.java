@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.n52.wps.io.IOUtils;
@@ -43,9 +44,13 @@ public class ShapefileGenerator extends AGenerator {
     public void generateBase64EncodedString(String layerName,
             String resultFilename) throws Exception {
 
-        outputDir = getOutputDir() + File.separator + "tmp";
+        String outputDir = getOutputDir() + UUID.randomUUID().toString().substring(0, 5);
 
-        cleanAndRecreateDirectory(outputDir);
+        try {
+            new File(outputDir).mkdir();
+        } catch (Exception e) {
+            LOGGER.error("Could not create temp dir for shapefile export.", e);
+        }
 
         String fileName = outputDir + File.separator + layerName + ".shp";
         /*
@@ -64,12 +69,11 @@ public class ShapefileGenerator extends AGenerator {
         copyFeatures.setInFeatures(layerName);
 
         copyFeatures.setOutFeatureClass(fileName);
-        // Set the output Coordinate System environment
         try {
             gp.setAddOutputsToMap(false);
             gp.execute(copyFeatures, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Could not execute copyFeatures tool.", e);
         }
 
         File shp = new File(fileName);
