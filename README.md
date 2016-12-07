@@ -5,7 +5,7 @@ This client wraps WPS processes as standard ArcGIS Geoprocessing tools. With the
 
 # Getting Started and configuration
 
-* Get the latest Version here [WPS Client fo ArcGIS 1.1.0 installer](http://52north.org/downloads/send/128-extensibleclient/430-52n-extensible-wps-arcmap-client-1-1-0-setup)
+* Get the latest Version here [WPS Client for ArcGIS 1.2.0 Installer](http://52north.org/downloads/send/128-extensibleclient/506-wps-arcmap-client-1-2-0-setup-xe)
 
 # License
 
@@ -25,21 +25,18 @@ See here : [Geoprocessing Wiki](https://wiki.52north.org/Geoprocessing/Extensibl
 
   * Changes since last release
     * New features
-      * Add mechanism to update the status of a WPS4R process 
-      * Add a self-cleaning file input stream implementation for Postgres database
-      * Raise an exception if an annotated Algorithm has no @Execute annotation
-      * Empty port and webapp path allowed for WPS URL
+      * Support for ArcGIS for Desktop 10.4
+      * Add uninstaller to add/remove software 
+      * Client works with ArcMap Quick Export Tool
+      * Improved download handling
+      * Improved download handling
   
     * Changes
-      * Use moving code packages version 1.1  
-      * Removed outdated python module.
-      * Switch to Rserve from maven central
-      * GRASS backend works with current GRASS 7 release
+      * Change of license to Apache 2
   
     * Fixed issues
-      * Issue #123: Admin console not working when using Tomcat 6
-      * Issue #173: Databinding issue with WPS4R
-      * Issue #222: Save configuration with active R backend results in duplicate algorithm entries
+      * Cleaned up project
+      * Fixed checkstyle and dependency issues
 
 # References
 
