@@ -29,7 +29,6 @@ See here : [Geoprocessing Wiki](https://wiki.52north.org/Geoprocessing/Extensibl
       * Add uninstaller to add/remove software 
       * Client works with ArcMap Quick Export Tool
       * Improved download handling
-      * Improved download handling
   
     * Changes
       * Change of license to Apache 2
