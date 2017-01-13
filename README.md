@@ -49,7 +49,7 @@ See here : [Geoprocessing Wiki](https://wiki.52north.org/Geoprocessing/Extensibl
 
 # References
 
-* [AcUser Fall 2016 article](http://www.esri.com/esri-news/arcuser/fall-2016/sharing-geoprocessing-tools-via-the-web)
+* [ArcUser Fall 2016 article](http://www.esri.com/esri-news/arcuser/fall-2016/sharing-geoprocessing-tools-via-the-web)
 
 # Contact
 
