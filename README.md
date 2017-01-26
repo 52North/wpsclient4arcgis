@@ -15,7 +15,7 @@ The 52°North WPS Client for ArcGIS is a client implementation for servers follo
 
 # License
 
-The WPS Client fo ArcGIS is published under The Apache Software License, Version 2.0. 
+The WPS Client for ArcGIS is published under The Apache Software License, Version 2.0. 
 
 # Changelog
 
