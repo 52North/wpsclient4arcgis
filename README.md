@@ -7,7 +7,7 @@ The 52°North WPS Client for ArcGIS wraps WPS processes as standard ArcGIS Geopr
 
 The 52°North WPS Client for ArcGIS is a client implementation for servers following the [OGC WPS specification](http://www.opengeospatial.org/standards/wps). 
 
-# Features
+Features
 
  * WPS version 1.0.0 support
  * Seamless integration in ArcMap
