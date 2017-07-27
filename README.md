@@ -19,23 +19,23 @@ The WPS Client for ArcGIS is published under The Apache Software License, Versio
 
 ## Changelog
 
-  * Changes since last release
-    * New features
-      * Support for ArcGIS for Desktop 10.4
-      * Add uninstaller to add/remove software 
-      * Client works with ArcMap Quick Export Tool
-      * Improved download handling
+Changes since last release
+  * New features
+    * Support for ArcGIS for Desktop 10.4
+    * Add uninstaller to add/remove software 
+    * Client works with ArcMap Quick Export Tool
+    * Improved download handling
   
-    * Changes
-      * Change of license to Apache 2
+ Changes
+    * Change of license to Apache 2
   
-    * Fixed issues
-      * Cleaned up project
-      * Fixed checkstyle and dependency issues
+ Fixed issues
+    * Cleaned up project
+    * Fixed checkstyle and dependency issues
 
 ## Quick Start
 
-* Get the latest Version here: [WPS Client for ArcGIS 1.2.0 Installer](http://52north.org/downloads/send/128-extensibleclient/506-wps-arcmap-client-1-2-0-setup-xe)
+Get the latest Version here: [WPS Client for ArcGIS 1.2.0 Installer](http://52north.org/downloads/send/128-extensibleclient/506-wps-arcmap-client-1-2-0-setup-xe)
 
 ## User guide/tutorial
 
