@@ -26,10 +26,10 @@ Changes since last release
     * Client works with ArcMap Quick Export Tool
     * Improved download handling
   
- Changes
+  * Changes
     * Change of license to Apache 2
   
- Fixed issues
+  * Fixed issues
     * Cleaned up project
     * Fixed checkstyle and dependency issues
 
