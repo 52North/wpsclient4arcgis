@@ -1,9 +1,9 @@
 # WPS Client for ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge.gif)](https://www.openhub.net/p/wps-arcmap-client)
 
 ## Description
-Make use of the geo-processing Web with ArcMap. 
+### Make use of the geo-processing Web with ArcMap. 
 
-The 52°North WPS Client for ArcGIS wraps WPS processes as standard ArcGIS Geoprocessing tools. With the client it is possible to select one or more layers in ArcMap and use them as input for WPS processes. The result of the processes can be visualized in ArcMap again.
+**The 52°North WPS Client for ArcGIS wraps WPS processes as standard ArcGIS Geoprocessing tools. With the client it is possible to select one or more layers in ArcMap and use them as input for WPS processes. The result of the processes can be visualized in ArcMap again.**
 
 The 52°North WPS Client for ArcGIS is a client implementation for servers following the [OGC WPS specification](http://www.opengeospatial.org/standards/wps). 
 
