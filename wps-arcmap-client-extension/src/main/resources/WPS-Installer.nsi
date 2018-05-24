@@ -23,7 +23,11 @@ ${If} $InstDir == ""
 		
 	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.4`
 
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.4	
+		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.4
+		
+	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.5`
+
+		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5	
 
 	${EndIf}
 	
@@ -52,6 +56,10 @@ Function un.onInit
 	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.4`
 
 		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.4
+		
+	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.5`
+
+		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5
 	${EndIf}
 
 FunctionEnd
