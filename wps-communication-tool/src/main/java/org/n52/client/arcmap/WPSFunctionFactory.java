@@ -20,9 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import net.opengis.wps.x100.ProcessDescriptionType;
-
-import org.n52.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.model.Process;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,23 +80,34 @@ public class WPSFunctionFactory implements IGPFunctionFactory {
 
         String[] identifierAndURL = name.split("@");
 
-        LOGGER.debug("Category (WPS-URL) " + identifierAndURL[1]);
-        LOGGER.debug("Displayname (Proces-ID) " + identifierAndURL[0]);
+        String wpsURL = identifierAndURL[1];
+        String processID = identifierAndURL[0];
+        String version = "1.0.0";
+
+        try {
+            version = identifierAndURL[2];
+        } catch (Exception e) {
+            LOGGER.error("Could not extract version from tool name: " + identifierAndURL + ". Possibly an old process was started with a new version of the client. Falling back to verssion 1.0.0.");
+        }
+
+        LOGGER.debug("Category (WPS-URL) " + wpsURL);
+        LOGGER.debug("Displayname (Process-ID) " + processID);
+        LOGGER.debug("Version " + version);
 
         GPFunctionName functionName = new GPFunctionName();
         functionName.setCategory(identifierAndURL[1]);
         try {
-            ProcessDescriptionType pDesc = WPSClientSession.getInstance().getProcessDescription(identifierAndURL[1], identifierAndURL[0]);
+            Process pDesc = WPSClientSession.getInstance().getProcessDescription(wpsURL, processID, version);
             String abstractString = "-";
             if (pDesc.getAbstract() != null) {
-                abstractString = pDesc.getAbstract().getStringValue();
+                abstractString = pDesc.getAbstract();
             }
             functionName.setDescription(abstractString);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             functionName.setDescription("-");
         }
-        functionName.setDisplayName(identifierAndURL[0]);
+        functionName.setDisplayName(processID);
         functionName.setName(name);
         functionName.setMinimumProduct(esriProductCode.esriProductCodeAdvanced);
         functionName.setFactoryByRef(this);

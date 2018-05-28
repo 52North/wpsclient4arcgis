@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JDialog;
@@ -40,14 +41,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.opengis.wps.x100.CapabilitiesDocument;
-import net.opengis.wps.x100.ProcessBriefType;
-import net.opengis.wps.x100.WPSCapabilitiesType;
-
-import org.apache.xmlbeans.XmlObject;
 import org.n52.client.arcmap.WPSFunctionFactory;
-import org.n52.wps.client.WPSClientException;
-import org.n52.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.WPSClientException;
+import org.n52.geoprocessing.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.model.Process;
+import org.n52.geoprocessing.wps.client.model.WPSCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +89,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private static ArcMapWPSClientDialog instance;
 
-    private ProcessBriefType[] processes;
+    private List<Process> processes;
 
     private ArrayList<String> selectedProcesses;
 
@@ -107,9 +105,9 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private javax.swing.JButton okButton;
 
-    private javax.swing.JComboBox wpsUrlsComboBox;
+    private javax.swing.JComboBox<String> wpsUrlsComboBox;
 
-    private javax.swing.JComboBox versionComboBox;
+    private javax.swing.JComboBox<String> versionComboBox;
 
     private javax.swing.JEditorPane processDetailsEditorPane;
 
@@ -137,6 +135,8 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private File arcmapWPSClientAppData;
 
+    private String version;
+
     public static ArcMapWPSClientDialog getInstance(IApplication app) {
 
         if (instance == null) {
@@ -148,10 +148,10 @@ public class ArcMapWPSClientDialog extends JDialog {
     private void initComponents() {
 
         urlLabel = new javax.swing.JLabel();
-        wpsUrlsComboBox = new javax.swing.JComboBox();
+        wpsUrlsComboBox = new javax.swing.JComboBox<String>();
         exampelLabel = new javax.swing.JLabel();
         versionLabel = new javax.swing.JLabel();
-        versionComboBox = new javax.swing.JComboBox();
+        versionComboBox = new javax.swing.JComboBox<String>();
         exampleWPSLabel = new javax.swing.JLabel();
         serverProcessesPanel = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
@@ -195,10 +195,10 @@ public class ArcMapWPSClientDialog extends JDialog {
         versionLabel.setText("Version:");
         versionLabel.setName("versionLabel");
 
-        versionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default Version", "1.0.0" }));
+        versionComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "1.0.0", "2.0.0" }));
         versionComboBox.setName("jComboBox2");
 
-        exampleWPSLabel.setText("http://geoprocessing.demo.52north.org:8080/wps/WebProcessingService");
+        exampleWPSLabel.setText("http://geoprocessing.demo.52north.org:8080/latest-wps/WebProcessingService");
         exampleWPSLabel.setName("exampleWPSLabel");
 
         serverProcessesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Server Processes"));
@@ -284,6 +284,8 @@ public class ArcMapWPSClientDialog extends JDialog {
         okButton.setName("okButton");
         okButton.setPreferredSize(new java.awt.Dimension(67, 23));
 
+        version = versionComboBox.getSelectedItem().toString();
+
         removeButton.addActionListener(new ActionListener() {
 
             @Override
@@ -305,9 +307,9 @@ public class ArcMapWPSClientDialog extends JDialog {
 
                 WPSClientSession.getInstance().disconnect(getWPSUrl());
                 try {
-                    WPSClientSession.getInstance().connect(getWPSUrl());
+                    WPSClientSession.getInstance().connect(getWPSUrl(), version);
                     processTree.setVisible(false);
-                    connectToWPS();
+                    connectToWPS(version);
                 } catch (WPSClientException e1) {
                     LOGGER.error(e1.getMessage());
                 }
@@ -319,7 +321,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                connectToWPS();
+                connectToWPS(version);
             }
         });
 
@@ -422,7 +424,7 @@ public class ArcMapWPSClientDialog extends JDialog {
         pack();
     }
 
-    private void connectToWPS() {
+    private void connectToWPS(String version) {
 
         try {
 
@@ -444,31 +446,39 @@ public class ArcMapWPSClientDialog extends JDialog {
                 wpsUrlsComboBox.addItem(url);
             }
 
-            WPSClientSession.getInstance().connect(url);
-
-            CapabilitiesDocument capsDoc = WPSClientSession.getInstance().getWPSCaps(url);
-
-            if(!(capsDoc instanceof XmlObject)){
-                LOGGER.error("CapabilitiesDocument doesn't implement XmlObject.");
+            try {
+                WPSClientSession.getInstance().connect(url, version);
+            } catch (WPSClientException e) {
+                String message = "Could not connect to WPS: " + url + " with version: " + version + ". ";
+                LOGGER.error(message, e);
+                JOptionPane.showMessageDialog(null, message + e.getMessage());
             }
 
-            processes = capsDoc.getCapabilities().getProcessOfferings().getProcessArray();
+            WPSCapabilities capsDoc = WPSClientSession.getInstance().getWPSCaps(url);
 
-            treeWPSCapsMap = new HashMap<DefaultMutableTreeNode, Object>(processes.length + 1);
+//            if(!(capsDoc instanceof XmlObject)){
+//                LOGGER.error("CapabilitiesDocument doesn't implement XmlObject.");
+//            }
+
+            processes = capsDoc.getProcesses();
+
+            int processCount = processes.size();
+
+            treeWPSCapsMap = new HashMap<DefaultMutableTreeNode, Object>(processCount + 1);
 
             DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("WPS");
 
-            treeWPSCapsMap.put(rootNode, capsDoc.getCapabilities());
+            treeWPSCapsMap.put(rootNode, capsDoc);
 
             /*
              * sort the processes
              */
-            Map<String, ProcessBriefType> sortMap = new HashMap<String, ProcessBriefType>(processes.length);
+            Map<String, Process> sortMap = new HashMap<String, Process>(processCount);
 
-            for (ProcessBriefType processBriefType : processes) {
-                sortMap.put(processBriefType.getIdentifier().getStringValue(), processBriefType);
+            for (Process processBriefType : processes) {
+                sortMap.put(processBriefType.getId(), processBriefType);
             }
-            String[] sortedIDs = new String[processes.length];
+            String[] sortedIDs = new String[processCount];
             sortMap.keySet().toArray(sortedIDs);
 
             Arrays.sort(sortedIDs);
@@ -492,26 +502,26 @@ public class ArcMapWPSClientDialog extends JDialog {
 
                     Object o1 = treeWPSCapsMap.get(o);
                     if (o1 != null) {
-                        if (o1 instanceof ProcessBriefType) {
-                            ProcessBriefType pBrief = (ProcessBriefType) o1;
+                        if (o1 instanceof Process) {
+                            Process pBrief = (Process) o1;
 
-                            String id = pBrief.getIdentifier().getStringValue();
+                            String id = pBrief.getId();
                             String title = "";
                             if (pBrief.getTitle() != null) {
-                                title = pBrief.getTitle().getStringValue();
+                                title = pBrief.getTitle();
                             }
 
                             String abstractS = "";
                             if (pBrief.getAbstract() != null) {
-                                abstractS = pBrief.getAbstract().getStringValue();
+                                abstractS = pBrief.getAbstract();
                             }
 
                             processDetailsEditorPane.setText("Identifier:" + "\n" + id + "\n\n" + "Title:" + "\n" + title + "\n\n" + "Abstract:" + "\n" + abstractS);
-                        } else if (o1 instanceof WPSCapabilitiesType) {
-                            WPSCapabilitiesType wpsCaps = (WPSCapabilitiesType) o1;
+                        } else if (o1 instanceof WPSCapabilities) {
+                            WPSCapabilities wpsCaps = (WPSCapabilities) o1;
 
-                            processDetailsEditorPane.setText("Title:" + "\n" + wpsCaps.getServiceIdentification().getTitleArray(0).getStringValue() + "\n\n" + "Abstract:\n"
-                                    + wpsCaps.getServiceIdentification().getAbstractArray(0).getStringValue());
+                            processDetailsEditorPane.setText("Title:" + "\n" + wpsCaps.getServiceIdentification().getTitle() + "\n\n" + "Abstract:\n"
+                                    + wpsCaps.getServiceIdentification().getAbstract());
 
                         }
                     }
@@ -712,9 +722,11 @@ public class ArcMapWPSClientDialog extends JDialog {
 
                 for (String identifier : selectedProcesses) {
 
-                    wpsfac.functionNames.add(identifier + "@" + url);
+                    String completeName = identifier + "@" + url + "@" + version;
 
-                    IGPFunction function = wpsfac.getFunction(identifier + "@" + url);
+                    wpsfac.functionNames.add(completeName);
+
+                    IGPFunction function = wpsfac.getFunction(completeName);
 
                     IGPTool tool = tbox.createTool(esriGPToolType.esriGPFunctionTool, identifier, identifier, identifier, url, null);
 

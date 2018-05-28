@@ -14,15 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
+  52 North WPS Client libary under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Base64 Conversion Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Communication Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Extension under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Zipped Shapefile Export Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Zipped Shapefile Unzip Tool under The Apache Software License, Version 2.0
-  52North WPS Client Library under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52North WPS Commons under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52North WPS Input/Ouput Implementation under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52North WPS Input/Output API under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  52°North Jan Mayen under The Apache Software License, Version 2.0
+  Apache Commons Configuration under Apache License, Version 2.0
+  Apache Commons Lang under The Apache Software License, Version 2.0
+  Apache Commons Logging under The Apache Software License, Version 2.0
+  Apache HttpClient under Apache License, Version 2.0
+  Apache HttpCore under Apache License, Version 2.0
   Apache Log4j API under The Apache Software License, Version 2.0
   Apache Log4j Core under The Apache Software License, Version 2.0
   Apache Log4j SLF4J Binding under The Apache Software License, Version 2.0
@@ -44,6 +50,7 @@ This project includes:
   Filter Encoding Specification Model under The Apache Software License, Version 2.0
   Filter Encoding Specification XML Support under The Apache Software License, Version 2.0
   Filter XML Support under The Apache Software License, Version 2.0
+  FindBugs-jsr305 under The Apache Software License, Version 2.0
   GeoJSON Support under The Apache Software License, Version 2.0
   GeoTIFF grid coverage exchange module under The Apache Software License, Version 2.0
   GML2 XML Support under The Apache Software License, Version 2.0
@@ -59,9 +66,13 @@ This project includes:
   Image I/O-Extensions - Improved TIFF Plugin under BSD License
   Image I/O-Extensions - Pure java ArcGrid Plugin under GNU Lesser General Public License, version 3 or later (LGPL)
   Image I/O-Extensions - utilities classes and methods under GNU Lesser General Public License, version 3 or later (LGPL)
+  Jackson-annotations under The Apache Software License, Version 2.0
+  Jackson-core under The Apache Software License, Version 2.0
+  jackson-databind under The Apache Software License, Version 2.0
   jai_codec under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
   jai_imageio under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
   Java Advanced Imaging under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
+  javax.inject under The Apache Software License, Version 2.0
   JCL 1.1.1 implemented over SLF4J under MIT License
   jdom under JDOM license, https://github.com/hunterhacker/jdom/blob/master/LICENSE.txt
   jGridShift under GNU Lesser General Public License, version 2.0 (LGPLv2)
@@ -75,12 +86,15 @@ This project includes:
   JUnit under Common Public License Version 1.0
   KML XML Support under The Apache Software License, Version 2.0
   Log4j Implemented Over SLF4J under Apache Software Licenses
-  Logging under The Apache Software License, Version 2.0
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Main module under The Apache Software License, Version 2.0
   mapscript under MapServer License (MIT license)
   Metadata under The Apache Software License, Version 2.0
   OGC OWS schema (spec. v1.1.0) under The Apache Software License, Version 2.0
+  OGC OWS schema (spec. v2.0) under The Apache Software License, Version 2.0
   OGC WPS schema (spec. v1.0.0) under The Apache Software License, Version 2.0
+  OGC WPS schema (spec. v2.0) under The Apache Software License, Version 2.0
   ogckml2.2 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
   Open GIS Interfaces under The Apache Software License, Version 2.0
   Open Web Services Model under The Apache Software License, Version 2.0

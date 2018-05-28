@@ -20,14 +20,18 @@ import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,8 +42,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -48,42 +50,28 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import net.opengis.ows.x11.DomainMetadataType;
-import net.opengis.ows.x11.ExceptionReportDocument;
-import net.opengis.ows.x11.ExceptionType;
-import net.opengis.ows.x11.ValueType;
-import net.opengis.wps.x100.ComplexDataDescriptionType;
-import net.opengis.wps.x100.ComplexDataType;
-import net.opengis.wps.x100.DataInputsType;
-import net.opengis.wps.x100.DataType;
-import net.opengis.wps.x100.DocumentOutputDefinitionType;
-import net.opengis.wps.x100.ExecuteDocument;
-import net.opengis.wps.x100.ExecuteDocument.Execute;
-import net.opengis.wps.x100.ExecuteResponseDocument;
-import net.opengis.wps.x100.ExecuteResponseDocument.ExecuteResponse;
-import net.opengis.wps.x100.InputDescriptionType;
-import net.opengis.wps.x100.InputReferenceType;
-import net.opengis.wps.x100.InputType;
-import net.opengis.wps.x100.LiteralDataType;
-import net.opengis.wps.x100.LiteralInputType;
-import net.opengis.wps.x100.OutputDataType;
-import net.opengis.wps.x100.OutputDescriptionType;
-import net.opengis.wps.x100.OutputReferenceType;
-import net.opengis.wps.x100.ProcessDescriptionType;
-import net.opengis.wps.x100.ProcessDescriptionType.DataInputs;
-import net.opengis.wps.x100.ResponseDocumentType;
-import net.opengis.wps.x100.ResponseFormType;
-import net.opengis.wps.x100.SupportedComplexDataInputType;
-
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.n52.client.arcmap.util.Download;
 import org.n52.client.arcmap.util.InputTypeEnum;
-import org.n52.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.WPSClientSession;
+import org.n52.geoprocessing.wps.client.model.AllowedValues;
+import org.n52.geoprocessing.wps.client.model.ComplexInputDescription;
+import org.n52.geoprocessing.wps.client.model.Format;
+import org.n52.geoprocessing.wps.client.model.InputDescription;
+import org.n52.geoprocessing.wps.client.model.LiteralInputDescription;
+import org.n52.geoprocessing.wps.client.model.OutputDescription;
+import org.n52.geoprocessing.wps.client.model.Process;
+import org.n52.geoprocessing.wps.client.model.ResponseMode;
+import org.n52.geoprocessing.wps.client.model.TransmissionMode;
+import org.n52.geoprocessing.wps.client.model.execution.ComplexInput;
+import org.n52.geoprocessing.wps.client.model.execution.ComplexInputReference;
+import org.n52.geoprocessing.wps.client.model.execution.Execute;
+import org.n52.geoprocessing.wps.client.model.execution.ExecuteOutput;
+import org.n52.geoprocessing.wps.client.model.execution.ExecutionMode;
+import org.n52.geoprocessing.wps.client.model.execution.LiteralInput;
 import org.n52.wps.io.data.GenericFileDataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.esri.arcgis.datainterop.FMEDestDatasetType;
@@ -100,10 +88,6 @@ import com.esri.arcgis.geoprocessing.GPBoolean;
 import com.esri.arcgis.geoprocessing.GPBooleanType;
 import com.esri.arcgis.geoprocessing.GPCodedValueDomain;
 import com.esri.arcgis.geoprocessing.GPCompositeDataType;
-import com.esri.arcgis.geoprocessing.GPDouble;
-import com.esri.arcgis.geoprocessing.GPDoubleType;
-import com.esri.arcgis.geoprocessing.GPLong;
-import com.esri.arcgis.geoprocessing.GPLongType;
 import com.esri.arcgis.geoprocessing.GPParameter;
 import com.esri.arcgis.geoprocessing.GPString;
 import com.esri.arcgis.geoprocessing.GPStringType;
@@ -116,6 +100,15 @@ import com.esri.arcgis.system.Array;
 import com.esri.arcgis.system.IArray;
 import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
+
+import net.opengis.ows.x11.ExceptionReportDocument;
+import net.opengis.ows.x11.ExceptionType;
+import net.opengis.wps.x100.ComplexDataType;
+import net.opengis.wps.x100.DataType;
+import net.opengis.wps.x100.ExecuteResponseDocument;
+import net.opengis.wps.x100.ExecuteResponseDocument.ExecuteResponse;
+import net.opengis.wps.x100.OutputDataType;
+import net.opengis.wps.x100.OutputReferenceType;
 
 /**
  * This class represents a ArcGIS geoprocessing tool that communicates with
@@ -146,6 +139,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
     private final String outputPrefix = "out_";
 
+    private String version = "1.0.0";
+
     public WPSFunction() {
 
     }
@@ -156,6 +151,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             this.toolName = toolName;
             this.displayName = identifierAndURL[0];
+            try {
+                this.version = identifierAndURL[2];
+            } catch (Exception e) {
+                LOGGER.error("Could not extract version from tool name: " + identifierAndURL + ". Possibly an old process was started with a new version of the client. Falling back to verssion 1.0.0.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +202,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         WPSClientSession session = WPSClientSession.getInstance();
 
-        ProcessDescriptionType descriptionType = null;
+        Process descriptionType = null;
 
         JFrame progressFrame = new JFrame();
         try {
@@ -241,32 +241,35 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 progressFrame.setVisible(true);
             }
 
+            session.connect(wpsURL, version);
+
             /**
              * TODO: do that maybe beforehand, if we want the input and output
              * descriptions for the process already at the process selection
              * panel
              */
-            descriptionType = session.getProcessDescription(wpsURL, displayName);
+            descriptionType = session.getProcessDescription(wpsURL, displayName, version);
 
             progressFrame.setVisible(false);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
             JOptionPane.showMessageDialog(progressFrame, "Could not connect to: \n" + wpsURL + ".", "52 North WPS ArcMap Client", 1);
             progressFrame.setVisible(false);
             return null;
         }
 
-        DataInputs dataInputs = descriptionType.getDataInputs();
-        InputDescriptionType[] inputDescriptions = dataInputs.getInputArray();
+        List<InputDescription> dataInputs = descriptionType.getInputs();
 
-        for (int i = 0; i < inputDescriptions.length; i++) {
+        Iterator<InputDescription> dataInputsIterator = dataInputs.iterator();
 
-            final InputDescriptionType currentDescriptionType = inputDescriptions[i];
+        while(dataInputsIterator.hasNext()) {
 
-            String labelText = currentDescriptionType.getIdentifier().getStringValue();
+            final InputDescription currentDescription = dataInputsIterator.next();
 
-            InputTypeEnum type = checkType(currentDescriptionType);
+            String labelText = currentDescription.getId();
+
+            InputTypeEnum type = checkType(currentDescription);
 
             switch (type) {
             case Complex:
@@ -280,7 +283,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 complexParameter.setName(labelText);
                 complexParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
                 complexParameter.setDisplayName(labelText);
-                if (currentDescriptionType.getMinOccurs().intValue() > 0) {
+                if (currentDescription.getMinOccurs() > 0) {
                     complexParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
                 } else {
                     complexParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
@@ -290,7 +293,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 complexParameter.setValueByRef(new GPString());
                 parameters.add(complexParameter);
 
-                addSchemaMimeTypeEncodingToParameters(parameters, currentDescriptionType);
+                addSchemaMimeTypeEncodingToParameters(parameters, currentDescription);
 
                 try {
                     addReferenceParameter(labelText, parameters, esriGPParameterDirection.esriGPParameterDirectionInput);
@@ -305,75 +308,81 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 literalParameter.setName(labelText);
                 literalParameter.setDirection(esriGPParameterDirection.esriGPParameterDirectionInput);
                 literalParameter.setDisplayName(labelText);
-                if (currentDescriptionType.getMinOccurs().intValue() > 0) {
+                if (currentDescription.getMinOccurs() > 0) {
                     literalParameter.setParameterType(esriGPParameterType.esriGPParameterTypeRequired);
                 } else {
                     literalParameter.setParameterType(esriGPParameterType.esriGPParameterTypeOptional);
                 }
 
-                DomainMetadataType dataType = currentDescriptionType.getLiteralData().getDataType();
+                LiteralInputDescription literalInputDescription = (LiteralInputDescription)currentDescription;
+
+                String dataTypeString = literalInputDescription.getDataType();
 
                 boolean noDataTypeFound = false;
 
-                if (dataType != null) {
-
-                    String dataTypeString = currentDescriptionType.getLiteralData().getDataType().getReference();
-
-                    if (dataTypeString == null) {
-                        dataTypeString = currentDescriptionType.getLiteralData().getDataType().getStringValue();
-                    }
-                    if (dataTypeString != null) {
-
-                        if (dataTypeString.contains("double")) {
-                            // parameter2.setDataTypeByRef(new GPDoubleType());
-                            // parameter2.setValueByRef(new GPDouble());
-                            /*
-                             * try this to avoid decimal point/comma issues
-                             */
-                            literalParameter.setDataTypeByRef(new GPStringType());
-                            literalParameter.setValueByRef(new GPString());
-                        } else if (dataTypeString.contains("string")) {
-                            literalParameter.setDataTypeByRef(new GPStringType());
-                            literalParameter.setValueByRef(new GPString());
-                        } else if (dataTypeString.contains("integer") || dataTypeString.contains("int")) {
-                            literalParameter.setDataTypeByRef(new GPLongType());
-                            literalParameter.setValueByRef(new GPLong());
-                        } else if (dataTypeString.contains("dateTime")) {
-                            //TODO: use String here as format of dateTime is not clear
-                            literalParameter.setDataTypeByRef(new GPStringType());
-                            literalParameter.setValueByRef(new GPString());
-                        } else if (dataTypeString.contains("boolean") || dataTypeString.contains("bool")) {
-                            literalParameter.setDataTypeByRef(new GPBooleanType());
-                            literalParameter.setValueByRef(new GPBoolean());
-                        } else if (dataTypeString.contains("float")) {
-                            literalParameter.setDataTypeByRef(new GPDoubleType());
-                            literalParameter.setValueByRef(new GPDouble());
-                        } else {
-                            noDataTypeFound = true;
-                        }
-                    } else {
-                        noDataTypeFound = true;
-                    }
-
-                } else {
+                if(dataTypeString != null) {
                     noDataTypeFound = true;
                 }
 
+//                if (dataType != null) {
+//
+//                    String dataTypeString = currentDescription.getLiteralData().getDataType().getReference();
+//
+//                    if (dataTypeString == null) {
+//                        dataTypeString = currentDescription.getLiteralData().getDataType().getStringValue();
+//                    }
+//                    if (dataTypeString != null) {
+//
+//                        if (dataTypeString.contains("double")) {
+//                            // parameter2.setDataTypeByRef(new GPDoubleType());
+//                            // parameter2.setValueByRef(new GPDouble());
+//                            /*
+//                             * try this to avoid decimal point/comma issues
+//                             */
+//                            literalParameter.setDataTypeByRef(new GPStringType());
+//                            literalParameter.setValueByRef(new GPString());
+//                        } else if (dataTypeString.contains("string")) {
+//                            literalParameter.setDataTypeByRef(new GPStringType());
+//                            literalParameter.setValueByRef(new GPString());
+//                        } else if (dataTypeString.contains("integer") || dataTypeString.contains("int")) {
+//                            literalParameter.setDataTypeByRef(new GPLongType());
+//                            literalParameter.setValueByRef(new GPLong());
+//                        } else if (dataTypeString.contains("dateTime")) {
+//                            //TODO: use String here as format of dateTime is not clear
+//                            literalParameter.setDataTypeByRef(new GPStringType());
+//                            literalParameter.setValueByRef(new GPString());
+//                        } else if (dataTypeString.contains("boolean") || dataTypeString.contains("bool")) {
+//                            literalParameter.setDataTypeByRef(new GPBooleanType());
+//                            literalParameter.setValueByRef(new GPBoolean());
+//                        } else if (dataTypeString.contains("float")) {
+//                            literalParameter.setDataTypeByRef(new GPDoubleType());
+//                            literalParameter.setValueByRef(new GPDouble());
+//                        } else {
+//                            noDataTypeFound = true;
+//                        }
+//                    } else {
+//                        noDataTypeFound = true;
+//                    }
+//
+//                } else {
+//                    noDataTypeFound = true;
+//                }
+
                 try {
 
-                    if (currentDescriptionType.getLiteralData().getAllowedValues() != null) {
+                    if (literalInputDescription.getAllowedValues() != null) {
 
-                        ValueType[] allowedValues = currentDescriptionType.getLiteralData().getAllowedValues().getValueArray();
+                        AllowedValues allowedValuesSuperType = literalInputDescription.getAllowedValues();
+
+                        List<String> allowedValues = allowedValuesSuperType.getAllowedValues();
 
                         IGPCodedValueDomain domain = new GPCodedValueDomain();
 
-                        for (ValueType allowedValue : allowedValues) {
+                        for (String allowedValue : allowedValues) {
 
-                            String string = allowedValue.getStringValue();
+                            LOGGER.debug("Allowed value " + allowedValue);
 
-                            LOGGER.debug("Allowed value " + string);
-
-                            domain.addStringCode(string, string);
+                            domain.addStringCode(allowedValue, allowedValue);
                         }
                         // Assign the domain to the parameter.
                         literalParameter.setDomainByRef((IGPDomain) domain);
@@ -384,13 +393,13 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     } else {
                         literalParameter.setDataTypeByRef(new GPStringType());
 
-                        String defaultValue = currentDescriptionType.getLiteralData().getDefaultValue();
+                        Object defaultValue = literalInputDescription.getDefaultValue();
 
                         if (defaultValue != null && !defaultValue.equals("")) {
 
                             GPString gpString = new GPString();
 
-                            gpString.setValue(defaultValue);
+                            gpString.setValue(defaultValue.toString());
 
                             literalParameter.setValueByRef(gpString);
                         } else {
@@ -410,14 +419,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         }
 
-        for (OutputDescriptionType outDescType : descriptionType.getProcessOutputs().getOutputArray()) {
+        for (OutputDescription outDescType : descriptionType.getOutputs()) {
             // TODO add support for literal-/bboxdata
-            if (outDescType.getComplexOutput() == null) {
-                LOGGER.info("Skipping non-complex output {}", outDescType.getIdentifier().getStringValue());
-                continue;
-            }
+//            if (outDescType.getComplexOutput() == null) {
+//                LOGGER.info("Skipping non-complex output {}", outDescType.getId());
+//                continue;
+//            }
 
-            String identifier = outDescType.getIdentifier().getStringValue();
+            String identifier = outDescType.getId();
 
             GPParameter outputParameter = new GPParameter();
             outputParameter.setName(outputPrefix + identifier);
@@ -501,21 +510,21 @@ public class WPSFunction extends BaseGeoprocessingTool {
         try {
             messages.addMessage("WPS URL: " + wpsURL);
 
-            WPSClientSession.getInstance().connect(wpsURL);
+            WPSClientSession.getInstance().connect(wpsURL, version);
 
             Map<String, String> parameterNameValueMap = getParameterNameValueMap(paramvalues);
 
-            ProcessDescriptionType pDescType = WPSClientSession.getInstance().getProcessDescription(wpsURL, displayName);
+            Process process = WPSClientSession.getInstance().getProcessDescription(wpsURL, displayName, version);
 
-            ExecuteDocument execDoc = createExecuteDocument(parameterNameValueMap, pDescType, messages);
+            Execute execute = createExecuteDocument(parameterNameValueMap, process, messages);
 
-            if (execDoc == null) {
+            if (execute == null) {
                 return;
             }
 
             //only debug execute document if smaller than 5 MB
-            if(execDoc.toString().length() < 5242880){
-                LOGGER.debug(execDoc.toString());
+            if(execute.toString().length() < 5242880){
+                LOGGER.debug(execute.toString());
             }
 
             try {
@@ -526,7 +535,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                  */
             }
 
-            Object response = WPSClientSession.getInstance().execute(wpsURL, execDoc);
+            Object response = WPSClientSession.getInstance().execute(wpsURL, execute, version);
 
             try {
                 messages.addMessage("Got response.");
@@ -744,27 +753,29 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
     }
 
-    private ExecuteDocument createExecuteDocument(Map<String, String> parameterNameValueMap,
-            ProcessDescriptionType pDescType,
+    private Execute createExecuteDocument(Map<String, String> parameterNameValueMap,
+            Process process,
             IGPMessages messages) {
 
-        ExecuteDocument result = ExecuteDocument.Factory.newInstance();
+        Execute ex = new Execute();
 
-        Execute ex = result.addNewExecute();
+        ex.setId(process.getId());
 
-        ex.setVersion("1.0.0");
+        ex.setResponseMode(ResponseMode.RAW);
 
-        ex.setService("WPS");
+        ex.setExecutionMode(ExecutionMode.ASYNC);
 
-        ex.addNewIdentifier().setStringValue(pDescType.getIdentifier().getStringValue());
+//        DataInputsType executeDataInputs = ex.addNewDataInputs();
 
-        DataInputsType dataInputs = ex.addNewDataInputs();
+        List<InputDescription> inputDescTypes = process.getInputs();
 
-        InputDescriptionType[] inputDescTypes = pDescType.getDataInputs().getInputArray();
+        Iterator<InputDescription> dataInputsIterator = inputDescTypes.iterator();
 
-        for (InputDescriptionType inputDescriptionType : inputDescTypes) {
+        while(dataInputsIterator.hasNext()) {
 
-            String identifier = inputDescriptionType.getIdentifier().getStringValue();
+            InputDescription inputDescriptionType = dataInputsIterator.next();
+
+            String identifier = inputDescriptionType.getId();
 
             InputTypeEnum type = checkType(inputDescriptionType);
 
@@ -793,30 +804,25 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 String isReference = parameterNameValueMap.get(identifier + "_reference");
                 LOGGER.debug("IsReference = " + isReference);
 
-                InputType inTypeVector = dataInputs.addNewInput();
+                ComplexInput executeInput = new ComplexInput();
 
-                inTypeVector.addNewIdentifier().setStringValue(identifier);
+                executeInput.setId(identifier);
 
                 if (isReference != null && Boolean.parseBoolean(isReference)) {
 
-                    InputReferenceType inHref = inTypeVector.addNewReference();
+                    ComplexInputReference inHref = new ComplexInputReference();
 
-                    inHref.setHref(value);
-
-                    if (mimeType != null && !mimeType.equals("")) {
-
-                        inHref.setMimeType(mimeType);
+                    URL referenceURL;
+                    try {
+                        referenceURL = new URL(value);
+                    } catch (MalformedURLException e) {
+                        LOGGER.error("Could not form URL from value: " + value, e);
+                        break;
                     }
 
-                    if (schema != null && !schema.equals("")) {
+                    inHref.setHref(referenceURL);
 
-                        inHref.setSchema(schema);
-                    }
-
-                    if (encoding != null && !encoding.equals("")) {
-
-                        inHref.setEncoding(encoding);
-                    }
+                    executeInput.setReference(inHref);
 
                 } else {
                     try {
@@ -874,94 +880,48 @@ public class WPSFunction extends BaseGeoprocessingTool {
                         }
                     }
 
-                    DocumentBuilderFactory factoryVector = DocumentBuilderFactory.newInstance();
 
-                    if (mimeType != null && mimeType.contains("xml")) {
-                        try {
+                    BufferedReader bufferedReader;
+                    try {
+                        bufferedReader = new BufferedReader(new FileReader(inputFile));
 
-                            DataType dataTypeVector = inTypeVector.addNewData();
+                    String content = "";
 
-                            ComplexDataType cDataTypeVector = dataTypeVector.addNewComplexData();
+                    String line = "";
 
-                            factoryVector.setNamespaceAware(true);
+                    while((line = bufferedReader.readLine()) != null) {
+                        content = content.concat(line);
+                    }
 
-                            // TODO: just parse text input??? For
-                            // vector/raster/whatever??
-                            DocumentBuilder builder = factoryVector.newDocumentBuilder();
+                    executeInput.setValue(content);
 
-                            Document d = builder.parse(new File(value));
-
-                            cDataTypeVector.set(XmlObject.Factory.parse(d));
-
-                            if (mimeType != null && !mimeType.equals("")) {
-
-                                cDataTypeVector.setMimeType(mimeType);
-                            }
-
-                            if (schema != null && !schema.equals("")) {
-
-                                cDataTypeVector.setSchema(schema);
-                            }
-
-                            if (encoding != null && !encoding.equals("")) {
-
-                                cDataTypeVector.setEncoding(encoding);
-                            }
-
-                        } catch (Exception e) {
-                            LOGGER.error("Can not parse input XML", e);
-                        }
-                    } else {
-
-                        try {
-
-                            BufferedReader bread = new BufferedReader(new FileReader(new File(value)));
-
-                            String content = "";
-
-                            char[] chars = new char[8192];
-
-                            while (bread.read(chars) != -1) {
-                                content = content.concat(String.valueOf(chars));
-                            }
-
-                            content = content.trim();
-
-                            bread.close();
-
-                            DataType dataTypeVector = inTypeVector.addNewData();
-
-                            ComplexDataType cDataTypeVector = dataTypeVector.addNewComplexData();
-
-                            factoryVector.setNamespaceAware(true);
-
-                            DocumentBuilder builder = factoryVector.newDocumentBuilder();
-
-                            Document d = builder.newDocument();
-
-                            Node cdata = d.createCDATASection(content);
-
-                            cDataTypeVector.set(XmlObject.Factory.parse(cdata));
-
-                            if (mimeType != null && !mimeType.equals("")) {
-
-                                cDataTypeVector.setMimeType(mimeType);
-                            }
-
-                            if (schema != null && !schema.equals("")) {
-
-                                cDataTypeVector.setSchema(schema);
-                            }
-
-                            if (encoding != null && !encoding.equals("")) {
-
-                                cDataTypeVector.setEncoding(encoding);
-                            }
-                        } catch (Exception e) {
-                            LOGGER.error(e.getMessage());
-                        }
+                    } catch (FileNotFoundException e) {
+                        LOGGER.error("File not found:" + value, e);
+                        break;
+                    } catch (IOException e) {
+                        LOGGER.error("Could not read file: " + value, e);
                     }
                 }
+
+                Format format = new Format();
+
+                if (mimeType != null && !mimeType.equals("")) {
+
+                    format.setMimeType(mimeType);
+                }
+
+                if (schema != null && !schema.equals("")) {
+
+                    format.setSchema(schema);
+                }
+
+                if (encoding != null && !encoding.equals("")) {
+
+                    format.setEncoding(encoding);
+                }
+                executeInput.setFormat(format);
+
+                ex.addInput(executeInput);
 
                 try {
                     messages.addMessage("Done.");
@@ -975,32 +935,17 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             case Literal:
 
-                InputType inType1 = dataInputs.addNewInput();
+                LiteralInput literalInput = new LiteralInput();
 
-                inType1.addNewIdentifier().setStringValue(identifier);
+                literalInput.setId(identifier);
 
-                DataType dataType1 = inType1.addNewData();
+                String literalDatatype = ((LiteralInputDescription)inputDescriptionType).getDataType();
 
-                LiteralDataType lit = dataType1.addNewLiteralData();
+                literalInput.setDataType(literalDatatype);
 
-                DomainMetadataType literalDatatype = inputDescriptionType.getLiteralData().getDataType();
+                literalInput.setValue(value);
 
-                String datatypeRef = null;
-
-                if (literalDatatype != null) {
-                    datatypeRef = literalDatatype.getReference();
-                    if (datatypeRef == null) {
-                        datatypeRef = literalDatatype.getStringValue();
-                    }
-                }
-
-                if (datatypeRef == null) {
-                    datatypeRef = "xs:string";
-                }
-
-                lit.setDataType(datatypeRef);
-
-                lit.setStringValue(value);
+                ex.addInput(literalInput);
 
                 break;
             default:
@@ -1008,45 +953,43 @@ public class WPSFunction extends BaseGeoprocessingTool {
             }
         }
         try {
-            addResponseForm(pDescType, ex, parameterNameValueMap, messages);
+            addResponseForm(process, ex, parameterNameValueMap, messages);
         } catch (IllegalArgumentException e) {
             return null;
         }
-        return result;
+        return ex;
     }
 
-    private void addResponseForm(ProcessDescriptionType pDescType,
+    private void addResponseForm(Process pDescType,
             Execute ex,
             Map<String, String> parameterNameValueMap,
             IGPMessages messages) throws IllegalArgumentException {
 
-        ArrayList<OutputDescriptionType> outputDescTypes = new ArrayList<OutputDescriptionType>(pDescType.getProcessOutputs().getOutputArray().length);
+        ArrayList<OutputDescription> outputDescTypes = new ArrayList<OutputDescription>(pDescType.getOutputs().size());
 
-        for (OutputDescriptionType outDescType : pDescType.getProcessOutputs().getOutputArray()) {
-            if (parameterNameValueMap.get(outputPrefix + outDescType.getIdentifier().getStringValue()) != null) {
+        List<OutputDescription> outputDescriptions = pDescType.getOutputs();
+
+        for (OutputDescription outDescType : outputDescriptions) {
+            if (parameterNameValueMap.get(outputPrefix + outDescType.getId()) != null) {
                 outputDescTypes.add(outDescType);
             }
         }
 
-        ResponseFormType responseForm = ex.addNewResponseForm();
+        for (OutputDescription outputDescriptionType : outputDescTypes) {
 
-        ResponseDocumentType responseDocument = responseForm.addNewResponseDocument();
+            String identifier = outputDescriptionType.getId();
 
-        for (OutputDescriptionType outputDescriptionType : outputDescTypes) {
+            ExecuteOutput output = new ExecuteOutput();
 
-            String identifier = outputDescriptionType.getIdentifier().getStringValue();
-
-            DocumentOutputDefinitionType output = responseDocument.addNewOutput();
-
-            output.addNewIdentifier().setStringValue(identifier);
+            output.setId(identifier);
             /*
              * TODO: add strategy for empty schema/mimetype/encoding
              */
             String schema = parameterNameValueMap.get(identifier + "_schema");
             LOGGER.debug("Schema = " + schema);
 
-            String mimeType1 = parameterNameValueMap.get(identifier + "_mimetype");
-            LOGGER.debug("Mime Type = " + mimeType1);
+            String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
+            LOGGER.debug("Mime Type = " + mimeType);
 
             String encoding = parameterNameValueMap.get(identifier + "_encoding");
             LOGGER.debug("Mime Type = " + encoding);
@@ -1055,18 +998,25 @@ public class WPSFunction extends BaseGeoprocessingTool {
             LOGGER.debug("IsReference = " + isReference);
 
             if (isReference != null && Boolean.parseBoolean(isReference)) {
-                output.setAsReference(true);
+                output.setTransmissionMode(TransmissionMode.REFERENCE);
+                ex.setResponseMode(ResponseMode.DOCUMENT);
             }
 
-            if (mimeType1 != null && !mimeType1.equals("")) {
-                output.setMimeType(mimeType1);
+            Format outputFormat = new Format();
+
+            if (mimeType != null && !mimeType.equals("")) {
+                outputFormat.setMimeType(mimeType);
             }
             if (encoding != null && !encoding.equals("")) {
-                output.setEncoding(encoding);
+                outputFormat.setEncoding(encoding);
             }
             if (schema != null && !schema.equals("")) {
-                output.setSchema(schema);
+                outputFormat.setSchema(schema);
             }
+
+            output.setFormat(outputFormat);
+
+            ex.addOutput(output);
         }
 
     }
@@ -1112,14 +1062,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
         WPSFunction.app = app;
     }
 
-    private InputTypeEnum checkType(InputDescriptionType inputDescType) {
+    private InputTypeEnum checkType(InputDescription inputDescription) {
 
-        SupportedComplexDataInputType cDataType = inputDescType.getComplexData();
-        LiteralInputType lDataType = inputDescType.getLiteralData();
-
-        if (cDataType != null) {
+        if (inputDescription instanceof ComplexInputDescription) {
             return InputTypeEnum.Complex;
-        } else if (lDataType != null) {
+        } else if (inputDescription instanceof LiteralInputDescription) {
             return InputTypeEnum.Literal;
         }
         return InputTypeEnum.Unknown;
@@ -1136,16 +1083,17 @@ public class WPSFunction extends BaseGeoprocessingTool {
         return null;
     }
 
+    //TODO use supertype and merge with method below
     private void addSchemaMimeTypeEncodingToParameters(IArray params,
-            InputDescriptionType currentDescriptionType) {
+            InputDescription inputDescription) {
 
-        String labelText = currentDescriptionType.getIdentifier().getStringValue();
+        String labelText = inputDescription.getId();
 
         Set<String> schemas = new HashSet<String>();
         Set<String> mimeTypes = new HashSet<String>();
         Set<String> encodings = new HashSet<String>();
 
-        ComplexDataDescriptionType defaultFormat = currentDescriptionType.getComplexData().getDefault().getFormat();
+        Format defaultFormat = inputDescription.getDefaultFormat();
 
         String defaultSchema = defaultFormat.getSchema();
         String defaultEncoding = defaultFormat.getEncoding();
@@ -1158,12 +1106,14 @@ public class WPSFunction extends BaseGeoprocessingTool {
         }
         mimeTypes.add(defaultFormat.getMimeType());
 
-        ComplexDataDescriptionType[] supportedFormats = currentDescriptionType.getComplexData().getSupported().getFormatArray();
+        List<Format> supportedFormats = inputDescription.getFormats();
 
-        for (ComplexDataDescriptionType complexDataDescriptionType : supportedFormats) {
+        for (Format format : supportedFormats) {
 
-            String supportedSchema = complexDataDescriptionType.getSchema();
-            String supportedEncoding = complexDataDescriptionType.getEncoding();
+            //TODO skip default format?
+
+            String supportedSchema = format.getSchema();
+            String supportedEncoding = format.getEncoding();
 
             if (supportedSchema != null && !supportedSchema.equals("")) {
                 schemas.add(supportedSchema);
@@ -1173,7 +1123,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 encodings.add(supportedEncoding);
             }
 
-            mimeTypes.add(complexDataDescriptionType.getMimeType());
+            mimeTypes.add(format.getMimeType());
         }
 
         if (!schemas.isEmpty()) {
@@ -1213,35 +1163,46 @@ public class WPSFunction extends BaseGeoprocessingTool {
         }
     }
 
+    //TODO use supertype and merge with method above
     private void addSchemaMimeTypeEncodingToParameters(Array parameters2,
-            OutputDescriptionType outDescType) {
-        String labelText = outDescType.getIdentifier().getStringValue();
+            OutputDescription outputDescription) {
+        String labelText = outputDescription.getId();
 
         Set<String> schemas = new HashSet<String>();
         Set<String> mimeTypes = new HashSet<String>();
         Set<String> encodings = new HashSet<String>();
 
-        ComplexDataDescriptionType defaultFormat = outDescType.getComplexOutput().getDefault().getFormat();
+        Format defaultFormat = outputDescription.getDefaultFormat();
 
         String defaultSchema = defaultFormat.getSchema();
+        String defaultEncoding = defaultFormat.getEncoding();
 
         if (defaultSchema != null && !defaultSchema.equals("")) {
             schemas.add(defaultSchema);
         }
+        if (defaultEncoding != null && !defaultEncoding.equals("")) {
+            encodings.add(defaultEncoding);
+        }
         mimeTypes.add(defaultFormat.getMimeType());
-        encodings.add(defaultFormat.getEncoding());
 
-        ComplexDataDescriptionType[] supportedFormats = outDescType.getComplexOutput().getSupported().getFormatArray();
+        List<Format> supportedFormats = outputDescription.getFormats();
 
-        for (ComplexDataDescriptionType complexDataDescriptionType : supportedFormats) {
-            String supportedSchema = complexDataDescriptionType.getSchema();
+        for (Format format : supportedFormats) {
+
+            //TODO skip default format?
+
+            String supportedSchema = format.getSchema();
+            String supportedEncoding = format.getEncoding();
 
             if (supportedSchema != null && !supportedSchema.equals("")) {
                 schemas.add(supportedSchema);
             }
 
-            mimeTypes.add(complexDataDescriptionType.getMimeType());
-            encodings.add(complexDataDescriptionType.getEncoding());
+            if (supportedEncoding != null && !supportedEncoding.equals("")) {
+                encodings.add(supportedEncoding);
+            }
+
+            mimeTypes.add(format.getMimeType());
         }
 
         if (!schemas.isEmpty()) {

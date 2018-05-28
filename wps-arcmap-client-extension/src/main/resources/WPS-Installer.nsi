@@ -99,7 +99,7 @@ Section ""
   SetOutPath $INSTDIR\java\jre\lib\ext
 
   File .\dependency\52n-wps-arcmap-client-log4j2-xml.jar
-  File .\dependency\52n-wps-client-lib-3.2.0.jar
+  File .\dependency\wps-client-lib-1.0.0-SNAPSHOT.jar
   File .\dependency\52n-wps-commons-3.2.0.jar
   File .\dependency\52n-wps-io-3.2.0.jar
   File .\dependency\52n-wps-io-impl-3.2.0.jar
@@ -115,7 +115,7 @@ Section ""
   File .\dependency\log4j-over-slf4j-1.7.5.jar
   File .\dependency\log4j-slf4j-impl-2.0.2.jar
   File .\dependency\slf4j-api-1.7.5.jar
-  File .\dependency\xmlbeans-2.4.0.jar
+  File .\dependency\xmlbeans-2.6.0.jar
 
 SectionEnd 
 
@@ -173,7 +173,7 @@ Section "Uninstall"
   delete $INSTDIR\bin\addins\AddWPSServerAddin.esriAddIn  
   delete $INSTDIR\bin\addins\ArcMapWPSClient.esriaddin
   delete $INSTDIR\java\jre\lib\ext\52n-wps-arcmap-client-log4j2-xml.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-wps-client-lib-3.2.0.jar
+  delete $INSTDIR\java\jre\lib\ext\wps-client-lib-1.0.0-SNAPSHOT.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-commons-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-impl-3.2.0.jar
@@ -189,7 +189,7 @@ Section "Uninstall"
   delete $INSTDIR\java\jre\lib\ext\log4j-over-slf4j-1.7.5.jar
   delete $INSTDIR\java\jre\lib\ext\log4j-slf4j-impl-2.0.2.jar
   delete $INSTDIR\java\jre\lib\ext\slf4j-api-1.7.5.jar
-  delete $INSTDIR\java\jre\lib\ext\xmlbeans-2.4.0.jar
+  delete $INSTDIR\java\jre\lib\ext\xmlbeans-2.6.0.jar
   delete $INSTDIR\java\lib\ext\wps-base64-conversion-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-communication-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-zipped-shp-export-tool-${project.version}.jar
