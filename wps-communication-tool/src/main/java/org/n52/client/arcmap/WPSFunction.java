@@ -239,9 +239,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             if (!session.getLoggedServices().contains(wpsURL)) {
                 progressFrame.setVisible(true);
+                session.connect(wpsURL, version);
             }
-
-            session.connect(wpsURL, version);
 
             /**
              * TODO: do that maybe beforehand, if we want the input and output

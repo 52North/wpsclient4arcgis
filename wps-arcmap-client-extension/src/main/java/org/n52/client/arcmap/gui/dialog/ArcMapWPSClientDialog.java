@@ -284,8 +284,6 @@ public class ArcMapWPSClientDialog extends JDialog {
         okButton.setName("okButton");
         okButton.setPreferredSize(new java.awt.Dimension(67, 23));
 
-        version = versionComboBox.getSelectedItem().toString();
-
         removeButton.addActionListener(new ActionListener() {
 
             @Override
@@ -306,6 +304,8 @@ public class ArcMapWPSClientDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 WPSClientSession.getInstance().disconnect(getWPSUrl());
+
+                version = versionComboBox.getSelectedItem().toString();
                 try {
                     WPSClientSession.getInstance().connect(getWPSUrl(), version);
                     processTree.setVisible(false);
@@ -321,6 +321,7 @@ public class ArcMapWPSClientDialog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                version = versionComboBox.getSelectedItem().toString();
                 connectToWPS(version);
             }
         });

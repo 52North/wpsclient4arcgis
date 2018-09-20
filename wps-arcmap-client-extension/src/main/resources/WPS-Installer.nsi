@@ -99,7 +99,7 @@ Section ""
   SetOutPath $INSTDIR\java\jre\lib\ext
 
   File .\dependency\52n-wps-arcmap-client-log4j2-xml.jar
-  File .\dependency\wps-client-lib-1.0.0-SNAPSHOT.jar
+  File .\dependency\wps-client-lib-2.0.0-SNAPSHOT.jar
   File .\dependency\52n-wps-commons-3.2.0.jar
   File .\dependency\52n-wps-io-3.2.0.jar
   File .\dependency\52n-wps-io-impl-3.2.0.jar
@@ -173,7 +173,7 @@ Section "Uninstall"
   delete $INSTDIR\bin\addins\AddWPSServerAddin.esriAddIn  
   delete $INSTDIR\bin\addins\ArcMapWPSClient.esriaddin
   delete $INSTDIR\java\jre\lib\ext\52n-wps-arcmap-client-log4j2-xml.jar
-  delete $INSTDIR\java\jre\lib\ext\wps-client-lib-1.0.0-SNAPSHOT.jar
+  delete $INSTDIR\java\jre\lib\ext\wps-client-lib-2.0.0-SNAPSHOT.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-commons-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-impl-3.2.0.jar
