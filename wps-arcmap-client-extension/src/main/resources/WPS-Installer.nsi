@@ -29,6 +29,10 @@ ${If} $InstDir == ""
 
 		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5	
 
+	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.6`
+
+		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.6	
+
 	${EndIf}
 	
 	
@@ -60,6 +64,10 @@ Function un.onInit
 	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.5`
 
 		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5
+		
+	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.6`
+
+		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.6
 	${EndIf}
 
 FunctionEnd
@@ -99,23 +107,36 @@ Section ""
   SetOutPath $INSTDIR\java\jre\lib\ext
 
   File .\dependency\52n-wps-arcmap-client-log4j2-xml.jar
-  File .\dependency\wps-client-lib-2.0.0-SNAPSHOT.jar
   File .\dependency\52n-wps-commons-3.2.0.jar
   File .\dependency\52n-wps-io-3.2.0.jar
   File .\dependency\52n-wps-io-impl-3.2.0.jar
-  File .\dependency\52n-xml-ows-v110-2.1.0.jar
-  File .\dependency\52n-xml-wps-v100-2.1.0.jar
-  File .\dependency\52n-xml-xlink-v110-2.1.0.jar
   File .\dependency\commons-codec-1.8.jar
+  File .\dependency\commons-configuration2-2.0.jar
   File .\dependency\commons-io-2.4.jar
+  File .\dependency\commons-lang3-3.3.2.jar
+  File .\dependency\guava-23.4-jre.jar
+  File .\dependency\httpclient-4.5.6.jar
+  File .\dependency\httpcore-4.4.10.jar
+  File .\dependency\jackson-annotations-2.9.0.jar
+  File .\dependency\jackson-core-2.9.2.jar
+  File .\dependency\jackson-databind-2.9.2.jar
+  File .\dependency\javax.inject-1.jar
   File .\dependency\jcl-over-slf4j-1.7.5.jar
+  File .\dependency\joda-time-2.9.9.jar
   File .\dependency\jul-to-slf4j-1.7.5.jar
   File .\dependency\log4j-api-2.0.2.jar
   File .\dependency\log4j-core-2.0.2.jar
   File .\dependency\log4j-over-slf4j-1.7.5.jar
   File .\dependency\log4j-slf4j-impl-2.0.2.jar
+  File .\dependency\shetland-5.0.1.jar
+  File .\dependency\janmayen-5.0.1.jar
+  File .\dependency\svalbard-5.0.1.jar
+  File .\dependency\iceland-5.0.1.jar
   File .\dependency\slf4j-api-1.7.5.jar
-  File .\dependency\xmlbeans-2.6.0.jar
+  File .\dependency\stax-api-1.0.1.jar
+  File .\dependency\wps-client-lib-2.0.0-SNAPSHOT.jar
+  File .\dependency\xml-1.1.1.jar
+  File .\dependency\iceland-stream-1.1.1.jar
 
 SectionEnd 
 
@@ -173,23 +194,36 @@ Section "Uninstall"
   delete $INSTDIR\bin\addins\AddWPSServerAddin.esriAddIn  
   delete $INSTDIR\bin\addins\ArcMapWPSClient.esriaddin
   delete $INSTDIR\java\jre\lib\ext\52n-wps-arcmap-client-log4j2-xml.jar
-  delete $INSTDIR\java\jre\lib\ext\wps-client-lib-2.0.0-SNAPSHOT.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-commons-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-3.2.0.jar
   delete $INSTDIR\java\jre\lib\ext\52n-wps-io-impl-3.2.0.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-xml-ows-v110-2.1.0.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-xml-wps-v100-2.1.0.jar
-  delete $INSTDIR\java\jre\lib\ext\52n-xml-xlink-v110-2.1.0.jar
   delete $INSTDIR\java\jre\lib\ext\commons-codec-1.8.jar
+  delete $INSTDIR\java\jre\lib\ext\commons-configuration2-2.0.jar
   delete $INSTDIR\java\jre\lib\ext\commons-io-2.4.jar
+  delete $INSTDIR\java\jre\lib\ext\commons-lang3-3.3.2.jar
+  delete $INSTDIR\java\jre\lib\ext\guava-23.4-jre.jar
+  delete $INSTDIR\java\jre\lib\ext\httpclient-4.5.6.jar
+  delete $INSTDIR\java\jre\lib\ext\httpcore-4.4.10.jar
+  delete $INSTDIR\java\jre\lib\ext\jackson-annotations-2.9.0.jar
+  delete $INSTDIR\java\jre\lib\ext\jackson-core-2.9.2.jar
+  delete $INSTDIR\java\jre\lib\ext\jackson-databind-2.9.2.jar
+  delete $INSTDIR\java\jre\lib\ext\javax.inject-1.jar
   delete $INSTDIR\java\jre\lib\ext\jcl-over-slf4j-1.7.5.jar
+  delete $INSTDIR\java\jre\lib\ext\joda-time-2.9.9.jar
   delete $INSTDIR\java\jre\lib\ext\jul-to-slf4j-1.7.5.jar
   delete $INSTDIR\java\jre\lib\ext\log4j-api-2.0.2.jar
   delete $INSTDIR\java\jre\lib\ext\log4j-core-2.0.2.jar
   delete $INSTDIR\java\jre\lib\ext\log4j-over-slf4j-1.7.5.jar
   delete $INSTDIR\java\jre\lib\ext\log4j-slf4j-impl-2.0.2.jar
+  delete $INSTDIR\java\jre\lib\ext\shetland-5.0.1.jar
+  delete $INSTDIR\java\jre\lib\ext\janmayen-5.0.1.jar
+  delete $INSTDIR\java\jre\lib\ext\svalbard-5.0.1.jar
+  delete $INSTDIR\java\jre\lib\ext\iceland-5.0.1.jar
   delete $INSTDIR\java\jre\lib\ext\slf4j-api-1.7.5.jar
-  delete $INSTDIR\java\jre\lib\ext\xmlbeans-2.6.0.jar
+  delete $INSTDIR\java\jre\lib\ext\stax-api-1.0.1.jar
+  delete $INSTDIR\java\jre\lib\ext\wps-client-lib-2.0.0-SNAPSHOT.jar
+  delete $INSTDIR\java\jre\lib\ext\xml-1.1.1.jar
+  delete $INSTDIR\java\jre\lib\ext\iceland-stream-1.1.1.jar
   delete $INSTDIR\java\lib\ext\wps-base64-conversion-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-communication-tool-${project.version}.jar
   delete $INSTDIR\java\lib\ext\wps-zipped-shp-export-tool-${project.version}.jar

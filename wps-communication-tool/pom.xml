@@ -16,10 +16,10 @@
 			<artifactId>arcobjects</artifactId>
 			<groupId>com.esri.arcgis</groupId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.xmlbeans</groupId> -->
+<!-- 			<artifactId>xmlbeans</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>${wps.groupid}</groupId>
 			<artifactId>52n-wps-io-impl</artifactId>
@@ -28,14 +28,14 @@
 			<groupId>org.n52.geoprocessing</groupId>
 			<artifactId>wps-client-lib</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-xml-wps-v100</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-xml-ows-v110</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.n52.sensorweb</groupId> -->
+<!-- 			<artifactId>52n-xml-wps-v100</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.n52.sensorweb</groupId> -->
+<!-- 			<artifactId>52n-xml-ows-v110</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

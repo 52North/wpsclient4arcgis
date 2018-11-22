@@ -56,19 +56,24 @@ import org.n52.client.arcmap.util.InputTypeEnum;
 import org.n52.geoprocessing.wps.client.WPSClientSession;
 import org.n52.geoprocessing.wps.client.model.AllowedValues;
 import org.n52.geoprocessing.wps.client.model.ComplexInputDescription;
+import org.n52.geoprocessing.wps.client.model.ExceptionReport;
 import org.n52.geoprocessing.wps.client.model.Format;
 import org.n52.geoprocessing.wps.client.model.InputDescription;
 import org.n52.geoprocessing.wps.client.model.LiteralInputDescription;
 import org.n52.geoprocessing.wps.client.model.OutputDescription;
 import org.n52.geoprocessing.wps.client.model.Process;
 import org.n52.geoprocessing.wps.client.model.ResponseMode;
+import org.n52.geoprocessing.wps.client.model.Result;
+import org.n52.geoprocessing.wps.client.model.StatusInfo;
 import org.n52.geoprocessing.wps.client.model.TransmissionMode;
-import org.n52.geoprocessing.wps.client.model.execution.ComplexInput;
-import org.n52.geoprocessing.wps.client.model.execution.ComplexInputReference;
+import org.n52.geoprocessing.wps.client.model.execution.BoundingBoxData;
+import org.n52.geoprocessing.wps.client.model.execution.ComplexData;
+import org.n52.geoprocessing.wps.client.model.execution.ComplexDataReference;
+import org.n52.geoprocessing.wps.client.model.execution.Data;
 import org.n52.geoprocessing.wps.client.model.execution.Execute;
 import org.n52.geoprocessing.wps.client.model.execution.ExecuteOutput;
 import org.n52.geoprocessing.wps.client.model.execution.ExecutionMode;
-import org.n52.geoprocessing.wps.client.model.execution.LiteralInput;
+import org.n52.geoprocessing.wps.client.model.execution.LiteralData;
 import org.n52.wps.io.data.GenericFileDataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,15 +105,6 @@ import com.esri.arcgis.system.Array;
 import com.esri.arcgis.system.IArray;
 import com.esri.arcgis.system.IName;
 import com.esri.arcgis.system.ITrackCancel;
-
-import net.opengis.ows.x11.ExceptionReportDocument;
-import net.opengis.ows.x11.ExceptionType;
-import net.opengis.wps.x100.ComplexDataType;
-import net.opengis.wps.x100.DataType;
-import net.opengis.wps.x100.ExecuteResponseDocument;
-import net.opengis.wps.x100.ExecuteResponseDocument.ExecuteResponse;
-import net.opengis.wps.x100.OutputDataType;
-import net.opengis.wps.x100.OutputReferenceType;
 
 /**
  * This class represents a ArcGIS geoprocessing tool that communicates with
@@ -481,6 +477,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
             LOGGER.error("Error in updating parameters method", e);
         } catch (IOException e) {
             LOGGER.error("Error in updating parameters method", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("Error in updating parameters method", e);
         }
     }
 
@@ -544,11 +542,15 @@ public class WPSFunction extends BaseGeoprocessingTool {
                  */
             }
 
-            if (response instanceof ExecuteResponseDocument) {
+            if (response instanceof Result) {
 
-                handleExecuteResponse((ExecuteResponseDocument) response, paramvalues, parameterNameValueMap, messages, trackcancel);
+                handleExecuteResponse((Result) response, paramvalues, parameterNameValueMap, messages, trackcancel);
 
-            } else if (response instanceof ExceptionReportDocument) {
+            } else if (response instanceof StatusInfo) {
+
+                handleExecuteResponse(((StatusInfo) response).getResult(), paramvalues, parameterNameValueMap, messages, trackcancel);
+
+            } else if (response instanceof ExceptionReport) {
                 LOGGER.error("Something went wrong while executing the WPS process. Exceptionreport: {}", response.toString());
                 try {
                     messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Something went wrong while executing the WPS process.");
@@ -568,141 +570,42 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
     }
 
-    private void handleExecuteResponse(ExecuteResponseDocument responseDoc,
+    private void handleExecuteResponse(Result responseDoc,
             IArray paramvalues,
             Map<String, String> parameterNameValueMap,
-            final IGPMessages messages, ITrackCancel trackcancel) throws IOException, TransformerFactoryConfigurationError, TransformerException {
+            final IGPMessages messages,
+            ITrackCancel trackcancel) throws IOException, TransformerFactoryConfigurationError, TransformerException {
 
-        ExecuteResponse response = responseDoc.getExecuteResponse();
+        for (Data outputDataType : responseDoc.getOutputs()) {
 
-        //only debug response if smaller than 5 MB
-        if(response.toString().length() < 5242880){
-            LOGGER.debug(response.toString());
-        }
+            String identifier = outputDataType.getId();
 
-        String statusLocation = response.getStatusLocation();
+            String outputPath = parameterNameValueMap.get(outputPrefix + identifier);
 
-        boolean processFinished = response.getStatus() == null ? false : response.getStatus().isSetProcessSucceeded();
+            File outputFile = new File(outputPath);
 
-        boolean processFailed = response.getStatus() == null ? false : response.getStatus().isSetProcessFailed();
+            String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
 
-        OutputDataType[] outputs = response.getProcessOutputs().getOutputArray();
+            String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
 
-        if (statusLocation != null && !statusLocation.equals("") && !processFinished  && !processFailed) {
-
-            boolean processAccepted = false;
-            boolean processStarted = false;
-
-            String status = "";
-            int percentage = 0;
-
-            if(response.getStatus().isSetProcessAccepted()){
-                processAccepted = true;
+            if (extension == null || extension.equals("")) {
+                extension = "dat";
             }
 
-            if(response.getStatus().isSetProcessStarted()){
-                processStarted = true;
-                status = response.getStatus().getProcessStarted().getStringValue();
-                percentage = response.getStatus().getProcessStarted().getPercentCompleted();
-            }
+            LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+            messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
 
-            try {
+            if(outputDataType instanceof ComplexData) {
 
-                if (processAccepted) {
-                    messages.addMessage("Process accepted.");
-                }
-                if (processStarted) {
-                    if (status != null && !status.isEmpty()) {
-                        messages.addMessage("Process status: " + status);
-                    } else if (percentage != 0) {
-                        messages.addMessage("Process completed: " + status + " %");
-                    }
-                }
-            } catch (Exception e) {
-                /* ignore */
-            }
-
-            // sleep for five seconds
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e1) {
-                LOGGER.error("Something went wrong while pausing the thread.", e1);
-                messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Something went wrong while pausing the thread.");
-            }
-
-            URL statusLocationURL = new URL(statusLocation);
-
-            ExecuteResponseDocument executeDoc = ExecuteResponseDocument.Factory.newInstance();
-
-            try {
-                executeDoc = ExecuteResponseDocument.Factory.parse(statusLocationURL.openStream());
-            } catch (XmlException e) {
-                LOGGER.error("Could not fetch statuslocation URL: {}", statusLocation);
-                LOGGER.error(e.getMessage());
-            }
-            handleExecuteResponse(executeDoc, paramvalues, parameterNameValueMap, messages, trackcancel);
-            return;
-        } else if (processFinished) {
-
-            for (OutputDataType outputDataType : outputs) {
-
-                DataType outputData = outputDataType.getData();
-
-                OutputReferenceType outputReference = outputDataType.getReference();
-
-                String identifier = outputDataType.getIdentifier().getStringValue();
-
-                String outputPath = parameterNameValueMap.get(outputPrefix + identifier);
-
-                File outputFile = new File(outputPath);
-
-                String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
-
-                String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
-
-                if (extension == null || extension.equals("")) {
-                    extension = "dat";
-                }
-
-                LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
-                messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+                ComplexData complexData = (ComplexData)outputDataType;
 
                 String s = "";
 
-                if (outputData != null) {
+                if (complexData.isReference()) {
 
-                    ComplexDataType cData = outputData.getComplexData();
-
-                    s = nodeToString(cData.getDomNode().getFirstChild());
-
-                    //TODO check if still necessary
-                    if (!response.toString().contains("application/x-zipped-shp")) {
-
-                        if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
-
-                            try {
-                                s = nodeToString(cData.getDomNode().getChildNodes().item(1));
-
-                                LOGGER.debug("ComplexData content " + s);
-                            } catch (Exception e) {
-                                LOGGER.error("cData.getDomNode().getFirstChild().getChildNodes().item(1) leads to " + e);
-                            }
-                        } else {
-                            LOGGER.debug("ComplexData content " + s);
-                        }
-                    }
-
-                    BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
-
-                    bwr.write(s);
-
-                    bwr.close();
-
-                } else if (outputReference != null) {
-
-                    URL href = new URL(outputReference.getHref());
+                    URL href = complexData.getReference().getHref();
                     try {
-                        messages.addMessage("Start result download from " + outputReference.getHref());
+                        messages.addMessage("Start result download from " + href);
                     } catch (Exception e) {
                         /* ignore */
                     }
@@ -723,33 +626,44 @@ public class WPSFunction extends BaseGeoprocessingTool {
                     });
 
                     download.startDownload();
+
+                } else {
+
+                    Object cData = complexData.getValue();
+
+                    s = cData.toString();
+
+//                    // TODO check if still necessary
+//                    if (!complexData.getFormat().getMimeType()equals("application/x-zipped-shp")) {
+//
+//                        if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
+//
+//                            try {
+//                                s = nodeToString(cData.getDomNode().getChildNodes().item(1));
+//
+//                                LOGGER.debug("ComplexData content " + s);
+//                            } catch (Exception e) {
+//                                LOGGER.error("cData.getDomNode().getFirstChild().getChildNodes().item(1) leads to " + e);
+//                            }
+//                        } else {
+//                            LOGGER.debug("ComplexData content " + s);
+//                        }
+//                    }
+
+                    BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
+
+                    bwr.write(s);
+
+                    bwr.close();
                 }
+
+            } else if(outputDataType instanceof LiteralData) {
+              //TODO
+            } else if(outputDataType instanceof BoundingBoxData) {
+                //TODO
 
             }
         }
-
-        if (processFailed) {
-
-            LOGGER.error("Something went wrong while executing the WPS process.");
-            messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, "Something went wrong while executing the WPS process.");
-
-            ExceptionType[] exceptions = response.getStatus().getProcessFailed().getExceptionReport().getExceptionArray();
-
-            for (ExceptionType exceptionType : exceptions) {
-
-                String[] exceptionTexts = exceptionType.getExceptionTextArray();
-
-                String completeExceptionText = "";
-
-                for (String string : exceptionTexts) {
-                    completeExceptionText = completeExceptionText.concat(string + "\n");
-                }
-
-                messages.addError(esriGPMessageSeverity.esriGPMessageSeverityError, completeExceptionText);
-            }
-            return;
-        }
-
     }
 
     private Execute createExecuteDocument(Map<String, String> parameterNameValueMap,
@@ -760,7 +674,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
         ex.setId(process.getId());
 
-        ex.setResponseMode(ResponseMode.RAW);
+        ex.setResponseMode(ResponseMode.DOCUMENT);
 
         ex.setExecutionMode(ExecutionMode.ASYNC);
 
@@ -803,13 +717,13 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 String isReference = parameterNameValueMap.get(identifier + "_reference");
                 LOGGER.debug("IsReference = " + isReference);
 
-                ComplexInput executeInput = new ComplexInput();
+                ComplexData executeInput = new ComplexData();
 
                 executeInput.setId(identifier);
 
                 if (isReference != null && Boolean.parseBoolean(isReference)) {
 
-                    ComplexInputReference inHref = new ComplexInputReference();
+                    ComplexDataReference inHref = new ComplexDataReference();
 
                     URL referenceURL;
                     try {
@@ -934,7 +848,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             case Literal:
 
-                LiteralInput literalInput = new LiteralInput();
+                LiteralData literalInput = new LiteralData();
 
                 literalInput.setId(identifier);
 
