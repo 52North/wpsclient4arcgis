@@ -90,9 +90,9 @@ public class WPSFunctionFactory implements IGPFunctionFactory {
             LOGGER.error("Could not extract version from tool name: " + identifierAndURL + ". Possibly an old process was started with a new version of the client. Falling back to verssion 1.0.0.");
         }
 
-        LOGGER.debug("Category (WPS-URL) " + wpsURL);
-        LOGGER.debug("Displayname (Process-ID) " + processID);
-        LOGGER.debug("Version " + version);
+        LOGGER.trace("Category (WPS-URL) " + wpsURL);
+        LOGGER.trace("Displayname (Process-ID) " + processID);
+        LOGGER.trace("Version " + version);
 
         GPFunctionName functionName = new GPFunctionName();
         functionName.setCategory(identifierAndURL[1]);

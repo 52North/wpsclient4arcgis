@@ -579,7 +579,7 @@ public class ArcMapWPSClientDialog extends JDialog {
         setSize(508, 605);
         setResizable(false);
         initComponents();
-        setAlwaysOnTop(true);
+//        setAlwaysOnTop(true);
     }
 
     /**

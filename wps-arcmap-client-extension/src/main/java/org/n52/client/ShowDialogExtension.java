@@ -71,7 +71,7 @@ public class ShowDialogExtension extends Extension {
             }
         } else {
             dialog.setVisible(true);
-            LOGGER.debug("Show dialog.");
+            LOGGER.trace("Show dialog.");
         }
 
     }

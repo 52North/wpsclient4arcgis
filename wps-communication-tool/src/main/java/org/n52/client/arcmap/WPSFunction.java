@@ -17,6 +17,7 @@
 package org.n52.client.arcmap;
 
 import java.awt.GridLayout;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,8 +33,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,16 +40,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.apache.xmlbeans.XmlException;
-import org.n52.client.arcmap.util.Download;
 import org.n52.client.arcmap.util.InputTypeEnum;
 import org.n52.geoprocessing.wps.client.WPSClientSession;
 import org.n52.geoprocessing.wps.client.model.AllowedValues;
@@ -77,12 +68,12 @@ import org.n52.geoprocessing.wps.client.model.execution.LiteralData;
 import org.n52.wps.io.data.GenericFileDataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
 
 import com.esri.arcgis.datainterop.FMEDestDatasetType;
 import com.esri.arcgis.datasourcesfile.DEFile;
 import com.esri.arcgis.datasourcesfile.DEFileType;
 import com.esri.arcgis.framework.IApplication;
+import com.esri.arcgis.geodatabase.GPMessage;
 import com.esri.arcgis.geodatabase.IGPCodedValueDomain;
 import com.esri.arcgis.geodatabase.IGPDomain;
 import com.esri.arcgis.geodatabase.IGPMessages;
@@ -188,7 +179,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
      */
     public IArray getParameterInfo() throws IOException, AutomationException {
 
-        LOGGER.debug("Creating parameter array for " + toolName + " a.k.a " + displayName);
+        LOGGER.trace("Creating parameter array for " + toolName + " a.k.a " + displayName);
 
         parameters = new Array();
 
@@ -375,7 +366,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
                         for (String allowedValue : allowedValues) {
 
-                            LOGGER.debug("Allowed value " + allowedValue);
+                            LOGGER.trace("Allowed value " + allowedValue);
 
                             domain.addStringCode(allowedValue, allowedValue);
                         }
@@ -470,8 +461,8 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
                 IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
 
-                LOGGER.info("check " + tmpParameter.getName());
-                LOGGER.info("Value: " + tmpParameterValue.getAsText());
+                LOGGER.trace("check " + tmpParameter.getName());
+                LOGGER.trace("Value: " + tmpParameterValue.getAsText());
             }
         } catch (AutomationException e) {
             LOGGER.error("Error in updating parameters method", e);
@@ -573,7 +564,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
     private void handleExecuteResponse(Result responseDoc,
             IArray paramvalues,
             Map<String, String> parameterNameValueMap,
-            final IGPMessages messages,
+            IGPMessages messages,
             ITrackCancel trackcancel) throws IOException, TransformerFactoryConfigurationError, TransformerException {
 
         for (Data outputDataType : responseDoc.getOutputs()) {
@@ -592,7 +583,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 extension = "dat";
             }
 
-            LOGGER.debug("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
+            LOGGER.trace("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
             messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
 
             if(outputDataType instanceof ComplexData) {
@@ -604,51 +595,16 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 if (complexData.isReference()) {
 
                     URL href = complexData.getReference().getHref();
-                    try {
-                        messages.addMessage("Start result download from " + href);
-                    } catch (Exception e) {
-                        /* ignore */
-                    }
 
-                    final Download download = new Download(href, outputFile);
+                    messages.addMessage("Start result download from " + href);
 
-                    download.addObserver(new Observer() {
-
-                        @Override
-                        public void update(Observable o,
-                                Object arg) {
-                            try {
-                                messages.addMessage("Downloaded " + download.getDownloaded() + " / " + download.getSize() + " bytes.");
-                            } catch (Exception e) {
-                                /* ignore */
-                            }
-                        }
-                    });
-
-                    download.startDownload();
+                    download(href, outputFile, messages);
 
                 } else {
 
                     Object cData = complexData.getValue();
 
                     s = cData.toString();
-
-//                    // TODO check if still necessary
-//                    if (!complexData.getFormat().getMimeType()equals("application/x-zipped-shp")) {
-//
-//                        if (s == null || s.trim().equals("") || s.trim().equals(" ")) {
-//
-//                            try {
-//                                s = nodeToString(cData.getDomNode().getChildNodes().item(1));
-//
-//                                LOGGER.debug("ComplexData content " + s);
-//                            } catch (Exception e) {
-//                                LOGGER.error("cData.getDomNode().getFirstChild().getChildNodes().item(1) leads to " + e);
-//                            }
-//                        } else {
-//                            LOGGER.debug("ComplexData content " + s);
-//                        }
-//                    }
 
                     BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
 
@@ -666,6 +622,39 @@ public class WPSFunction extends BaseGeoprocessingTool {
         }
     }
 
+    private void download(URL url,
+            File resultFile,
+            IGPMessages messages) throws IOException {
+
+        java.io.BufferedInputStream in = new java.io.BufferedInputStream(url.openStream());
+        java.io.FileOutputStream fos = new java.io.FileOutputStream(resultFile);
+        java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
+
+        int bufferSize = 1024;
+        byte[] data = new byte[bufferSize];
+        int x = 0;
+        int count = 1;
+        while ((x = in.read(data, 0, bufferSize)) >= 0) {
+            bout.write(data, 0, x);
+            if(count == 1) {
+                messages.addMessage("Downloaded " + bufferSize*count + " bytes.");
+            }else {
+                updateDownloadMessage(bufferSize*count, messages);
+            }
+            count++;
+        }
+        bout.close();
+        in.close();
+    }
+
+    private void updateDownloadMessage(int i,
+            IGPMessages messages) throws AutomationException, IOException {
+        int messagePosition = messages.getCount() - 1;
+        GPMessage message = new GPMessage();
+        message.setDescription("Downloaded " + i + " bytes.");
+        messages.replace(messagePosition, message);
+    }
+
     private Execute createExecuteDocument(Map<String, String> parameterNameValueMap,
             Process process,
             IGPMessages messages) {
@@ -677,8 +666,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
         ex.setResponseMode(ResponseMode.DOCUMENT);
 
         ex.setExecutionMode(ExecutionMode.ASYNC);
-
-//        DataInputsType executeDataInputs = ex.addNewDataInputs();
 
         List<InputDescription> inputDescTypes = process.getInputs();
 
@@ -698,7 +685,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 continue;
             }
 
-            LOGGER.debug("Value " + value);
+            LOGGER.trace("Value " + value);
 
             switch (type) {
             case Complex:
@@ -706,16 +693,16 @@ public class WPSFunction extends BaseGeoprocessingTool {
                  * TODO: add strategy for empty schema/mimetype/encoding
                  */
                 String schema = parameterNameValueMap.get(identifier + "_schema");
-                LOGGER.debug("Schema = " + schema);
+                LOGGER.trace("Schema = " + schema);
 
                 String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
-                LOGGER.debug("Mime Type = " + mimeType);
+                LOGGER.trace("Mime Type = " + mimeType);
 
                 String encoding = parameterNameValueMap.get(identifier + "_encoding");
-                LOGGER.debug("Encoding = " + encoding);
+                LOGGER.trace("Encoding = " + encoding);
 
                 String isReference = parameterNameValueMap.get(identifier + "_reference");
-                LOGGER.debug("IsReference = " + isReference);
+                LOGGER.trace("IsReference = " + isReference);
 
                 ComplexData executeInput = new ComplexData();
 
@@ -899,16 +886,16 @@ public class WPSFunction extends BaseGeoprocessingTool {
              * TODO: add strategy for empty schema/mimetype/encoding
              */
             String schema = parameterNameValueMap.get(identifier + "_schema");
-            LOGGER.debug("Schema = " + schema);
+            LOGGER.trace("Schema = " + schema);
 
             String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
-            LOGGER.debug("Mime Type = " + mimeType);
+            LOGGER.trace("Mime Type = " + mimeType);
 
             String encoding = parameterNameValueMap.get(identifier + "_encoding");
-            LOGGER.debug("Mime Type = " + encoding);
+            LOGGER.trace("Mime Type = " + encoding);
 
             String isReference = parameterNameValueMap.get(identifier + "_reference");
-            LOGGER.debug("IsReference = " + isReference);
+            LOGGER.trace("IsReference = " + isReference);
 
             if (isReference != null && Boolean.parseBoolean(isReference)) {
                 output.setTransmissionMode(TransmissionMode.REFERENCE);
@@ -942,11 +929,11 @@ public class WPSFunction extends BaseGeoprocessingTool {
                 IGPParameter tmpParameter = (IGPParameter) paramvalues.getElement(i);
                 IGPValue tmpParameterValue = gpUtilities.unpackGPValue(tmpParameter);
                 if (!tmpParameterValue.getAsText().equals("")) {
-                    LOGGER.info("added " + tmpParameter.getName());
+                    LOGGER.trace("added " + tmpParameter.getName());
                     result.put(tmpParameter.getName(), tmpParameterValue.getAsText());
                 } else {
-                    LOGGER.info("Omitted " + tmpParameter.getName());
-                    LOGGER.info("Value: " + tmpParameterValue);
+                    LOGGER.trace("Omitted " + tmpParameter.getName());
+                    LOGGER.trace("Value: " + tmpParameterValue);
                 }
             }
             return result;
@@ -1188,15 +1175,6 @@ public class WPSFunction extends BaseGeoprocessingTool {
         parameter.setDomainByRef((IGPDomain) domain);
 
         return parameter;
-    }
-
-    private String nodeToString(Node node) throws TransformerFactoryConfigurationError, TransformerException {
-        StringWriter stringWriter = new StringWriter();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.transform(new DOMSource(node), new StreamResult(stringWriter));
-
-        return stringWriter.toString();
     }
 
 }
