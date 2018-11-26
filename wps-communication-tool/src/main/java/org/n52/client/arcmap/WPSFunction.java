@@ -65,7 +65,6 @@ import org.n52.geoprocessing.wps.client.model.execution.Execute;
 import org.n52.geoprocessing.wps.client.model.execution.ExecuteOutput;
 import org.n52.geoprocessing.wps.client.model.execution.ExecutionMode;
 import org.n52.geoprocessing.wps.client.model.execution.LiteralData;
-import org.n52.wps.io.data.GenericFileDataConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -575,13 +574,13 @@ public class WPSFunction extends BaseGeoprocessingTool {
 
             File outputFile = new File(outputPath);
 
-            String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
-
-            String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
-
-            if (extension == null || extension.equals("")) {
-                extension = "dat";
-            }
+//            String mimeType = parameterNameValueMap.get(identifier + "_mimetype");
+//
+//            String extension = GenericFileDataConstants.mimeTypeFileTypeLUT().get(mimeType);
+//
+//            if (extension == null || extension.equals("")) {
+//                extension = "dat";
+//            }
 
             LOGGER.trace("Writing " + identifier + " output to " + outputFile.getAbsolutePath());
             messages.addMessage("Writing " + identifier + " output to " + outputFile.getAbsolutePath());

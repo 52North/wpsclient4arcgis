@@ -157,9 +157,12 @@
 		<log4j.version>2.0.2</log4j.version>
 		<wps.version>3.2.0</wps.version><!-- after 3.2.0 WPS is using Java 1.7, 
 			ArcGIS still uses 1.6 -->
-		<version.java>1.6</version.java>
+		<version.java>1.8</version.java>
 		<wps.groupid>org.n52.wps</wps.groupid>
 		<arctic-sea.version>5.0.1</arctic-sea.version>
+		<jackson.version>2.9.2</jackson.version>
+		<javaps.version>1.1.1</javaps.version>
+		<wps.client.lib.version>1.0.1</wps.client.lib.version>
 		<currentYear>2018</currentYear> <!-- manual setting -->
 	</properties>
 	<dependencyManagement>
@@ -242,53 +245,53 @@
 <!-- 				<artifactId>xmlbeans</artifactId> -->
 <!-- 				<version>2.6.0</version> -->
 <!-- 			</dependency> -->
-			<dependency>
-				<groupId>${wps.groupid}</groupId>
-				<artifactId>52n-wps-io</artifactId>
-				<version>${wps.version}</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>xercesImpl</artifactId>
-						<groupId>xerces</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>${wps.groupid}</groupId>
-				<artifactId>52n-wps-io-impl</artifactId>
-				<version>${wps.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.google.guava</groupId>
-						<artifactId>guava</artifactId>
-					</exclusion>
-					<exclusion>
-						<artifactId>xercesImpl</artifactId>
-						<groupId>xerces</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>commons-lang</artifactId>
-						<groupId>commons-lang</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>xmlbeans</artifactId>
-						<groupId>org.apache.xmlbeans</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>${wps.groupid}</groupId> -->
+<!-- 				<artifactId>52n-wps-io</artifactId> -->
+<!-- 				<version>${wps.version}</version> -->
+<!-- 				<exclusions> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>xercesImpl</artifactId> -->
+<!-- 						<groupId>xerces</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 			        <exclusion> -->
+<!-- 			            <groupId>${wps.groupid}</groupId> -->
+<!-- 			            <artifactId>52n-wps-commons</artifactId> -->
+<!-- 			        </exclusion> -->
+<!-- 				</exclusions> -->
+<!-- 			</dependency> -->
+<!-- 			<dependency> -->
+<!-- 				<groupId>${wps.groupid}</groupId> -->
+<!-- 				<artifactId>52n-wps-io-impl</artifactId> -->
+<!-- 				<version>${wps.version}</version> -->
+<!-- 				<exclusions> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>commons-logging</groupId> -->
+<!-- 						<artifactId>commons-logging</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>com.google.guava</groupId> -->
+<!-- 						<artifactId>guava</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>xercesImpl</artifactId> -->
+<!-- 						<groupId>xerces</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>commons-lang</artifactId> -->
+<!-- 						<groupId>commons-lang</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>xmlbeans</artifactId> -->
+<!-- 						<groupId>org.apache.xmlbeans</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 				</exclusions> -->
+<!-- 			</dependency> -->
 			<dependency>
 				<groupId>org.n52.geoprocessing</groupId>
 				<artifactId>wps-client-lib</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
+				<version>${wps.client.lib.version}</version>
 				<exclusions>
-					<exclusion>
-						<groupId>org.n52.wps</groupId>
-						<artifactId>52n-xml-wps-v100</artifactId>
-					</exclusion>
 					<exclusion>
 						<groupId>joda-time</groupId>
 						<artifactId>joda-time</artifactId>
@@ -297,45 +300,40 @@
 			</dependency>
 <!-- 			<dependency> -->
 <!-- 				<groupId>${wps.groupid}</groupId> -->
-<!-- 				<artifactId>52n-wps-config</artifactId> -->
-<!-- 				<version>1.2.1</version> -->
+<!-- 				<artifactId>52n-wps-commons</artifactId> -->
+<!-- 				<version>${wps.version}</version> -->
+<!-- 				<exclusions> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>org.codehaus.woodstox</groupId> -->
+<!-- 						<artifactId>woodstox-core-asl</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>javax.servlet</groupId> -->
+<!-- 						<artifactId>servlet-api</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>org.codehaus.woodstox</groupId> -->
+<!-- 						<artifactId>woodstox-core-asl</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>org.n52.wps</groupId> -->
+<!-- 						<artifactId>52n-xml-wps-v100</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<groupId>com.google.guava</groupId> -->
+<!-- 						<artifactId>guava</artifactId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>xmlbeans</artifactId> -->
+<!-- 						<groupId>org.apache.xmlbeans</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 					<exclusion> -->
+<!-- 						<artifactId>commons-lang</artifactId> -->
+<!-- 						<groupId>commons-lang</groupId> -->
+<!-- 					</exclusion> -->
+<!-- 				</exclusions> -->
+<!-- 				<scope>runtime</scope> -->
 <!-- 			</dependency> -->
-			<dependency>
-				<groupId>${wps.groupid}</groupId>
-				<artifactId>52n-wps-commons</artifactId>
-				<version>${wps.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.codehaus.woodstox</groupId>
-						<artifactId>woodstox-core-asl</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>javax.servlet</groupId>
-						<artifactId>servlet-api</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.codehaus.woodstox</groupId>
-						<artifactId>woodstox-core-asl</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.n52.wps</groupId>
-						<artifactId>52n-xml-wps-v100</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.google.guava</groupId>
-						<artifactId>guava</artifactId>
-					</exclusion>
-					<exclusion>
-						<artifactId>xmlbeans</artifactId>
-						<groupId>org.apache.xmlbeans</groupId>
-					</exclusion>
-					<exclusion>
-						<artifactId>commons-lang</artifactId>
-						<groupId>commons-lang</groupId>
-					</exclusion>
-				</exclusions>
-				<scope>runtime</scope>
-			</dependency>
 <!-- 			<dependency> -->
 <!-- 				<groupId>org.n52.sensorweb</groupId> -->
 <!-- 				<artifactId>52n-xml-wps-v100</artifactId> -->
@@ -468,19 +466,19 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-core</artifactId>
-				<version>2.9.2</version>
+				<version>${jackson.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.0</version>
+				<version>${jackson.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.9.2</version>
+				<version>${jackson.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
@@ -546,6 +544,33 @@
 				</exclusion>
 			</exclusions>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.wps</groupId>
+			<artifactId>engine</artifactId>
+			<version>1.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-webmvc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

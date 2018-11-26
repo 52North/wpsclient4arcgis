@@ -15,15 +15,11 @@ limitations under the License.
 
 This project includes:
   52 North WPS Client libary under The Apache Software License, Version 2.0
-  52n-WPS-Config under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52North WPS ArcMap Client Base64 Conversion Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Communication Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Extension under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Zipped Shapefile Export Tool under The Apache Software License, Version 2.0
   52North WPS ArcMap Client Zipped Shapefile Unzip Tool under The Apache Software License, Version 2.0
-  52North WPS Commons under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  52North WPS Input/Ouput Implementation under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  52North WPS Input/Output API under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52°North Faroe under The Apache Software License, Version 2.0
   52°North Faroe Annotations under The Apache Software License, Version 2.0
   52°North Faroe JSON Backend under The Apache Software License, Version 2.0
@@ -44,79 +40,33 @@ This project includes:
   Apache Log4j API under The Apache Software License, Version 2.0
   Apache Log4j Core under The Apache Software License, Version 2.0
   Apache Log4j SLF4J Binding under The Apache Software License, Version 2.0
-  API interfaces under The Apache Software License, Version 2.0
-  ArcGrid datasource module under The Apache Software License, Version 2.0
   ArcObjects Java 10.5 under ESRI License Agreement, Version 10.5
-  Axis Web Services under The Apache Software License, Version 2.0
-  common under Eclipse Public License (EPL)
   Commons Codec under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
-  Commons JXPath under The Apache Software License, Version 2.0
   Commons Lang under The Apache Software License, Version 2.0
-  Commons Pool under The Apache Software License, Version 2.0
-  commons-collections under The Apache Software License, Version 2.0
-  DataStore Support under The Apache Software License, Version 2.0
-  Discovery under The Apache Software License, Version 2.0
-  ecore under Eclipse Public License (EPL)
-  EPSG Authority Service using HSQL database under The Apache Software License, Version 2.0
   error-prone annotations under Apache 2.0
   EXIficient under MIT License
   EXIficient-Core under MIT License
   EXIficient-Grammars under MIT License
-  Feature Based Graphs and Networks under The Apache Software License, Version 2.0
-  Filter Encoding Specification Model under The Apache Software License, Version 2.0
-  Filter Encoding Specification XML Support under The Apache Software License, Version 2.0
-  Filter XML Support under The Apache Software License, Version 2.0
   FindBugs-jsr305 under The Apache Software License, Version 2.0
-  GeoJSON Support under The Apache Software License, Version 2.0
-  GeoTIFF grid coverage exchange module under The Apache Software License, Version 2.0
-  GML2 XML Support under The Apache Software License, Version 2.0
-  GML3 XML Support under The Apache Software License, Version 2.0
-  gmlpacket-2.0 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
-  Grid Coverage module under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under The Apache Software License, Version 2.0
   Hamcrest Core under BSD style
   Hamcrest Library under BSD style
-  HSQLDB under HSQLDB License
-  HttpClient under Apache License
-  Image I/O-Extensions - Custom Streams under GNU Lesser General Public License, version 3 or later (LGPL)
-  Image I/O-Extensions - Improved TIFF Plugin under BSD License
-  Image I/O-Extensions - Pure java ArcGrid Plugin under GNU Lesser General Public License, version 3 or later (LGPL)
-  Image I/O-Extensions - utilities classes and methods under GNU Lesser General Public License, version 3 or later (LGPL)
   J2ObjC Annotations under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0
-  jai_codec under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
-  jai_imageio under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
-  Java Advanced Imaging under Java Advanced Imaging Distribution License, http://download.java.net/media/jai/builds/release/1_1_3/LICENSE-jai.txt
   javax.inject under The Apache Software License, Version 2.0
   JCL 1.1.1 implemented over SLF4J under MIT License
-  jdom under JDOM license, https://github.com/hunterhacker/jdom/blob/master/LICENSE.txt
-  jGridShift under GNU Lesser General Public License, version 2.0 (LGPLv2)
   jMock 2 Core under BSD style
   jMock JUnit 4 Extension under BSD style
   Joda-Time under Apache 2
-  JSON.simple under The Apache Software License, Version 2.0
-  jsr-275 under BSD License
-  JTS Topology Suite under Lesser General Public License (LGPL)
   JUL to SLF4J bridge under MIT License
   JUnit under Common Public License Version 1.0
-  KML XML Support under The Apache Software License, Version 2.0
   Log4j Implemented Over SLF4J under Apache Software Licenses
   Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
-  Main module under The Apache Software License, Version 2.0
-  mapscript under MapServer License (MIT license)
-  Metadata under The Apache Software License, Version 2.0
-  ogckml2.2 under GNU GENERAL PUBLIC LICENSE (GPL Version 2, June 1991)
-  Open GIS Interfaces under The Apache Software License, Version 2.0
-  Open Web Services Model under The Apache Software License, Version 2.0
   org.locationtech.jts:jts-core under Eclipse Publish License, Version 1.0 or Eclipse Distribution License - v 1.0
-  OWS XML Support under The Apache Software License, Version 2.0
-  PicoContainer Core under BSD License
-  Referencing services under The Apache Software License, Version 2.0
-  Shapefile module under The Apache Software License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J Simple Binding under MIT License
   Spring AOP under Apache License, Version 2.0
@@ -126,20 +76,8 @@ This project includes:
   Spring Expression Language (SpEL) under Apache License, Version 2.0
   Spring Web under Apache License, Version 2.0
   StAX API under The Apache Software License, Version 2.0
-  stax-utils under BSD
-  Support and utility classes under Simplified BSD
-  vecmath under GNU General Public License (GPL), version 2, with the CLASSPATH exception
-  Web Feature Service Model under The Apache Software License, Version 2.0
-  WFS XML Support under The Apache Software License, Version 2.0
   WPS Client for ArcGIS under The Apache Software License, Version 2.0
-  Xalan Java under The Apache Software License, Version 2.0
-  Xalan Java Serializer under The Apache Software License, Version 2.0
   Xerces2-j under The Apache Software License, Version 2.0
-  Xlink Model under The Apache Software License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0 or The SAX License or The W3C License
-  XML Parsing under The Apache Software License, Version 2.0
-  XML Parsing Support under The Apache Software License, Version 2.0
   XmlBeans under The Apache Software License, Version 2.0
-  xsd under Eclipse Public License (EPL)
-  ZonalStats operator under Simplified BSD
 
