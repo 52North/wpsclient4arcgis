@@ -427,113 +427,104 @@ public class ArcMapWPSClientDialog extends JDialog {
 
     private void connectToWPS(String version) {
 
-        try {
+        String url = wpsUrlsComboBox.getSelectedItem().toString().trim();
 
-            String url = wpsUrlsComboBox.getSelectedItem().toString().trim();
-
-            if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                url = "http://" + url;
-            }
-
-            boolean wpsURLAlreadyInComboboxItems = false;
-
-            for (int i = 0; i < wpsUrlsComboBox.getItemCount(); i++) {
-                if (wpsUrlsComboBox.getItemAt(i).equals(url)) {
-                    wpsURLAlreadyInComboboxItems = true;
-                    break;
-                }
-            }
-            if (!wpsURLAlreadyInComboboxItems) {
-                wpsUrlsComboBox.addItem(url);
-            }
-
-            try {
-                WPSClientSession.getInstance().connect(url, version);
-            } catch (WPSClientException e) {
-                String message = "Could not connect to WPS: " + url + " with version: " + version + ". ";
-                LOGGER.error(message, e);
-                JOptionPane.showMessageDialog(null, message + e.getMessage());
-            }
-
-            WPSCapabilities capsDoc = WPSClientSession.getInstance().getWPSCaps(url);
-
-//            if(!(capsDoc instanceof XmlObject)){
-//                LOGGER.error("CapabilitiesDocument doesn't implement XmlObject.");
-//            }
-
-            processes = capsDoc.getProcesses();
-
-            int processCount = processes.size();
-
-            treeWPSCapsMap = new HashMap<DefaultMutableTreeNode, Object>(processCount + 1);
-
-            DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("WPS");
-
-            treeWPSCapsMap.put(rootNode, capsDoc);
-
-            /*
-             * sort the processes
-             */
-            Map<String, Process> sortMap = new HashMap<String, Process>(processCount);
-
-            for (Process processBriefType : processes) {
-                sortMap.put(processBriefType.getId(), processBriefType);
-            }
-            String[] sortedIDs = new String[processCount];
-            sortMap.keySet().toArray(sortedIDs);
-
-            Arrays.sort(sortedIDs);
-
-            for (String id : sortedIDs) {
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(id);
-                treeWPSCapsMap.put(node, sortMap.get(id));
-                rootNode.add(node);
-            }
-
-            DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-
-            processTree.setModel(treeModel);
-            processTree.setVisible(true);
-            processTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-            processTree.addTreeSelectionListener(new TreeSelectionListener() {
-
-                @Override
-                public void valueChanged(TreeSelectionEvent e) {
-                    Object o = e.getNewLeadSelectionPath().getLastPathComponent();
-
-                    Object o1 = treeWPSCapsMap.get(o);
-                    if (o1 != null) {
-                        if (o1 instanceof Process) {
-                            Process pBrief = (Process) o1;
-
-                            String id = pBrief.getId();
-                            String title = "";
-                            if (pBrief.getTitle() != null) {
-                                title = pBrief.getTitle();
-                            }
-
-                            String abstractS = "";
-                            if (pBrief.getAbstract() != null) {
-                                abstractS = pBrief.getAbstract();
-                            }
-
-                            processDetailsEditorPane.setText("Identifier:" + "\n" + id + "\n\n" + "Title:" + "\n" + title + "\n\n" + "Abstract:" + "\n" + abstractS);
-                        } else if (o1 instanceof WPSCapabilities) {
-                            WPSCapabilities wpsCaps = (WPSCapabilities) o1;
-
-                            processDetailsEditorPane.setText("Title:" + "\n" + wpsCaps.getServiceIdentification().getTitle() + "\n\n" + "Abstract:\n"
-                                    + wpsCaps.getServiceIdentification().getAbstract());
-
-                        }
-                    }
-
-                }
-            });
-
-        } catch (Exception e1) {
-            JOptionPane.showMessageDialog(null, "" + e1);
-            LOGGER.error(e1.getMessage());
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "http://" + url;
         }
+
+        boolean wpsURLAlreadyInComboboxItems = false;
+
+        for (int i = 0; i < wpsUrlsComboBox.getItemCount(); i++) {
+            if (wpsUrlsComboBox.getItemAt(i).equals(url)) {
+                wpsURLAlreadyInComboboxItems = true;
+                break;
+            }
+        }
+        if (!wpsURLAlreadyInComboboxItems) {
+            wpsUrlsComboBox.addItem(url);
+        }
+
+        try {
+            WPSClientSession.getInstance().connect(url, version);
+        } catch (WPSClientException e) {
+            String message = "Could not connect to WPS: " + url + " with version: " + version + ". ";
+            LOGGER.error(message, e);
+            JOptionPane.showMessageDialog(null, message + e.getMessage());
+            return;
+        }
+
+        WPSCapabilities capsDoc = WPSClientSession.getInstance().getWPSCaps(url);
+
+        processes = capsDoc.getProcesses();
+
+        int processCount = processes.size();
+
+        treeWPSCapsMap = new HashMap<DefaultMutableTreeNode, Object>(processCount + 1);
+
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("WPS");
+
+        treeWPSCapsMap.put(rootNode, capsDoc);
+
+        /*
+         * sort the processes
+         */
+        Map<String, Process> sortMap = new HashMap<String, Process>(processCount);
+
+        for (Process processBriefType : processes) {
+            sortMap.put(processBriefType.getId(), processBriefType);
+        }
+        String[] sortedIDs = new String[processCount];
+        sortMap.keySet().toArray(sortedIDs);
+
+        Arrays.sort(sortedIDs);
+
+        for (String id : sortedIDs) {
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(id);
+            treeWPSCapsMap.put(node, sortMap.get(id));
+            rootNode.add(node);
+        }
+
+        DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+
+        processTree.setModel(treeModel);
+        processTree.setVisible(true);
+        processTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        processTree.addTreeSelectionListener(new TreeSelectionListener() {
+
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                Object o = e.getNewLeadSelectionPath().getLastPathComponent();
+
+                Object o1 = treeWPSCapsMap.get(o);
+                if (o1 != null) {
+                    if (o1 instanceof Process) {
+                        Process pBrief = (Process) o1;
+
+                        String id = pBrief.getId();
+                        String title = "";
+                        if (pBrief.getTitle() != null) {
+                            title = pBrief.getTitle();
+                        }
+
+                        String abstractS = "";
+                        if (pBrief.getAbstract() != null) {
+                            abstractS = pBrief.getAbstract();
+                        }
+
+                        processDetailsEditorPane.setText("Identifier:" + "\n" + id + "\n\n" + "Title:" + "\n" + title
+                                + "\n\n" + "Abstract:" + "\n" + abstractS);
+                    } else if (o1 instanceof WPSCapabilities) {
+                        WPSCapabilities wpsCaps = (WPSCapabilities) o1;
+
+                        processDetailsEditorPane.setText("Title:" + "\n" + wpsCaps.getServiceIdentification().getTitle()
+                                + "\n\n" + "Abstract:\n" + wpsCaps.getServiceIdentification().getAbstract());
+
+                    }
+                }
+
+            }
+        });
 
     }
 
@@ -579,7 +570,7 @@ public class ArcMapWPSClientDialog extends JDialog {
         setSize(508, 605);
         setResizable(false);
         initComponents();
-//        setAlwaysOnTop(true);
+        setAlwaysOnTop(true);
     }
 
     /**
