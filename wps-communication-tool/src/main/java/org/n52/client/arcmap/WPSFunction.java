@@ -140,7 +140,7 @@ public class WPSFunction extends BaseGeoprocessingTool {
             try {
                 this.version = identifierAndURL[2];
             } catch (Exception e) {
-                LOGGER.error("Could not extract version from tool name: " + identifierAndURL + ". Possibly an old process was started with a new version of the client. Falling back to verssion 1.0.0.");
+                LOGGER.error("Could not extract version from tool name: " + identifierAndURL + ". Possibly an old process was started with a new version of the client. Falling back to version 1.0.0.");
             }
         } catch (Exception e) {
             e.printStackTrace();
