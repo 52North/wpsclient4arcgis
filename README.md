@@ -9,7 +9,7 @@ The 52°North WPS Client for ArcGIS is a client implementation for servers follo
 
 ### Features
 
- * WPS version 1.0.0 support
+ * WPS version 1.0.0 and 2.0 support
  * Seamless integration in ArcMap
  * Use WPS processes in the Model Builder or execute them directly as ArcGIS Geoprocessing Tools
 
@@ -82,3 +82,4 @@ http://52north.org/about/licensing/cla-guidelines
 
  * Google Summer of Code
  * GLUES
+ * RIESGOS
