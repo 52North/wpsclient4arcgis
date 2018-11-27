@@ -66,48 +66,9 @@
 			<scope>runtime</scope>
 		</dependency>
 		<!-- end dependencies needed by zipped shapefile tools -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>${wps.groupid}</groupId> -->
-<!-- 			<artifactId>52n-wps-io</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>${wps.groupid}</groupId> -->
-<!-- 			<artifactId>52n-wps-io-impl</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.n52.geoprocessing</groupId>
 			<artifactId>wps-client-lib</artifactId>
-		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.xmlbeans</groupId> -->
-<!-- 			<artifactId>xmlbeans</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>${wps.groupid}</groupId> -->
-<!-- 			<artifactId>52n-wps-commons</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.n52.sensorweb</groupId> -->
-<!-- 			<artifactId>52n-xml-wps-v100</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.n52.sensorweb</groupId> -->
-<!-- 			<artifactId>52n-xml-ows-v110</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.n52.sensorweb</groupId> -->
-<!-- 			<artifactId>52n-xml-xlink-v110</artifactId> -->
-<!-- 			<scope>runtime</scope> -->
-<!-- 		</dependency> -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<artifactId>wps-communication-tool</artifactId>
@@ -161,7 +122,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
+			<artifactId>httpclient</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
