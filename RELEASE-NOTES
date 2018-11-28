@@ -9,16 +9,11 @@ The result of the processes can be visualized in ArcMap again.
  
   --- New features ---
  
- 	  * Support for ArcGIS for Desktop 10.4
- 	  * Add uninstaller to add/remove software 
- 	  * Client works with ArcMap Quick Export Tool
-	  * Improved download handling
+ 	  * Support for ArcGIS for Desktop 10.6
+ 	  * Support for the WPS standard version 2.0
+	  * Use of wps-client-lib version 1.0.0
  
-  --- Changes ---
- 
-	  * Change of license to Apache 2 
+  --- Changes ---  
  
   --- Fixed issues --- 
-	  * Cleaned up project
-	  * Fixed checkstyle and dependency issues
 

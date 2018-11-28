@@ -21,21 +21,13 @@ The WPS Client for ArcGIS is published under The Apache Software License, Versio
 
 Changes since last release
   * New features
-    * Support for ArcGIS for Desktop 10.4
-    * Add uninstaller to add/remove software 
-    * Client works with ArcMap Quick Export Tool
-    * Improved download handling
+ 	* Support for ArcGIS for Desktop 10.6
+ 	* Support for the WPS standard version 2.0
+	* Use of wps-client-lib version 1.0.0
   
-  * Changes
-    * Change of license to Apache 2
-  
-  * Fixed issues
-    * Cleaned up project
-    * Fixed checkstyle and dependency issues
-
 ## Quick Start
 
-Get the latest Version here: [WPS Client for ArcGIS 1.2.0 Installer](http://52north.org/downloads/send/128-extensibleclient/506-wps-arcmap-client-1-2-0-setup-xe)
+Get the latest Version here: [WPS Client for ArcGIS 1.3.0 Installer](https://52north.org/delivery/WPSClient4ArcGIS/52n-Extensible-WPS-ArcMap-Client-1.3.0-Setup.exe)
 
 ## User guide/tutorial
 
@@ -58,14 +50,14 @@ Benjamin Pross (b.pross (at) 52north.org)
 ## Support
 
 You can get support in the community mailing list and forums:
-http://52north.org/resources/mailing-lists-and-forums/
+https://52north.org/discuss/#mailing-lists
 
 ## Contribute
 
 Are you are interesting in contributing to the 52°North WPS Client for ArcGIS and you want to pull your changes to the 52N repository to make it available to all?
 In that case we need your official permission and for this purpose we have a so called contributors license agreement (CLA) in place. With this agreement you grant us the rights to use and publish your code under an open source license.
 A link to the contributors license agreement and further explanations are available here:
-http://52north.org/about/licensing/cla-guidelines
+https://52north.org/software/licensing/guidelines/
 
 ## Credits
 
