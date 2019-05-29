@@ -3,72 +3,25 @@
 !include "MUI2.nsh"
 
 Function .onInit
-${If} $InstDir == ""
 
-	${If} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.0`
+Var /GLOBAL arcgisfullversion
+Var /GLOBAL arcgismajorversion
 
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.0
+ReadRegStr $arcgisfullversion HKLM "Software\Wow6432node\ESRI\ArcGIS" "RealVersion"
 
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.1`
+StrCpy $arcgismajorversion $arcgisfullversion 4
 
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.1
+ReadRegStr $InstDir HKLM "Software\Wow6432node\ESRI\Desktop$arcgismajorversion" "InstallDir"
 
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.2`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.2
-
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.3`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.3
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.4`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.4
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.5`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5	
-
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.6`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.6	
-
-	${EndIf}
-	
-	
-${EndIf}
 FunctionEnd
 
 Function un.onInit
 
-	${If} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.0`
+ReadRegStr $arcgisfullversion HKLM "Software\Wow6432node\ESRI\ArcGIS" "RealVersion"
 
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.0
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.1`
+StrCpy $arcgismajorversion $arcgisfullversion 4
 
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.1
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.2`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.2
-
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.3`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.3
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.4`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.4
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.5`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.5
-		
-	${ElseIf} ${FileExists} `$PROGRAMFILES\ArcGIS\Desktop10.6`
-
-		StrCpy $InstDir $PROGRAMFILES\ArcGIS\Desktop10.6
-	${EndIf}
+ReadRegStr $InstDir HKLM "Software\Wow6432node\ESRI\Desktop$arcgismajorversion" "InstallDir"
 
 FunctionEnd
 
