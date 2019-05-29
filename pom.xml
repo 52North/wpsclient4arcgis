@@ -154,11 +154,11 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<log4j.version>2.0.2</log4j.version>
 		<version.java>1.8</version.java>
-		<arctic-sea.version>5.0.1</arctic-sea.version>
+		<arctic-sea.version>6.0.0</arctic-sea.version>
 		<jackson.version>2.9.2</jackson.version>
-		<javaps.version>1.1.1</javaps.version>
-		<wps.client.lib.version>1.0.1</wps.client.lib.version>
-		<currentYear>2018</currentYear> <!-- manual setting -->
+		<javaps.version>1.3.0</javaps.version>
+		<wps.client.lib.version>1.0.3</wps.client.lib.version>
+		<currentYear>2019</currentYear> <!-- manual setting -->
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -193,7 +193,7 @@
 			<dependency>
 				<artifactId>arcobjects</artifactId>
 				<groupId>com.esri.arcgis</groupId>
-				<version>10.5</version>
+				<version>10.7</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -392,7 +392,7 @@
 		<dependency>
 			<groupId>org.n52.wps</groupId>
 			<artifactId>iceland-stream</artifactId>
-			<version>1.1.1</version>
+			<version>${javaps.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -416,7 +416,7 @@
 		<dependency>
 			<groupId>org.n52.wps</groupId>
 			<artifactId>xml</artifactId>
-			<version>1.1.1</version>
+			<version>${javaps.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -444,7 +444,7 @@
 		<dependency>
 			<groupId>org.n52.wps</groupId>
 			<artifactId>engine</artifactId>
-			<version>1.1.1</version>
+			<version>${javaps.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>

@@ -469,9 +469,9 @@
     <artifact>
         <groupId>com.esri.arcgis</groupId>
         <artifactId>arcobjects</artifactId>
-        <version>10.5</version>
-        <name>ArcObjects Java 10.5</name>
-		<license>ESRI License Agreement, Version 10.5</license>
+        <version>10.7</version>
+        <name>ArcObjects Java 10.7</name>
+		<license>ESRI License Agreement, Version 10.7</license>
     </artifact>
         <artifact>
         <groupId>org.geotools</groupId>
