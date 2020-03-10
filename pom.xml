@@ -158,6 +158,7 @@
 		<jackson.version>2.9.2</jackson.version>
 		<javaps.version>1.4.0</javaps.version>
 		<wps.client.lib.version>1.0.4</wps.client.lib.version>
+		<currentYear>2020</currentYear> <!-- manual setting -->
 	</properties>
 	<dependencyManagement>
 		<dependencies>
