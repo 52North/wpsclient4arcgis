@@ -1,6 +1,9 @@
 !include LogicLib.nsh
 !include x64.nsh
 !include "MUI2.nsh"
+!include nsDialogs.nsh
+
+Unicode true
 
 Function .onInit
 
@@ -25,6 +28,27 @@ ReadRegStr $InstDir HKLM "Software\Wow6432node\ESRI\Desktop$arcgismajorversion" 
 
 FunctionEnd
 
+Function checkDataInteropExtension
+
+    !insertmacro MUI_HEADER_TEXT "Checking prerequisites" "Checking if the Data Interoperability Extension is installed. The extension needs to be installed, but does not have to be licensed."
+
+	nsDialogs::Create 1018
+	
+	ClearErrors
+ 
+    ReadRegStr $0 HKLM "SOFTWARE\WOW6432Node\ESRI\Data Interoperability Extension" RealVersion
+ 
+    ${If} ${Errors}
+      MessageBox MB_OK "Data Interoperability Extension not found. Aborting the installation."
+	  Quit
+    ${Else}
+	  ${NSD_CreateLabel} 0 0 100% 12u "Data Interoperability Extension version $0 found."
+    ${EndIf}
+
+	nsDialogs::Show
+
+FunctionEnd
+
 Name "52 North Extensible WPS ArcMap Client ${project.version}"
 
 OutFile "52n-Extensible-WPS-ArcMap-Client-${project.version}-Setup.exe"
@@ -40,6 +64,7 @@ OutFile "52n-Extensible-WPS-ArcMap-Client-${project.version}-Setup.exe"
 !define MUI_FINISHPAGE_TITLE_3LINES
 
 !insertmacro MUI_PAGE_WELCOME
+Page custom checkDataInteropExtension
 !insertmacro MUI_PAGE_LICENSE ".\Installer-Files\LICENSE.txt"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
