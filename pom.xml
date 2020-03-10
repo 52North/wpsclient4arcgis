@@ -9,7 +9,7 @@
 	<artifactId>wpsclient4arcgis</artifactId>
 	<packaging>pom</packaging>
 	<name>WPS Client for ArcGIS</name>
-	<version>1.5.0</version>
+	<version>1.6.0-SNAPSHOT</version>
 	<description>WPSClient4ArcGIS</description>
 	<url>http://52north.org/wpsclient4arcgis</url>
 	<licenses>
@@ -33,7 +33,7 @@
 		<connection>scm:git:git://github.com/52North/wpsclient4arcgis.git</connection>
 		<url>https://github.com/52North/wpsclient4arcgis</url>
 		<developerConnection>scm:git:ssh://git@github.com/52North/wpsclient4arcgis.git</developerConnection>
-		<tag>v1.5.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
