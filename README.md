@@ -1,4 +1,4 @@
-# WPS Client for ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge.gif)](https://www.openhub.net/p/wps-arcmap-client)
+# WPS Client for ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge?format=js)](https://www.openhub.net/p/wps-arcmap-client)
 
 ## Description
 ### Make use of the geo-processing Web with ArcMap. 
