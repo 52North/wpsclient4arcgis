@@ -27,7 +27,7 @@ Changes since last release
   
 ## Quick Start
 
-Get the latest Version here: [WPS Client for ArcGIS 1.3.0 Installer](https://52north.org/delivery/WPSClient4ArcGIS/52n-Extensible-WPS-ArcMap-Client-1.3.0-Setup.exe)
+Get the latest Version here: [WPS Client for ArcGIS Installer](https://52north.org/delivery/WPSClient4ArcGIS/52n-Extensible-WPS-ArcMap-Client-1.5.0-Setup.exe)
 
 ## User guide/tutorial
 
