@@ -1,3 +1,5 @@
+This repository is no longer maintained and has therefore been archived. Feel free to use and extend the code, but we are aware that it might have security leaks, no longer supported dependencies or might not work at all.
+
 # WPS Client for ArcGIS [![OpenHUB](https://www.openhub.net/p/wps-arcmap-client/widgets/project_thin_badge?format=js)](https://www.openhub.net/p/wps-arcmap-client)
 
 ## Description
